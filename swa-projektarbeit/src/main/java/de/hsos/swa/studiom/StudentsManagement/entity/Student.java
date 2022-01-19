@@ -15,4 +15,13 @@ public class Student {
     private String email;
     private Set<MockModule> modules;
     private Set<MockGroup> groups;
+    private Adress adress;
+
+    public void addAdress(String street, int nr, int zipCode, String town) {
+        this.adress = new Adress(street, nr, zipCode, town);
+    }
+
+    public Student(String name) {
+        this.name = name;
+    }
 }
