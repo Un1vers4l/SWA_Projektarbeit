@@ -1,5 +1,6 @@
 package de.hsos.swa.studiom.StudentsManagement.gateway;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -62,21 +63,39 @@ public class StudentRepository implements StudentService, AddressService {
     }
 
     @Override
-    public Optional<Student> changeStudent(Student student) {
-        // TODO Auto-generated method stub
-        return null;
+    public Optional<Student> changeStudent(Student newStudent) {
+        try {
+            Student student = em.find(Student.class, newStudent.getMatNr());
+            student = newStudent;
+            em.persist(student);
+            return Optional.ofNullable(student);
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            return Optional.ofNullable(null);
+        }
     }
 
     @Override
     public boolean deleteStudent(int matNr) {
-        // TODO Auto-generated method stub
-        return false;
+        try {
+            Student student = em.find(Student.class, matNr);
+            em.remove(student);
+            return true;
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     @Override
     public Optional<Student> getStudent(int matNr) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            Student student = em.find(Student.class, matNr);
+            return Optional.ofNullable(student);
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            return Optional.ofNullable(null);
+        }
     }
 
+    public Optional<List<Student>> getAllStudent() {
+        return Optional.ofNullable(em.createNamedQuery("Students.findAll", Student.class).getResultList());
+    }
 }

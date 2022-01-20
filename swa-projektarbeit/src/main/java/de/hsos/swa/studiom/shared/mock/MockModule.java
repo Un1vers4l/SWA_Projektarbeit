@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Generated;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Student;
  * @author Joana Wegener
  */
 @Entity
+@ApplicationScoped
 public class MockModule {
     @Id
     @SequenceGenerator(name = "mockModuleSeq", sequenceName = "mock_module_seq", allocationSize = 1, initialValue = 1)
@@ -30,4 +32,18 @@ public class MockModule {
 
     @ManyToMany(mappedBy = "modules")
     private Set<Student> students = new HashSet<>();
+
+    public String getName() {
+        return this.name;
+    }
+
+    public MockModule(String name) {
+        this.name = name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
 }

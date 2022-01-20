@@ -11,7 +11,7 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 public interface StudentService {
     public Optional<Student> createStudent(String name);
 
-    public Optional<Student> changeStudent(Student student);
+    public Optional<Student> changeStudent(Student newStudent);
 
     public boolean deleteStudent(int matNr);
 

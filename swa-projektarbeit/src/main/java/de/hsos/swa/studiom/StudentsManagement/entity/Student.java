@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -27,18 +28,18 @@ import de.hsos.swa.studiom.shared.mock.MockModule;
 @NamedQuery(name = "Students.findAll", query = "SELECT s FROM Student s")
 public class Student {
     @Id
-    @SequenceGenerator(name = "matNrSequence", sequenceName = "students_seq", allocationSize = 1, initialValue = 100000)
+    @SequenceGenerator(name = "matNrSequence", sequenceName = "students_seq", allocationSize = 1, initialValue = 1000)
     @GeneratedValue(generator = "matNrSequence")
     private int matNr;
     private String name;
     private String email;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "students_modules", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
             @JoinColumn(name = "fk_module") })
     private Set<MockModule> modules = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "students_groups", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
             @JoinColumn(name = "fk_group") })
     private Set<MockGroup> groups = new HashSet<>();
@@ -52,6 +53,18 @@ public class Student {
     public Student(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public Student(String name) {
+        this.name = name.trim();
+        this.email = generateEmail(name);
+    }
+
+    public String generateEmail(String name) {
+        name = name.trim();
+        name = name.replace(" ", ".");
+        name = name.toLowerCase();
+        return name + "@hs-osnabrueck.de";
     }
 
     @Override
@@ -84,14 +97,42 @@ public class Student {
         this.email = email;
     }
 
+    public Set<MockModule> getModules() {
+        return modules;
+    }
+
+    public void setModules(Set<MockModule> modules) {
+        this.modules = modules;
+    }
+
+    public Set<MockGroup> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<MockGroup> groups) {
+        this.groups = groups;
+    }
+
+    public Adress getAdress() {
+        return adress;
+    }
+
+    public void setAdress(Adress adress) {
+        this.adress = adress;
+    }
+
     public void addAdress(String street, int nr, int zipCode, String town) {
         this.adress = new Adress(street, nr, zipCode, town);
     }
 
-    public Student(String name) {
+    public Student(int matNr, String name, String email, Set<MockModule> modules, Set<MockGroup> groups,
+            Adress adress) {
+        this.matNr = matNr;
         this.name = name;
-        this.email = this.name + "@hs-osnabrueck.de";
-        this.groups = new HashSet<>();
+        this.email = email;
+        this.modules = modules;
+        this.groups = groups;
+        this.adress = adress;
     }
 
 }
