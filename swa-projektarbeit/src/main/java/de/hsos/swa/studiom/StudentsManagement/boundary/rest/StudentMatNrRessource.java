@@ -41,7 +41,7 @@ public class StudentMatNrRessource {
 
     @POST
     @PUT
-    public Response postMatNr() {
+    public Response notImplementedResponse() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
     }
 

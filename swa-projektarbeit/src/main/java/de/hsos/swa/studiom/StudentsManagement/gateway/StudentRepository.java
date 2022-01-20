@@ -27,27 +27,61 @@ public class StudentRepository implements StudentService, AddressService {
     EntityManager em;
 
     @Override
-    public Optional<Adress> createAdress(int matNr, String street, int zipCode, String town) {
-        // TODO Auto-generated method stub
-        return null;
+    public Optional<Adress> createAdress(int matNr, Adress adress) {
+        try {
+            Student student = em.find(Student.class, matNr);
+            if (student.getAdress() != null) {
+                return Optional.ofNullable(null);
+            }
+            student.setAdress(adress);
+            em.persist(student);
+            return Optional.ofNullable(adress);
+        } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            return Optional.ofNullable(null);
+        }
     }
 
     @Override
     public Optional<Adress> getAdress(int matNr) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            Student student = em.find(Student.class, matNr);
+            if (student.getAdress() == null) {
+                return Optional.ofNullable(null);
+            }
+            return Optional.ofNullable(student.getAdress());
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            return Optional.ofNullable(null);
+        }
     }
 
     @Override
     public boolean deleteAdress(int matNr) {
-        // TODO Auto-generated method stub
-        return false;
+        try {
+            Student student = em.find(Student.class, matNr);
+            if (student.getAdress() == null) {
+                return false;
+            }
+            student.setAdress(null);
+            em.persist(student);
+            return true;
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     @Override
-    public Optional<Adress> changeAdress(int matNr, String street, int zipCode, String town) {
-        // TODO Auto-generated method stub
-        return null;
+    public Optional<Adress> changeAdress(int matNr, Adress adress) {
+        try {
+            Student student = em.find(Student.class, matNr);
+            if (student.getAdress() == null) {
+                return Optional.ofNullable(null);
+            }
+            student.setAdress(adress);
+            em.persist(student);
+            return Optional.ofNullable(adress);
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            return Optional.ofNullable(null);
+        }
     }
 
     @Override

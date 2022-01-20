@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -17,7 +18,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 
@@ -26,6 +26,8 @@ import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 @Path("/student")
 @ApplicationScoped
 public class StudentRessource {
+
+    // immer DTO zurückgeben!!!
 
     // Named und interface inj
     @Inject
@@ -65,5 +67,10 @@ public class StudentRessource {
             return Response.ok(studentsDTO).build();
         }
         return Response.status(Status.BAD_REQUEST).build();
+    }
+
+    @DELETE
+    public Response notImplemented() {
+        return Response.status(Status.NOT_IMPLEMENTED).build();
     }
 }

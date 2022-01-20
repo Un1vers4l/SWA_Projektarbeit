@@ -31,4 +31,56 @@ public class Adress {
         this.zipCode = zipCode;
         this.town = town;
     }
+
+
+    public int getId() {
+        return id;
+    }
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public String getStreet() {
+        return street;
+    }
+
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+
+    public int getNr() {
+        return nr;
+    }
+
+
+    public void setNr(int nr) {
+        this.nr = nr;
+    }
+
+
+    public int getZipCode() {
+        return zipCode;
+    }
+
+
+    public void setZipCode(int zipCode) {
+        this.zipCode = zipCode;
+    }
+
+
+    public String getTown() {
+        return town;
+    }
+
+
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    
 }
