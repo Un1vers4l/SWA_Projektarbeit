@@ -1,9 +1,15 @@
-package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
-import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
-
 /**
  * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 19:08:01
+ * @modify date 2022-01-22 19:08:01
+ * @desc [description]
  */
+
+package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
+
+import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
+
 public class AdressDTO {
     public String street;
     public int nr;

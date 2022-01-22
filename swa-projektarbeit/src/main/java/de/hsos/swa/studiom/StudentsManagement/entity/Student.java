@@ -26,7 +26,6 @@ import javax.persistence.Table;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 
-
 @Entity
 @Table(name = "students")
 @NamedQuery(name = "Students.findAll", query = "SELECT s FROM Student s")
@@ -115,6 +114,10 @@ public class Student {
 
     public void setGroups(Set<Group> groups) {
         this.groups = groups;
+    }
+
+    public void addGroup(Group group) {
+        this.groups.add(group);
     }
 
     public Adress getAdress() {

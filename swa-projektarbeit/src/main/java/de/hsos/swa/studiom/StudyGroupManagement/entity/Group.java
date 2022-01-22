@@ -2,7 +2,7 @@
  * @author [author]
  * @email [example@mail.com]
  * @create date 2022-01-22 14:04:44
- * @modify date 2022-01-22 14:08:28
+ * @modify date 2022-01-22 20:28:46
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.entity;
@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -25,6 +26,7 @@ import de.hsos.swa.studiom.shared.mock.MockModule;
 
 @Entity
 @Table(name = "groups")
+@NamedQuery(name = "Groups.findAll", query = "SELECT g FROM Group g")
 public class Group {
     @Id
     @SequenceGenerator(name = "groupIdSequence", sequenceName = "group_seq", allocationSize = 1, initialValue = 1000)
@@ -34,14 +36,14 @@ public class Group {
     private int maxMembers;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private MockModule module;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Student owner;
 
-    @ManyToMany(mappedBy = "groups")
-    private Set<Student> students = new HashSet<>();
+    @ManyToMany(mappedBy = "groups", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Student> member = new HashSet<>();
 
     private GroupType type;
 
@@ -105,11 +107,11 @@ public class Group {
     }
 
     public Set<Student> getStudents() {
-        return students;
+        return member;
     }
 
     public void setStudents(Set<Student> students) {
-        this.students = students;
+        this.member = students;
     }
 
     public GroupType getType() {
@@ -120,4 +122,16 @@ public class Group {
         this.type = type;
     }
 
+    public Set<Student> getMember() {
+        return member;
+    }
+
+    public void setMember(Set<Student> member) {
+        this.member = member;
+    }
+
+    public void addMember(Student student) {
+        this.member.add(student);
+    }
+    
 }

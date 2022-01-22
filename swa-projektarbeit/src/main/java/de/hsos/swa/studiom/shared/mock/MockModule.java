@@ -1,3 +1,11 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 19:23:29
+ * @modify date 2022-01-22 19:23:29
+ * @desc [description]
+ */
+
 package de.hsos.swa.studiom.shared.mock;
 
 import java.util.HashSet;
@@ -14,14 +22,11 @@ import javax.persistence.SequenceGenerator;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
-/**
- * @author Joana Wegener
- */
 @Entity
 @ApplicationScoped
 public class MockModule {
     @Id
-    @SequenceGenerator(name = "mockModuleSeq", sequenceName = "mock_module_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "mockModuleSeq", sequenceName = "mock_module_seq", allocationSize = 1, initialValue = 3)
     @GeneratedValue(generator = "mockModuleSeq")
     private int id;
     private String name;

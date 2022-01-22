@@ -33,7 +33,7 @@ import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/student/{matNr}")
+@Path("/api/v1/student/{matNr}")
 @ApplicationScoped
 public class StudentMatNrRessource {
     // Named und interface inj
