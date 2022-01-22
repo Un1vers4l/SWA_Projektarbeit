@@ -1,3 +1,10 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 14:42:32
+ * @modify date 2022-01-22 14:42:32
+ * @desc [description]
+ */
 package de.hsos.swa.studiom.StudentsManagement.boundary.rest;
 
 import java.util.Optional;
@@ -21,6 +28,7 @@ import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
+
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

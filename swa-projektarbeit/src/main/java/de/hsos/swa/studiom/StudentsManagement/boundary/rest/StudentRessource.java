@@ -1,3 +1,11 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 14:14:14
+ * @modify date 2022-01-22 14:14:14
+ * @desc [description]
+ */
+
 package de.hsos.swa.studiom.StudentsManagement.boundary.rest;
 
 import java.util.ArrayList;
@@ -27,8 +35,6 @@ import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 @ApplicationScoped
 public class StudentRessource {
 
-    // immer DTO zurückgeben!!!
-
     // Named und interface inj
     @Inject
     StudentRepository service;
@@ -40,19 +46,6 @@ public class StudentRessource {
             return Response.ok(opt.get()).build();
         }
         return Response.status(Status.BAD_REQUEST).build();
-    }
-
-    @POST
-    public Response changeStudent(StudentDTO studentDTO) {
-        /*
-         * Optional<Student> opt =
-         * service.changeStudent(StudentDTO.Converter.toStudent(studentDTO));
-         * if (opt.isPresent()) {
-         * return Response.ok(opt.get()).build();
-         * }
-         * return Response.status(Status.BAD_REQUEST).build();
-         */
-        return null;
     }
 
     @GET
@@ -70,6 +63,7 @@ public class StudentRessource {
     }
 
     @DELETE
+    @POST
     public Response notImplemented() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
     }

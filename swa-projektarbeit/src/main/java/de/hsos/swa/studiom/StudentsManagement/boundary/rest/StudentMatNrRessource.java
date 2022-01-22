@@ -1,3 +1,11 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 14:14:30
+ * @modify date 2022-01-22 14:14:30
+ * @desc [description]
+ */
+
 package de.hsos.swa.studiom.StudentsManagement.boundary.rest;
 
 import java.util.ArrayList;
@@ -18,6 +26,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 
@@ -34,12 +44,20 @@ public class StudentMatNrRessource {
     public Response getStudent(@PathParam("matNr") int matNr) {
         Optional<Student> opt = service.getStudent(matNr);
         if (opt.isPresent()) {
-            return Response.ok(opt.get()).build();
+            return Response.ok(StudentDTO.Converter.toStudentDTO(opt.get())).build();
         }
         return Response.status(Status.BAD_REQUEST).build();
     }
 
     @POST
+    public Response changeStudent(@PathParam("matNr") int matNr, newStudentDTO newStudent) {
+        Optional<Student> opt = service.changeStudent(matNr, newStudentDTO.Converter.toStudent(newStudent));
+        if (opt.isPresent()) {
+            return Response.ok(StudentDTO.Converter.toStudentDTO(opt.get())).build();
+        }
+        return Response.status(Status.BAD_REQUEST).build();
+    }
+
     @PUT
     public Response notImplementedResponse() {
         return Response.status(Status.NOT_IMPLEMENTED).build();

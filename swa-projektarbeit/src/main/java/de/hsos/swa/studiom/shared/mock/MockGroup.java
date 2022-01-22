@@ -1,3 +1,10 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 14:36:32
+ * @modify date 2022-01-22 14:36:32
+ * @desc [description]
+ */
 package de.hsos.swa.studiom.shared.mock;
 
 import java.util.HashSet;
@@ -12,9 +19,6 @@ import javax.persistence.SequenceGenerator;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
-/**
- * @author Joana Wegener
- */
 @Entity
 @ApplicationScoped
 public class MockGroup {

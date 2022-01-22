@@ -7,19 +7,23 @@ import java.util.Set;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.mock.MockGroup;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 
+/**
+ * @author Joana Wegener
+ */
 public class StudentDTO {
     public int matNr;
     public String name;
     public String email;
-    public Set<ModuleDTO> modules = new HashSet<>();
-    public Set<GroupDTO> groups = new HashSet<>();
-    public Adress adress;
+    public Set<MockModuleDTO> modules = new HashSet<>();
+    public Set<MockGroupDTO> groups = new HashSet<>();
+    public AdressDTO adress;
 
-    public StudentDTO(int matNr, String name, String email, Set<ModuleDTO> modules, Set<GroupDTO> groups,
-            Adress adress) {
+    public StudentDTO(int matNr, String name, String email, Set<MockModuleDTO> modules, Set<MockGroupDTO> groups,
+            AdressDTO adress) {
         this.matNr = matNr;
         this.name = name;
         this.email = email;
@@ -30,19 +34,19 @@ public class StudentDTO {
 
     public static class Converter {
         public static StudentDTO toStudentDTO(Student student) {
-            Set<ModuleDTO> modules = new HashSet<>();
-            Set<GroupDTO> groups = new HashSet<>();
+            Set<MockModuleDTO> modules = new HashSet<>();
+            Set<MockGroupDTO> groups = new HashSet<>();
 
             for (MockModule module : student.getModules()) {
-                modules.add(ModuleDTO.Converter.toDTO(module));
+                modules.add(MockModuleDTO.Converter.toDTO(module));
             }
 
-            for (MockGroup group : student.getGroups()) {
-                groups.add(GroupDTO.Converter.toDTO(group));
+            for (Group group : student.getGroups()) {
+                groups.add(MockGroupDTO.Converter.toDTO(group));
             }
 
             return new StudentDTO(student.getMatNr(), student.getName(), student.getEmail(), modules,
-                    groups, student.getAdress());
+                    groups, AdressDTO.Converter.toDto(student.getAdress()));
         }
         /*
          * public static Student toStudent(StudentDTO sDto) {

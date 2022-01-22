@@ -1,7 +1,9 @@
 package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
-
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 
+/**
+ * @author Joana Wegener
+ */
 public class AdressDTO {
     public String street;
     public int nr;
@@ -15,12 +17,15 @@ public class AdressDTO {
         this.town = town;
     }
 
-    public AdressDTO(){
+    public AdressDTO() {
 
     }
-    
+
     public static class Converter {
         public static AdressDTO toDto(Adress adress) {
+            if (adress == null) {
+                return null;
+            }
             return new AdressDTO(adress.getStreet(), adress.getNr(), adress.getZipCode(), adress.getTown());
         }
 

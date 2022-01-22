@@ -1,3 +1,10 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 14:08:13
+ * @modify date 2022-01-22 14:08:16
+ * @desc [description]
+ */
 package de.hsos.swa.studiom.StudentsManagement.entity;
 
 import java.util.HashSet;
@@ -16,12 +23,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import de.hsos.swa.studiom.shared.mock.MockGroup;
+import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 
-/**
- * @author Joana Wegener
- */
 
 @Entity
 @Table(name = "students")
@@ -35,14 +39,14 @@ public class Student {
     private String email;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "students_modules", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
+    @JoinTable(name = "student_modules", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
             @JoinColumn(name = "fk_module") })
     private Set<MockModule> modules = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "students_groups", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
+    @JoinTable(name = "student_groups", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
             @JoinColumn(name = "fk_group") })
-    private Set<MockGroup> groups = new HashSet<>();
+    private Set<Group> groups = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     private Adress adress;
@@ -105,11 +109,11 @@ public class Student {
         this.modules = modules;
     }
 
-    public Set<MockGroup> getGroups() {
+    public Set<Group> getGroups() {
         return groups;
     }
 
-    public void setGroups(Set<MockGroup> groups) {
+    public void setGroups(Set<Group> groups) {
         this.groups = groups;
     }
 
@@ -125,7 +129,7 @@ public class Student {
         this.adress = new Adress(street, nr, zipCode, town);
     }
 
-    public Student(int matNr, String name, String email, Set<MockModule> modules, Set<MockGroup> groups,
+    public Student(int matNr, String name, String email, Set<MockModule> modules, Set<Group> groups,
             Adress adress) {
         this.matNr = matNr;
         this.name = name;
