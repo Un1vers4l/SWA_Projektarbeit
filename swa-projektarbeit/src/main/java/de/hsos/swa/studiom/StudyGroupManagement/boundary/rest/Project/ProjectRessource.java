@@ -21,9 +21,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
@@ -45,6 +48,7 @@ public class ProjectRessource {
     ProjectRepository service;
 
     @GET
+    @Operation(summary = "Get all Projects")
     public Response getAllProjects() {
         Optional<List<Group>> allProjects = service.getAllProjects();
         if (allProjects.isPresent()) {
@@ -59,9 +63,18 @@ public class ProjectRessource {
 
     @DELETE
     @POST
-    @PUT
     public Response notImplementedProjects() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
+    }
+
+    @PUT
+    @Operation(summary = "Creates a new Project", description = "Creates a new Project for the Module if allowed")
+    public Response createProject(@QueryParam("matNr") int matNr, @QueryParam("moduleId") int moduleId) {
+        Optional<Group> createProject = service.createProject(matNr, moduleId);
+        if (createProject.isPresent()) {
+            return Response.ok(GroupDTO.Converter.toDTO(createProject.get())).build();
+        }
+        return Response.status(Status.BAD_REQUEST).build();
     }
 
 }

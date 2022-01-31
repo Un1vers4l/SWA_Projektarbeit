@@ -25,6 +25,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
@@ -45,6 +47,7 @@ public class GroupRessource {
     GroupRepository service;
 
     @PUT
+    @Operation(summary = "Create a new Group")
     public Response createGroup(NewGroupDTO gDTO) {
         Optional<Group> created = service.createGroup(gDTO.ownerMatNr, gDTO.name, gDTO.maxMember, gDTO.moduleId);
         if (created.isPresent()) {
@@ -55,6 +58,7 @@ public class GroupRessource {
     }
 
     @GET
+    @Operation(summary = "Delete a Group", description = "Deletes a Group, if called by the owner of the group")
     public Response getAllGroups() {
         Optional<List<Group>> allGroups = service.getAllGroup();
         if (allGroups.isPresent()) {

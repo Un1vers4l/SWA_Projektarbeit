@@ -26,6 +26,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
@@ -41,6 +43,7 @@ public class StudentMatNrRessource {
     StudentRepository service;
 
     @GET
+    @Operation(summary = "find a Student", description = "Find a student with their matNr")
     public Response getStudent(@PathParam("matNr") int matNr) {
         Optional<Student> opt = service.getStudent(matNr);
         if (opt.isPresent()) {
@@ -50,6 +53,7 @@ public class StudentMatNrRessource {
     }
 
     @POST
+    @Operation(summary = "Change a student", description = "Change the E-Mail and name of a student")
     public Response changeStudent(@PathParam("matNr") int matNr, newStudentDTO newStudent) {
         Optional<Student> opt = service.changeStudent(matNr, newStudentDTO.Converter.toStudent(newStudent));
         if (opt.isPresent()) {
@@ -59,11 +63,13 @@ public class StudentMatNrRessource {
     }
 
     @PUT
+
     public Response notImplementedResponse() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
     }
 
     @DELETE
+    @Operation(summary = "Delete a student")
     public Response deleteStudent(@PathParam("matNr") int matNr) {
         boolean deleted = service.deleteStudent(matNr);
         if (deleted) {

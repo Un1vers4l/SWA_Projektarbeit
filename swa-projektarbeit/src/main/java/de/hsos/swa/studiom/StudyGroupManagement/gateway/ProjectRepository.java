@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-31 09:28:10
- * @modify date 2022-01-31 11:52:28
+ * @modify date 2022-01-31 13:36:16
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
@@ -36,29 +36,28 @@ public class ProjectRepository implements ProjectService {
     @Override
     public Optional<Group> createProject(int matNr, int moduleId) {
         try {
-
             Student owner = em.find(Student.class, matNr);
-
             MockModule module = em.find(MockModule.class, moduleId);
             if (owner == null || module == null) {
+                // TODO: Exception: Owner oder Modul nicht gefunden
                 return Optional.ofNullable(null);
             }
             if (module.isProject() == false) {
+                // TODO: Exception: Modul bietet kein Projekt an
                 return Optional.ofNullable(null);
             }
             if (!isInProject(matNr, moduleId)) {
+                // TODO: Exception: Student ist schon in einem Projekt eingetragen
                 return Optional.ofNullable(null);
             }
             Group projectgroup = new Group(owner, module, module.getName() + " Projektarbeit_" + owner.getMatNr(), 2,
                     TYPE);
-
-            System.out.println("mat: " + matNr + " mod: " + moduleId);
             projectgroup.addMember(owner);
             owner.addGroup(projectgroup);
             em.persist(projectgroup);
             return Optional.ofNullable(projectgroup);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            e.printStackTrace();
+            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
@@ -70,14 +69,17 @@ public class ProjectRepository implements ProjectService {
             Student student = em.find(Student.class, matNr);
 
             if (group == null || student == null) {
+                // TODO: Exception: Gruppe oder Student nicht gefunden
                 return false;
             }
 
             if (group.getOwner().getMatNr() != matNr) {
+                // TODO: Exception: Student ist nicht berechtigt
                 return false;
             }
 
             if (group.getMaxMembers() == group.getMember().size()) {
+                // TODO: Exception: Volles Projekt kann nicht gelöscht werden
                 return false;
             }
 
@@ -88,9 +90,8 @@ public class ProjectRepository implements ProjectService {
             em.remove(group);
             return true;
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            e.printStackTrace();
+            // TODO: Exception
             return false;
-            // TODO: handle exception
         }
     }
 
@@ -99,15 +100,17 @@ public class ProjectRepository implements ProjectService {
         try {
             Group project = em.find(Group.class, projectId);
             if (project == null) {
+                // TODO: Exception: Projekt nich gefunden
                 return Optional.ofNullable(null);
             }
             if (project.getType() != TYPE) {
+                // TODO: Exception: Projekt nicht gefunden
                 return Optional.ofNullable(null);
             }
             return Optional.ofNullable(project);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
-            // TODO: handle exception
         }
     }
 
@@ -124,8 +127,8 @@ public class ProjectRepository implements ProjectService {
             }
             return Optional.ofNullable(returnList);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
-            // TODO: handle exception
         }
     }
 
@@ -135,14 +138,15 @@ public class ProjectRepository implements ProjectService {
             Student student = em.find(Student.class, matNr);
             Group project = em.find(Group.class, groupId);
             if (project == null || student == null) {
+                // TODO: Exception: Projekt oder Student nicht gefunden
                 return Optional.ofNullable(null);
             }
             if (project.getMaxMembers() == project.getMember().size()) {
-                // Projekt ist voll
+                // TODO: Exception: Projekt ist voll
                 return Optional.ofNullable(null);
             }
             if (!isInProject(matNr, project.getModule().getId())) {
-                System.out.println("IST IN MODULPROJEKT");
+                // TODO: Exception: Student ist bereits in anderem Modul eingetragen
                 return Optional.ofNullable(null);
             }
 
@@ -152,6 +156,7 @@ public class ProjectRepository implements ProjectService {
             em.persist(project);
             return Optional.ofNullable(project);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }

@@ -25,6 +25,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
@@ -40,6 +42,7 @@ public class StudentRessource {
     StudentRepository service;
 
     @PUT
+    @Operation(summary = "Create a new student", description = "Create a new student with their name")
     public Response createStudent(String name) {
         Optional<Student> opt = service.createStudent(name);
         if (opt.isPresent()) {
@@ -49,6 +52,7 @@ public class StudentRessource {
     }
 
     @GET
+    @Operation(summary = "Get all Students")
     public Response getAllStudent() {
         Optional<List<Student>> opt = service.getAllStudent();
         if (opt.isPresent()) {

@@ -16,7 +16,7 @@ import javax.persistence.SequenceGenerator;
 @Entity
 public class Adress {
     @Id
-    @SequenceGenerator(name = "AdrIdSequence", sequenceName = "adress_seq", allocationSize = 1, initialValue = 3)
+    @SequenceGenerator(name = "AdrIdSequence", sequenceName = "adress_seq", allocationSize = 1, initialValue = 5)
     @GeneratedValue(generator = "AdrIdSequence")
     private int id;
     private String street;

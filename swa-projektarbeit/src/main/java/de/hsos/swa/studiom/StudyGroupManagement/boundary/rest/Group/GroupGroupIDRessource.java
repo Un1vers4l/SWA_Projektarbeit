@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 20:09:50
- * @modify date 2022-01-31 08:38:11
+ * @modify date 2022-01-31 15:36:09
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
@@ -15,7 +15,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -23,10 +22,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
-import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
@@ -47,6 +44,7 @@ public class GroupGroupIDRessource {
     StudentRepository studService;
 
     @GET
+    @Operation(summary = "Find Group with Id")
     public Response getGroup(@PathParam("groupId") int groupId) {
         Optional<Group> opt = service.getGroup(groupId);
         if (opt.isPresent()) {
@@ -57,6 +55,7 @@ public class GroupGroupIDRessource {
     }
 
     @POST
+    @Operation(summary = "Change a group", description = "Change the name, maxMembers or module of a group")
     public Response changeGroup(@PathParam("groupId") int groupId, NewGroupDTO newGroup) {
         Optional<Student> ownerOpt = studService.getStudent(newGroup.ownerMatNr);
         if (ownerOpt.isPresent()) {
@@ -71,6 +70,7 @@ public class GroupGroupIDRessource {
 
     @POST
     @Path("/student")
+    @Operation(summary = "Join a Group", description = "Adds a Student to a group if group is not full yet")
     public Response addStudent(@PathParam("matNr") int matNr, @PathParam("groupId") int groupId) {
 
         Optional<Group> addStudent = service.addStudent(groupId, matNr);
@@ -81,6 +81,7 @@ public class GroupGroupIDRessource {
     }
 
     @DELETE
+    @Operation(summary = "Delete a Group", description = "Deletes a Group, if called by the owner of the group")
     public Response deleteGroup(@PathParam("groupId") int groupId, @PathParam("matNr") int matNr) {
         boolean deleted = service.deleteGroup(matNr, groupId);
         if (deleted) {
@@ -91,6 +92,7 @@ public class GroupGroupIDRessource {
 
     @DELETE
     @Path("/student")
+    @Operation(summary = "Leave a Group", description = "Leave a Group, if called by a member of the group")
     public Response removeStudent(@PathParam("matNr") int matNr, @PathParam("groupId") int groupId) {
         Optional<Group> removeStudent = service.removeStudent(groupId, matNr);
         if (removeStudent.isPresent()) {
