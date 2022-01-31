@@ -24,8 +24,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
-
 import de.hsos.swa.studiom.UserManagement.boundary.dto.DataDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.ErrorDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.UserDto;
