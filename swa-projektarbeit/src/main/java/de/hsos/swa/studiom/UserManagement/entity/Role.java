@@ -8,5 +8,5 @@
 package de.hsos.swa.studiom.UserManagement.entity;
 
 public enum Role {
-    STUDENT,ADMIN,SEKT
+    STUDENT,ADMIN,SEKT,USER
 }

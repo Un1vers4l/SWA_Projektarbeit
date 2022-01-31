@@ -7,30 +7,60 @@
  */
 package de.hsos.swa.studiom.UserManagement.entity;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Vetoed
 @Entity
 @Table(name = "Account")
 @NamedQuery(name = "User.findByUsername", query = "SELECT f from User f where f.username = :username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "User.findAllUser", query = "SELECT f from User f", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
 public class User {
+
     @Id
+    @SequenceGenerator(name = "userIdSequence", sequenceName = "Users_seq", allocationSize = 1, initialValue = 10)
+    @GeneratedValue(generator = "userIdSequence")
+    private long userId;
+
+    @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
-    private Role role;
+    @ElementCollection(targetClass = Role.class)
+    @JoinTable(name = "User_Roles", joinColumns = @JoinColumn(name = "userID"))
+    @Fetch(FetchMode.JOIN)
+    private Set<Role> role;
 
-    public User(String username, String password, Role role) {
+    public User(String username, String password) {
         this.username = username;
-        this.password = password;
+        this.password = this.passwordDecoder(password);
+        this.role = new HashSet<>();
+    }
+
+    public User(String username, String password, Set<Role> role) {
+        this.username = username;
+        this.password = this.passwordDecoder(password);
         this.role = role;
+        role.add(Role.USER);
     }
 
     public User() {
@@ -49,15 +79,65 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = this.passwordDecoder(password);
     }
 
-    public Role getRole() {
-        return this.role;
+    public Set<Role> getRole() {
+        return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(Set<Role> role) {
         this.role = role;
     }
+
+    public long getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return userId == user.userId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " userId='" + getUserId() + "'" +
+            ", username='" + getUsername() + "'" +
+            ", password='" + getPassword() + "'" +
+            ", role='" + getRole() + "'" +
+            "}";
+    }
+
+    public boolean addRole(Role role){
+        return this.role.add(role);
+    }
+
+    public boolean isMyPassword(String password) {
+        return this.password.equals(this.passwordDecoder(password));
+    }
     
+    private String passwordDecoder(String password){
+        return DigestUtils.sha256Hex(password);
+    }
+    public void changeMyData(User other){
+        if(other.username != null) this.username = other.username;
+        if(other.password != null) this.password = other.password;
+        if(other.role != null) this.role = other.role;
+    }
 }
