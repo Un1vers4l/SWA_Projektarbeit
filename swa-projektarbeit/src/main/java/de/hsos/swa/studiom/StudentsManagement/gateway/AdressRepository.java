@@ -23,6 +23,8 @@ import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
+@Transactional
+@ApplicationScoped
 public class AdressRepository implements AddressService {
 
     @Inject

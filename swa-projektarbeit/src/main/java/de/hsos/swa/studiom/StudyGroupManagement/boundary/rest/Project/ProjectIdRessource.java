@@ -25,6 +25,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
@@ -45,6 +47,7 @@ public class ProjectIdRessource {
     ProjectRepository service;
 
     @DELETE
+    @Operation(summary = "Delete a project", description = "Deletes a project, if you are the owner and no one else joined")
     public Response deleteProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
         boolean deleted = service.deleteProject(matNr, projectId);
         if (deleted) {
@@ -54,6 +57,7 @@ public class ProjectIdRessource {
     }
 
     @GET
+    @Operation(summary = "Finds a project with Id")
     public Response getProject(@PathParam("projectId") int projectId) {
         Optional<Group> project = service.getProject(projectId);
         if (project.isPresent()) {
@@ -63,6 +67,7 @@ public class ProjectIdRessource {
     }
 
     @PUT
+    @Operation(summary = "Join a Project", description = "Adds a Student to a project if not already joined another project in that module and if project is not full yet")
     public Response addStudentToProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
         Optional<Group> group = service.addStudent(matNr, projectId);
         if (group.isPresent()) {

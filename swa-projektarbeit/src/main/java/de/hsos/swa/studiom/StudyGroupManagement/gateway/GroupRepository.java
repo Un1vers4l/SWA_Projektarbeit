@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:37:40
- * @modify date 2022-01-31 11:33:04
+ * @modify date 2022-01-31 13:36:20
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
@@ -40,10 +40,10 @@ public class GroupRepository implements GroupService {
             MockModule module = em.find(MockModule.class, moduleId);
             if (module == null || owner == null) {
                 if (module == null) {
-                    // //TODO: Exception: Modul nicht gefunden
+                    //TODO: Exception: Modul nicht gefunden
                     System.out.println("module null" + moduleId);
                 } else {
-                    // //TODO: Exception: Student nicht gefunden
+                    //TODO: Exception: Student nicht gefunden
                     System.out.println("Student null");
                 }
                 return Optional.ofNullable(null);
@@ -149,27 +149,30 @@ public class GroupRepository implements GroupService {
     public Optional<Group> addStudent(int groupId, int matNr) {
         try {
             Student student = em.find(Student.class, matNr);
-            if (student != null) {
-                Group group = em.find(Group.class, groupId);
-                if (group != null && group.getMaxMembers() > group.getMember().size()) {
-                    for (Student stud : group.getMember()) {
-                        if (stud.getMatNr() == student.getMatNr()) {
-
-                            return Optional.ofNullable(null);
-                        }
-                    }
-                    group.addMember(student);
-                    em.persist(group);
-                    em.flush();
-                    student.addGroup(group);
-                    em.persist(student);
-                    return Optional.ofNullable(group);
+            Group group = em.find(Group.class, groupId);
+            if (student == null || group == null) {
+                // TODO: Exception: Student oder Gruppe nicht gefunden
+                return Optional.ofNullable(null);
+            }
+            if (group.getMaxMembers() <= group.getMember().size()) {
+                // TODO: Exception: Gruppe bereits voll
+                return Optional.ofNullable(null);
+            }
+            for (Student stud : group.getMember()) {
+                if (stud.getMatNr() == student.getMatNr()) {
+                    // TODO: Exception: Student schon in der Gruppe
+                    return Optional.ofNullable(null);
                 }
             }
-            return Optional.ofNullable(null);
+            group.addMember(student);
+            em.persist(group);
+            em.flush();
+            student.addGroup(group);
+            em.persist(student);
+            return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
-            // TODO: handle exception
         }
     }
 
@@ -177,28 +180,39 @@ public class GroupRepository implements GroupService {
     public Optional<Group> removeStudent(int groupId, int matNr) {
         try {
             Student student = em.find(Student.class, matNr);
-            if (student != null) {
-                Group group = em.find(Group.class, groupId);
-                if (group != null && group.getMember().size() > 1) {
-                    if (student.getMatNr() == group.getOwner().getMatNr()) {
-                        return Optional.ofNullable(null);
-                    }
-                    if (!group.removeMember(student)) {
-                        return Optional.ofNullable(null);
-                    }
-                    if (!student.removeGroup(group)) {
-                        return Optional.ofNullable(null);
-                    }
-                    em.persist(group);
-                    em.flush();
-                    em.persist(student);
-                    return Optional.ofNullable(group);
-                }
+            if (student == null) {
+                // TODO: Exception: Student ist nicht vorhanden
+                return Optional.ofNullable(null);
             }
-            return Optional.ofNullable(null);
+            Group group = em.find(Group.class, groupId);
+            if (group == null) {
+                // TODO: Exception: Gruppe nicht gefunden
+                return Optional.ofNullable(null);
+            }
+            if (group.getMember().size() <= 1) {
+                // TODO: Exception: Gruppe hat nur den Owner als Mitglied
+                return Optional.ofNullable(null);
+            }
+            if (student.getMatNr() == group.getOwner().getMatNr()) {
+                // TODO: Exception: Owner kann nicht entfernt werden
+                return Optional.ofNullable(null);
+            }
+            if (!group.removeMember(student)) {
+                // TODO: Exception: Fehler beim entfernen des Studenten
+                return Optional.ofNullable(null);
+            }
+            if (!student.removeGroup(group)) {
+                // TODO: Exception:
+                return Optional.ofNullable(null);
+            }
+            em.persist(group);
+            em.flush();
+            em.persist(student);
+            return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
-            // TODO: handle exception
+
         }
     }
 
