@@ -10,6 +10,7 @@ package de.hsos.swa.studiom.StudyGroupManagement.control;
 import java.util.List;
 import java.util.Optional;
 
+import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
 public interface GroupService {
@@ -22,4 +23,8 @@ public interface GroupService {
     public Optional<Group> getGroup(int groupId);
 
     public Optional<List<Group>> getAllGroup();
+
+    public Optional<Group> addStudent(int groupId, int matNr);
+
+    public Optional<Group> removeStudent(int groupId, int matNr);
 }

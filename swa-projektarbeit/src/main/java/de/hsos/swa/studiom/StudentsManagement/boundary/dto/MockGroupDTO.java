@@ -10,6 +10,7 @@ package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
 public class MockGroupDTO {
+    public int id;
     public String name;
 
     public MockGroupDTO(String name) {
@@ -18,7 +19,9 @@ public class MockGroupDTO {
 
     public static class Converter {
         public static MockGroupDTO toDTO(Group group) {
-            return new MockGroupDTO(group.getName());
+            MockGroupDTO mockGroupDTO = new MockGroupDTO(group.getName());
+            mockGroupDTO.id = group.getGroupId();
+            return mockGroupDTO;
         }
 
         public static Group toGroup(MockGroupDTO gDto) {

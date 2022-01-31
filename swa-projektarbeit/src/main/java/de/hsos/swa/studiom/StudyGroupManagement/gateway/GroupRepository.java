@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:37:40
- * @modify date 2022-01-22 14:37:40
+ * @modify date 2022-01-29 12:14:12
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
@@ -84,14 +84,37 @@ public class GroupRepository implements GroupService {
 
     @Override
     public boolean deleteGroup(int matNr, int groupId) {
-        // TODO Auto-generated method stub
+        try {
+            Group group = em.find(Group.class, groupId);
+            if (group == null) {
+                // TODO: Exception werfen
+                return false;
+            }
+            if (group.getOwner().getMatNr() != matNr) {
+                // TODO: Exception werfen
+                return false;
+            }
+            for (Student student : group.getMember()) {
+                student.removeGroup(group);
+            }
+            group.setOwner(null);
+            em.remove(group);
+            return true;
+        } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+
+        }
         return false;
     }
 
     @Override
     public Optional<Group> getGroup(int groupId) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            return Optional.ofNullable(em.find(Group.class, groupId));
+
+        } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            return Optional.ofNullable(null);
+            // TODO: handle exception
+        }
     }
 
     @Override
@@ -99,6 +122,62 @@ public class GroupRepository implements GroupService {
         try {
             return Optional.ofNullable(em.createNamedQuery("Groups.findAll", Group.class).getResultList());
 
+        } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            return Optional.ofNullable(null);
+            // TODO: handle exception
+        }
+    }
+
+    @Override
+    public Optional<Group> addStudent(int groupId, int matNr) {
+        try {
+            Student student = em.find(Student.class, matNr);
+            if (student != null) {
+                Group group = em.find(Group.class, groupId);
+                if (group != null && group.getMaxMembers() > group.getMember().size()) {
+                    for (Student stud : group.getMember()) {
+                        if (stud.getMatNr() == student.getMatNr()) {
+                            return Optional.ofNullable(null);
+                        }
+                    }
+                    group.addMember(student);
+                    em.persist(group);
+                    em.flush();
+                    student.addGroup(group);
+                    em.persist(student);
+                    return Optional.ofNullable(group);
+                }
+            }
+            return Optional.ofNullable(null);
+        } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            return Optional.ofNullable(null);
+            // TODO: handle exception
+        }
+    }
+
+    @Override
+    public Optional<Group> removeStudent(int groupId, int matNr) {
+        try {
+            Student student = em.find(Student.class, matNr);
+            if (student != null) {
+                Group group = em.find(Group.class, groupId);
+                if (group != null && group.getMember().size() > 1) {
+                    if (student.getMatNr() == group.getOwner().getMatNr()) {
+                        return Optional.ofNullable(null);
+                    }
+                    if (!group.removeMember(student)) {
+                        return Optional.ofNullable(null);
+                    }
+                    if (!student.removeGroup(group)) {
+                        return Optional.ofNullable(null);
+                    }
+                    em.persist(group);
+                    em.flush();
+                    em.persist(student);
+                    return Optional.ofNullable(group);
+                }
+            }
+            return Optional.ofNullable(null);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
             return Optional.ofNullable(null);
             // TODO: handle exception

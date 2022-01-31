@@ -31,7 +31,7 @@ import de.hsos.swa.studiom.shared.mock.MockModule;
 @NamedQuery(name = "Students.findAll", query = "SELECT s FROM Student s")
 public class Student {
     @Id
-    @SequenceGenerator(name = "matNrSequence", sequenceName = "students_seq", allocationSize = 1, initialValue = 1000)
+    @SequenceGenerator(name = "matNrSequence", sequenceName = "students_seq", allocationSize = 1, initialValue = 1003)
     @GeneratedValue(generator = "matNrSequence")
     private int matNr;
     private String name;
@@ -42,7 +42,7 @@ public class Student {
             @JoinColumn(name = "fk_module") })
     private Set<MockModule> modules = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "student_groups", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
             @JoinColumn(name = "fk_group") })
     private Set<Group> groups = new HashSet<>();
@@ -118,6 +118,10 @@ public class Student {
 
     public void addGroup(Group group) {
         this.groups.add(group);
+    }
+
+    public boolean removeGroup(Group group) {
+        return this.groups.remove(group);
     }
 
     public Adress getAdress() {

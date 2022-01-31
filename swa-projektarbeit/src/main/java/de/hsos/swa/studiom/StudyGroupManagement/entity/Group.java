@@ -29,7 +29,7 @@ import de.hsos.swa.studiom.shared.mock.MockModule;
 @NamedQuery(name = "Groups.findAll", query = "SELECT g FROM Group g")
 public class Group {
     @Id
-    @SequenceGenerator(name = "groupIdSequence", sequenceName = "group_seq", allocationSize = 1, initialValue = 1000)
+    @SequenceGenerator(name = "groupIdSequence", sequenceName = "group_seq", allocationSize = 1, initialValue = 1001)
     @GeneratedValue(generator = "groupIdSequence")
     private int groupId;
 
@@ -42,7 +42,7 @@ public class Group {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Student owner;
 
-    @ManyToMany(mappedBy = "groups", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "groups", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Student> member = new HashSet<>();
 
     private GroupType type;
@@ -133,5 +133,9 @@ public class Group {
     public void addMember(Student student) {
         this.member.add(student);
     }
-    
+
+    public boolean removeMember(Student student) {
+        return this.member.remove(student);
+    }
+
 }
