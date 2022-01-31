@@ -2,10 +2,10 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 20:09:50
- * @modify date 2022-01-22 20:09:50
+ * @modify date 2022-01-31 08:38:11
  * @desc [description]
  */
-package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest;
+package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
 
 import java.util.Optional;
 

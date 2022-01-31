@@ -1,11 +1,11 @@
 /**
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
- * @create date 2022-01-22 14:42:50
- * @modify date 2022-01-22 20:09:57
+ * @create date 2022-01-31 10:51:27
+ * @modify date 2022-01-31 11:55:57
  * @desc [description]
  */
-package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest;
+package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,42 +34,45 @@ import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
+import de.hsos.swa.studiom.StudyGroupManagement.gateway.ProjectRepository;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/api/v1/group")
+@Path("/api/v1/projects/projectId/{projectId}/{matNr}")
 @ApplicationScoped
-public class GroupRessource {
-
+public class ProjectIdRessource {
     @Inject
-    GroupRepository service;
+    ProjectRepository service;
 
-    @PUT
-    public Response createGroup(NewGroupDTO gDTO) {
-        Optional<Group> created = service.createGroup(gDTO.ownerMatNr, gDTO.name, gDTO.maxMember, gDTO.moduleId);
-        if (created.isPresent()) {
-            NewGroupDTO group = NewGroupDTO.Converter.toDTO(created.get());
-            return Response.ok(group).build();
+    @DELETE
+    public Response deleteProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
+        boolean deleted = service.deleteProject(matNr, projectId);
+        if (deleted) {
+            return Response.ok("true").build();
         }
         return Response.status(Status.BAD_REQUEST).build();
     }
 
     @GET
-    public Response getAllGroups() {
-        Optional<List<Group>> allGroups = service.getAllGroup();
-        if (allGroups.isPresent()) {
-            List<GroupDTO> gDTOs = new ArrayList<>();
-            for (Group group : allGroups.get()) {
-                gDTOs.add(GroupDTO.Converter.toDTO(group));
-            }
-            return Response.ok(gDTOs).build();
+    public Response getProject(@PathParam("projectId") int projectId) {
+        Optional<Group> project = service.getProject(projectId);
+        if (project.isPresent()) {
+            return Response.ok(GroupDTO.Converter.toDTO(project.get())).build();
+        }
+        return Response.status(Status.BAD_REQUEST).build();
+    }
+
+    @PUT
+    public Response addStudentToProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
+        Optional<Group> group = service.addStudent(matNr, projectId);
+        if (group.isPresent()) {
+            return Response.ok(GroupDTO.Converter.toDTO(group.get())).build();
         }
         return Response.status(Status.BAD_REQUEST).build();
     }
 
     @POST
-    @DELETE
-    public Response notImplemented() {
+    public Response notImplementedProjectsProjectId() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
     }
 }

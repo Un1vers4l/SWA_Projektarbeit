@@ -27,8 +27,8 @@ import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.StudentsManagement.gateway.AdressRepository;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
-
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -39,9 +39,12 @@ public class StudentAdressRessource {
     @Inject
     StudentRepository service;
 
+    @Inject
+    AdressRepository adressService;
+
     @GET
     public Response getAdress(@PathParam("matNr") int matNr) {
-        Optional<Adress> opt = service.getAdress(matNr);
+        Optional<Adress> opt = adressService.getAdress(matNr);
         if (opt.isPresent()) {
             return Response.ok(AdressDTO.Converter.toDto(opt.get())).build();
         }
@@ -50,7 +53,7 @@ public class StudentAdressRessource {
 
     @PUT
     public Response createAdress(@PathParam("matNr") int matNr, AdressDTO adress) {
-        Optional<Adress> opt = service.createAdress(matNr, AdressDTO.Converter.toAdress(adress));
+        Optional<Adress> opt = adressService.createAdress(matNr, AdressDTO.Converter.toAdress(adress));
         if (opt.isPresent()) {
             return Response.ok(AdressDTO.Converter.toDto(opt.get())).build();
         }
@@ -59,7 +62,7 @@ public class StudentAdressRessource {
 
     @POST
     public Response changeAdress(@PathParam("matNr") int matNr, AdressDTO adress) {
-        Optional<Adress> opt = service.changeAdress(matNr, AdressDTO.Converter.toAdress(adress));
+        Optional<Adress> opt = adressService.changeAdress(matNr, AdressDTO.Converter.toAdress(adress));
         if (opt.isPresent()) {
             return Response.ok(AdressDTO.Converter.toDto(opt.get())).build();
         }
@@ -68,7 +71,7 @@ public class StudentAdressRessource {
 
     @DELETE
     public Response deleteAdress(@PathParam("matNr") int matNr) {
-        boolean deleted = service.deleteAdress(matNr);
+        boolean deleted = adressService.deleteAdress(matNr);
         if (deleted) {
             return Response.ok().build();
         }

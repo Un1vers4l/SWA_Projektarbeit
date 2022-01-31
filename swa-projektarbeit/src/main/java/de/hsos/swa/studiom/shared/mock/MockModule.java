@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 19:23:29
- * @modify date 2022-01-22 19:23:29
+ * @modify date 2022-01-31 08:39:55
  * @desc [description]
  */
 
@@ -26,10 +26,11 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 @ApplicationScoped
 public class MockModule {
     @Id
-    @SequenceGenerator(name = "mockModuleSeq", sequenceName = "mock_module_seq", allocationSize = 1, initialValue = 3)
+    @SequenceGenerator(name = "mockModuleSeq", sequenceName = "mock_module_seq", allocationSize = 1, initialValue = 6)
     @GeneratedValue(generator = "mockModuleSeq")
     private int id;
     private String name;
+    private boolean isProject;
 
     public MockModule() {
         students = new HashSet<>();
@@ -56,6 +57,14 @@ public class MockModule {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isProject() {
+        return isProject;
+    }
+
+    public void setProject(boolean isProject) {
+        this.isProject = isProject;
     }
 
     @Override

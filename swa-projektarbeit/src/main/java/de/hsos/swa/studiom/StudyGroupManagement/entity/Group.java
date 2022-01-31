@@ -2,7 +2,7 @@
  * @author [author]
  * @email [example@mail.com]
  * @create date 2022-01-22 14:04:44
- * @modify date 2022-01-22 20:28:46
+ * @modify date 2022-01-31 08:38:29
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.entity;
@@ -29,7 +29,7 @@ import de.hsos.swa.studiom.shared.mock.MockModule;
 @NamedQuery(name = "Groups.findAll", query = "SELECT g FROM Group g")
 public class Group {
     @Id
-    @SequenceGenerator(name = "groupIdSequence", sequenceName = "group_seq", allocationSize = 1, initialValue = 1001)
+    @SequenceGenerator(name = "groupIdSequence", sequenceName = "group_seq", allocationSize = 1, initialValue = 1003)
     @GeneratedValue(generator = "groupIdSequence")
     private int groupId;
 

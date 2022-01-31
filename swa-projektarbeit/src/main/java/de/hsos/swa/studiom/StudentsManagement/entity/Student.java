@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:08:13
- * @modify date 2022-01-22 14:08:16
+ * @modify date 2022-01-31 08:38:24
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudentsManagement.entity;
@@ -31,7 +31,7 @@ import de.hsos.swa.studiom.shared.mock.MockModule;
 @NamedQuery(name = "Students.findAll", query = "SELECT s FROM Student s")
 public class Student {
     @Id
-    @SequenceGenerator(name = "matNrSequence", sequenceName = "students_seq", allocationSize = 1, initialValue = 1003)
+    @SequenceGenerator(name = "matNrSequence", sequenceName = "students_seq", allocationSize = 1, initialValue = 1004)
     @GeneratedValue(generator = "matNrSequence")
     private int matNr;
     private String name;

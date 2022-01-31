@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 19:50:02
- * @modify date 2022-01-22 19:50:02
+ * @modify date 2022-01-31 08:38:36
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.control;

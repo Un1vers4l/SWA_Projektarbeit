@@ -2,18 +2,18 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:37:40
- * @modify date 2022-01-29 12:14:12
+ * @modify date 2022-01-31 11:33:04
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +23,9 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
-import javax.ws.rs.Path;
 
 @ApplicationScoped
 @Transactional
-@Path("/api/v1/groups")
 public class GroupRepository implements GroupService {
 
     @Inject
@@ -42,10 +40,10 @@ public class GroupRepository implements GroupService {
             MockModule module = em.find(MockModule.class, moduleId);
             if (module == null || owner == null) {
                 if (module == null) {
-                    // TODO: Exception werfen
+                    // //TODO: Exception: Modul nicht gefunden
                     System.out.println("module null" + moduleId);
                 } else {
-                    // TODO: Exception werfen
+                    // //TODO: Exception: Student nicht gefunden
                     System.out.println("Student null");
                 }
                 return Optional.ofNullable(null);
@@ -57,6 +55,7 @@ public class GroupRepository implements GroupService {
             em.persist(group);
             return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
@@ -66,11 +65,11 @@ public class GroupRepository implements GroupService {
         try {
             Group group = em.find(Group.class, groupId);
             if (group == null) {
-                // TODO: Exception werfen
+                // TODO: Exception: Gruppe nicht gefunden
                 return Optional.ofNullable(null);
             }
             if (group.getOwner().getMatNr() != matNr) {
-                // TODO: Exception werfen
+                // TODO: Exception: Nicht berechtigt
                 return Optional.ofNullable(null);
             }
             group.setMaxMembers(newGroup.getMaxMembers());
@@ -78,6 +77,7 @@ public class GroupRepository implements GroupService {
             em.persist(group);
             return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
@@ -87,11 +87,11 @@ public class GroupRepository implements GroupService {
         try {
             Group group = em.find(Group.class, groupId);
             if (group == null) {
-                // TODO: Exception werfen
+                // TODO: Exception: Gruppe nicht gefunden
                 return false;
             }
             if (group.getOwner().getMatNr() != matNr) {
-                // TODO: Exception werfen
+                // TODO: Exception: Nicht berechtigt
                 return false;
             }
             for (Student student : group.getMember()) {
@@ -101,30 +101,47 @@ public class GroupRepository implements GroupService {
             em.remove(group);
             return true;
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-
+            // TODO: Exception
+            return false;
         }
-        return false;
     }
 
     @Override
     public Optional<Group> getGroup(int groupId) {
         try {
-            return Optional.ofNullable(em.find(Group.class, groupId));
+            Group group = em.find(Group.class, groupId);
+            if (group == null) {
+                // TODO: Exception: Gruppe nicht gefunden
+                return Optional.ofNullable(null);
+            }
+
+            if (group.getType() != TYPE) {
+                // TODO: Exception: Keine Gruppe vom Typ Projekt
+                return Optional.ofNullable(null);
+            }
+            return Optional.ofNullable(group);
 
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
-            // TODO: handle exception
         }
     }
 
     @Override
     public Optional<List<Group>> getAllGroup() {
         try {
-            return Optional.ofNullable(em.createNamedQuery("Groups.findAll", Group.class).getResultList());
+            List<Group> resultList = em.createNamedQuery("Groups.findAll", Group.class).getResultList();
+            List<Group> returnList = new ArrayList<>();
+            for (Group group : resultList) {
+                if (group.getType() == TYPE) {
+                    returnList.add(group);
+                }
+            }
+            return Optional.ofNullable(returnList);
 
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            // TODO: Exception
             return Optional.ofNullable(null);
-            // TODO: handle exception
         }
     }
 
@@ -137,6 +154,7 @@ public class GroupRepository implements GroupService {
                 if (group != null && group.getMaxMembers() > group.getMember().size()) {
                     for (Student stud : group.getMember()) {
                         if (stud.getMatNr() == student.getMatNr()) {
+
                             return Optional.ofNullable(null);
                         }
                     }
