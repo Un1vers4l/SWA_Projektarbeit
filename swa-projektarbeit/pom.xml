@@ -106,15 +106,15 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire-plugin.version}</version>
-        <configuration>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>${surefire-plugin.version}</version>
+    <configuration>
+       <systemPropertyVariables>
+          <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+          <maven.home>${maven.home}</maven.home>
+       </systemPropertyVariables>
+    </configuration>
+</plugin>
     </plugins>
   </build>
   <profiles>

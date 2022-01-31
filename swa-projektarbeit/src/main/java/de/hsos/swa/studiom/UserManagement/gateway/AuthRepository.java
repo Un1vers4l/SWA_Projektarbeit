@@ -46,6 +46,13 @@ public class AuthRepository implements AuthService {
     @ConfigProperty(name = "mp.jwt.verify.issuer", defaultValue="http://example.com") 
     private String issuer;
 
+    
+    /** 
+     * @param username
+     * @param password
+     * @return String
+     * @throws WrongUserDataExeption - wird ausgeloest falls die Userdaten nicht uebereinstimmen
+     */
     @Override
     public String userLogin(String username, String password) throws WrongUserDataExeption {
         User user = userService.findUserByUsername(username);
@@ -60,6 +67,13 @@ public class AuthRepository implements AuthService {
     }
 
 
+    
+    /** 
+     * @param userID
+     * @param roles
+     * @param duration
+     * @return String - gibt denn denn JWT in String Form zurueck.
+     */
     private String generateToken(long userID, Set<Role> roles, Long duration) {
 
         JwtClaimsBuilder claimsBuilder = Jwt.claims();
@@ -85,11 +99,20 @@ public class AuthRepository implements AuthService {
         return token;
     }
 
+    
+    /** 
+     * @return int - gibt denn aktuellen Timestamp
+     */
     private int currentTimeInSecs() {
         long currentTimeMS = System.currentTimeMillis();
         return (int) (currentTimeMS / 1000);
     } 
     
+    
+    /** 
+     * @param role
+     * @return long - gibt die passenden Durations zurueck falls die in der Config vorhanden ist, wenn nicht wird die Default Duration zurueck gegeben.
+     */
     private long getDuration(Set<Role> role){
 
         long duration = Long.MAX_VALUE;

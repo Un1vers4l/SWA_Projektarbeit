@@ -35,17 +35,33 @@ public class UserRepository implements UserService {
 
     Logger log = Logger.getLogger(UserRepository.class);
 
+    
+    /** 
+     * @param username - Der Username der gesucht wird
+     * @return User - Das gefundene User objekt
+     */
     @Override
     public User findUserByUsername(String username) {
         TypedQuery<User> query = entityManager.createNamedQuery("User.findByUsername", User.class);
         query.setParameter("username", username);
         return query.getResultStream().findFirst().orElse(null);
     }
+    
+    /** 
+     * @param userID - Die UserID die gesucht wird
+     * @return User - Das gefundene User objekt
+     */
     @Override
     public User findUser(long userID) {
         return entityManager.find(User.class, userID);
     }
     
+    
+    /** 
+     * @param userGenerator - Hier wird ein Obejekt erwartet das vom UsernameFactory gerebt hat und implementiert wurde. Wird dazu benutzt um einen Username zu erzuegen.
+     * @param password
+     * @return User - gibt null zurück falls die erezugung vergeschlagen ist, kann entstehen falls der Username generator kein generierten kann
+     */
     @Override
     public User createUserStudent(UsernameFactory userGenerator, String password){
         Set<Role> role = new HashSet<>();
@@ -53,6 +69,13 @@ public class UserRepository implements UserService {
         return this.createUserGenertor(userGenerator, password, role);
     }
 
+    
+    /** 
+     * @param userGenerator - Hier wird ein Obejekt erwartet das vom UsernameFactory gerebt hat und implementiert wurde. Wird dazu benutzt um einen Username zu erzuegen.
+     * @param password
+     * @param role
+     * @return User - gibt null zurück falls die erezugung vergeschlagen ist, kann entstehen falls der Username generator kein generierten kann
+     */
     @Override
     public User createUserGenertor(UsernameFactory userGenerator, String password, Set<Role> role){
         String username = null;
@@ -82,6 +105,14 @@ public class UserRepository implements UserService {
         }
     }
 
+    
+    /** 
+     * @param username
+     * @param password
+     * @param role
+     * @return User
+     * @throws UsernameExistExeption - wird ausgeloest falls es schon einen user mit dem Namen existiert
+     */
     @Override
     public User createUser(String username, String password, Set<Role> role) throws UsernameExistExeption{
         if(username == null || password == null || role == null) return null;
@@ -93,6 +124,11 @@ public class UserRepository implements UserService {
         return user;
     }
 
+    
+    /** 
+     * @param userID
+     * @return boolean
+     */
     @Override
     public boolean deleteUser(long userID) {
         User user = this.findUser(userID);
@@ -105,6 +141,13 @@ public class UserRepository implements UserService {
         return true;
     }
     
+    
+    /** 
+     * @param userID
+     * @param password
+     * @return boolean
+     * @throws UserNotExistExeption
+     */
     @Override
     public boolean changePassword(long userID, String password) throws UserNotExistExeption{
         User user = this.findUser(userID);
@@ -117,6 +160,10 @@ public class UserRepository implements UserService {
         log.debug("ChangePassword("+ user.toString() +')');
         return true;
     }
+    
+    /** 
+     * @return List<User>
+     */
     @Override
     public List<User> getAllUser() {
         TypedQuery<User> query = entityManager.createNamedQuery("User.findAllUser", User.class);
