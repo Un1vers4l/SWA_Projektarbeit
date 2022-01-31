@@ -1,5 +1,14 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-01-22 14:13:20
+ * @modify date 2022-01-31 12:00:49
+ * @desc [description]
+ */
+
 package de.hsos.swa.studiom.StudentsManagement.gateway;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -8,46 +17,15 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
-
-import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
-import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-
-/**
- * @author Joana Wegener
- */
 
 @ApplicationScoped
 @Transactional
-public class StudentRepository implements StudentService, AddressService {
+public class StudentRepository implements StudentService {
 
     @Inject
     EntityManager em;
-
-    @Override
-    public Optional<Adress> createAdress(int matNr, String street, int zipCode, String town) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Optional<Adress> getAdress(int matNr) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean deleteAdress(int matNr) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public Optional<Adress> changeAdress(int matNr, String street, int zipCode, String town) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Override
     public Optional<Student> createStudent(String name) {
@@ -56,27 +34,50 @@ public class StudentRepository implements StudentService, AddressService {
             em.persist(student);
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public Optional<Student> changeStudent(Student student) {
-        // TODO Auto-generated method stub
-        return null;
+    public Optional<Student> changeStudent(int matNr, Student newStudent) {
+        try {
+            System.out.println("OK");
+            Student student = em.find(Student.class, matNr);
+            student.setName(newStudent.getName());
+            student.setEmail(newStudent.getEmail());
+            em.persist(student);
+            return Optional.ofNullable(student);
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            // TODO: Exception
+            return Optional.ofNullable(null);
+        }
     }
 
     @Override
     public boolean deleteStudent(int matNr) {
-        // TODO Auto-generated method stub
-        return false;
+        try {
+            Student student = em.find(Student.class, matNr);
+            em.remove(student);
+            return true;
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            // TODO: Exception
+            return false;
+        }
     }
 
     @Override
     public Optional<Student> getStudent(int matNr) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            Student student = em.find(Student.class, matNr);
+            return Optional.ofNullable(student);
+        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            // TODO: Exception
+            return Optional.ofNullable(null);
+        }
     }
 
+    public Optional<List<Student>> getAllStudent() {
+        return Optional.ofNullable(em.createNamedQuery("Students.findAll", Student.class).getResultList());
+    }
 }
