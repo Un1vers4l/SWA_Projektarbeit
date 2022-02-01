@@ -18,11 +18,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
@@ -30,6 +33,8 @@ import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -37,6 +42,12 @@ import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
 @Path("/api/v1/group/{groupId}/{matNr}")
 @ApplicationScoped
 public class GroupGroupIDRessource {
+
+    Logger log = Logger.getLogger(GroupGroupIDRessource.class);
+
+    @Context
+    UriInfo uriInfo;
+
     @Inject
     GroupRepository service;
 
@@ -46,58 +57,84 @@ public class GroupGroupIDRessource {
     @GET
     @Operation(summary = "Find Group with Id")
     public Response getGroup(@PathParam("groupId") int groupId) {
-        Optional<Group> opt = service.getGroup(groupId);
-        if (opt.isPresent()) {
-            Group group = opt.get();
-            return Response.ok(GroupDTO.Converter.toDTO(group)).build();
+        try {
+            log.info("GET " + uriInfo.getPath());
+            Optional<Group> opt = service.getGroup(groupId);
+            if (opt.isPresent()) {
+                Group group = opt.get();
+                return Response.ok(GroupDTO.Converter.toDTO(group)).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @POST
     @Operation(summary = "Change a group", description = "Change the name, maxMembers or module of a group")
     public Response changeGroup(@PathParam("groupId") int groupId, NewGroupDTO newGroup) {
-        Optional<Student> ownerOpt = studService.getStudent(newGroup.ownerMatNr);
-        if (ownerOpt.isPresent()) {
-            Optional<Group> changeGroupOpt = service.changeGroup(newGroup.ownerMatNr, groupId,
-                    NewGroupDTO.Converter.toGroup(newGroup, ownerOpt.get(), null));
-            if (changeGroupOpt.isPresent()) {
-                return Response.ok(GroupDTO.Converter.toDTO(changeGroupOpt.get())).build();
+        try {
+            log.info("POST " + uriInfo.getPath());
+            Optional<Student> ownerOpt = studService.getStudent(newGroup.ownerMatNr);
+            if (ownerOpt.isPresent()) {
+                Optional<Group> changeGroupOpt = service.changeGroup(newGroup.ownerMatNr, groupId,
+                        NewGroupDTO.Converter.toGroup(newGroup, ownerOpt.get(), null));
+                if (changeGroupOpt.isPresent()) {
+                    return Response.ok(GroupDTO.Converter.toDTO(changeGroupOpt.get())).build();
+                }
             }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @POST
     @Path("/student")
     @Operation(summary = "Join a Group", description = "Adds a Student to a group if group is not full yet")
     public Response addStudent(@PathParam("matNr") int matNr, @PathParam("groupId") int groupId) {
-
-        Optional<Group> addStudent = service.addStudent(groupId, matNr);
-        if (addStudent.isPresent()) {
-            return Response.ok(GroupDTO.Converter.toDTO(addStudent.get())).build();
+        try {
+            log.info("POST " + uriInfo.getPath());
+            Optional<Group> addStudent = service.addStudent(groupId, matNr);
+            if (addStudent.isPresent()) {
+                return Response.ok(GroupDTO.Converter.toDTO(addStudent.get())).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (JoinGroupException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @DELETE
     @Operation(summary = "Delete a Group", description = "Deletes a Group, if called by the owner of the group")
     public Response deleteGroup(@PathParam("groupId") int groupId, @PathParam("matNr") int matNr) {
-        boolean deleted = service.deleteGroup(matNr, groupId);
-        if (deleted) {
-            return Response.ok().build();
+        try {
+            log.info("DELETE " + uriInfo.getPath());
+            boolean deleted = service.deleteGroup(matNr, groupId);
+            if (deleted) {
+                return Response.ok().build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @DELETE
     @Path("/student")
     @Operation(summary = "Leave a Group", description = "Leave a Group, if called by a member of the group")
     public Response removeStudent(@PathParam("matNr") int matNr, @PathParam("groupId") int groupId) {
-        Optional<Group> removeStudent = service.removeStudent(groupId, matNr);
-        if (removeStudent.isPresent()) {
-            return Response.ok(GroupDTO.Converter.toDTO(removeStudent.get())).build();
+        try {
+            log.info("DELETE " + uriInfo.getPath());
+            Optional<Group> removeStudent = service.removeStudent(groupId, matNr);
+            if (removeStudent.isPresent()) {
+                return Response.ok(GroupDTO.Converter.toDTO(removeStudent.get())).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 }

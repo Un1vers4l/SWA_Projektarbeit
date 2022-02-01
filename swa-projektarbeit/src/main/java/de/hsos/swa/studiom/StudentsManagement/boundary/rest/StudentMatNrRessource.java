@@ -22,12 +22,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
-
+import org.jboss.logging.Logger;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
@@ -38,6 +39,12 @@ import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 @Path("/api/v1/student/{matNr}")
 @ApplicationScoped
 public class StudentMatNrRessource {
+    
+    Logger log = Logger.getLogger(StudentMatNrRessource.class);
+
+    @Context
+    UriInfo uriInfo;
+    
     // Named und interface inj
     @Inject
     StudentRepository service;
@@ -45,6 +52,7 @@ public class StudentMatNrRessource {
     @GET
     @Operation(summary = "find a Student", description = "Find a student with their matNr")
     public Response getStudent(@PathParam("matNr") int matNr) {
+        log.info("GET " + uriInfo.getPath());
         Optional<Student> opt = service.getStudent(matNr);
         if (opt.isPresent()) {
             return Response.ok(StudentDTO.Converter.toStudentDTO(opt.get())).build();
@@ -55,6 +63,7 @@ public class StudentMatNrRessource {
     @POST
     @Operation(summary = "Change a student", description = "Change the E-Mail and name of a student")
     public Response changeStudent(@PathParam("matNr") int matNr, newStudentDTO newStudent) {
+        log.info("POST " + uriInfo.getPath());
         Optional<Student> opt = service.changeStudent(matNr, newStudentDTO.Converter.toStudent(newStudent));
         if (opt.isPresent()) {
             return Response.ok(StudentDTO.Converter.toStudentDTO(opt.get())).build();
@@ -71,6 +80,7 @@ public class StudentMatNrRessource {
     @DELETE
     @Operation(summary = "Delete a student")
     public Response deleteStudent(@PathParam("matNr") int matNr) {
+        log.info("DELETE " + uriInfo.getPath());
         boolean deleted = service.deleteStudent(matNr);
         if (deleted) {
             return Response.ok().build();

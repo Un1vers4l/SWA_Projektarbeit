@@ -12,19 +12,21 @@ import java.util.Optional;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 
 public interface GroupService {
-    public Optional<Group> createGroup(int matNr, String name, int maxMember, int moduleId);
+    public Optional<Group> createGroup(int matNr, String name, int maxMember, int moduleId) throws EntityNotFoundException;
 
-    public Optional<Group> changeGroup(int matNr, int groupId, Group newGroup);
+    public Optional<Group> changeGroup(int matNr, int groupId, Group newGroup) throws EntityNotFoundException;
 
-    public boolean deleteGroup(int matNr, int groupId);
+    public boolean deleteGroup(int matNr, int groupId) throws EntityNotFoundException;
 
-    public Optional<Group> getGroup(int groupId);
+    public Optional<Group> getGroup(int groupId) throws EntityNotFoundException;
 
     public Optional<List<Group>> getAllGroup();
 
-    public Optional<Group> addStudent(int groupId, int matNr);
+    public Optional<Group> addStudent(int groupId, int matNr) throws JoinGroupException, EntityNotFoundException;
 
-    public Optional<Group> removeStudent(int groupId, int matNr);
+    public Optional<Group> removeStudent(int groupId, int matNr) throws EntityNotFoundException;
 }

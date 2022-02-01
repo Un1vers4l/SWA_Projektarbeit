@@ -5,6 +5,7 @@
  * @modify date 2022-01-22 20:09:57
  * @desc [description]
  */
+
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
 
 import java.util.ArrayList;
@@ -19,23 +20,21 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
-import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
-import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
-import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -43,23 +42,34 @@ import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
 @ApplicationScoped
 public class GroupRessource {
 
+    Logger log = Logger.getLogger(GroupRessource.class);
+
+    @Context
+    UriInfo uriInfo;
+
     @Inject
     GroupRepository service;
 
     @PUT
     @Operation(summary = "Create a new Group")
     public Response createGroup(NewGroupDTO gDTO) {
-        Optional<Group> created = service.createGroup(gDTO.ownerMatNr, gDTO.name, gDTO.maxMember, gDTO.moduleId);
-        if (created.isPresent()) {
-            NewGroupDTO group = NewGroupDTO.Converter.toDTO(created.get());
-            return Response.ok(group).build();
+        try {
+            log.info("PUT " + uriInfo.getPath());
+            Optional<Group> created = service.createGroup(gDTO.ownerMatNr, gDTO.name, gDTO.maxMember, gDTO.moduleId);
+            if (created.isPresent()) {
+                NewGroupDTO group = NewGroupDTO.Converter.toDTO(created.get());
+                return Response.ok(group).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @GET
-    @Operation(summary = "Delete a Group", description = "Deletes a Group, if called by the owner of the group")
+    @Operation(summary = "Find all groups")
     public Response getAllGroups() {
+        log.info("GET " + uriInfo.getPath());
         Optional<List<Group>> allGroups = service.getAllGroup();
         if (allGroups.isPresent()) {
             List<GroupDTO> gDTOs = new ArrayList<>();
@@ -68,7 +78,7 @@ public class GroupRessource {
             }
             return Response.ok(gDTOs).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
 
     @POST

@@ -7,6 +7,7 @@
  */
 package de.hsos.swa.studiom.StudentsManagement.control;
 
+import java.util.List;
 import java.util.Optional;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
@@ -19,4 +20,6 @@ public interface StudentService {
     public boolean deleteStudent(int matNr);
 
     public Optional<Student> getStudent(int matNr);
+
+    public Optional<List<Student>> getAllStudent();
 }

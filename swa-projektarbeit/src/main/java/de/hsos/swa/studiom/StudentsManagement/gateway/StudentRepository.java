@@ -17,12 +17,22 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+
+import org.jboss.logging.Logger;
+
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
 @ApplicationScoped
 @Transactional
 public class StudentRepository implements StudentService {
+
+    Logger log = Logger.getLogger(StudentRepository.class);
+
+    @Context
+    UriInfo uriInfo;
 
     @Inject
     EntityManager em;
@@ -35,6 +45,7 @@ public class StudentRepository implements StudentService {
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             // TODO: Exception
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }
@@ -42,14 +53,18 @@ public class StudentRepository implements StudentService {
     @Override
     public Optional<Student> changeStudent(int matNr, Student newStudent) {
         try {
-            System.out.println("OK");
             Student student = em.find(Student.class, matNr);
+            if (student == null) {
+                log.error("Student konnte nicht gefunden werden");
+                return Optional.ofNullable(null);
+            }
             student.setName(newStudent.getName());
             student.setEmail(newStudent.getEmail());
             em.persist(student);
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             // TODO: Exception
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }
@@ -58,10 +73,15 @@ public class StudentRepository implements StudentService {
     public boolean deleteStudent(int matNr) {
         try {
             Student student = em.find(Student.class, matNr);
+            if (student == null) {
+                log.error("Student konnte nicht gefunden werden");
+                return false;
+            }
             em.remove(student);
             return true;
-        } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+        } catch (TransactionRequiredException | IllegalArgumentException e) {
             // TODO: Exception
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             return false;
         }
     }
@@ -70,9 +90,14 @@ public class StudentRepository implements StudentService {
     public Optional<Student> getStudent(int matNr) {
         try {
             Student student = em.find(Student.class, matNr);
+            if (student == null) {
+                log.error("Student konnte nicht gefunden werden");
+                return Optional.ofNullable(null);
+            }
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             // TODO: Exception
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }

@@ -21,11 +21,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
@@ -43,12 +46,19 @@ import de.hsos.swa.studiom.StudyGroupManagement.gateway.ProjectRepository;
 @Path("/api/v1/projects/projectId/{projectId}/{matNr}")
 @ApplicationScoped
 public class ProjectIdRessource {
+    
+    Logger log = Logger.getLogger(ProjectIdRessource.class);
+
+    @Context
+    UriInfo uriInfo;
+    
     @Inject
     ProjectRepository service;
 
     @DELETE
     @Operation(summary = "Delete a project", description = "Deletes a project, if you are the owner and no one else joined")
     public Response deleteProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
+        log.info("DELETE " + uriInfo.getPath());
         boolean deleted = service.deleteProject(matNr, projectId);
         if (deleted) {
             return Response.ok("true").build();
@@ -59,6 +69,7 @@ public class ProjectIdRessource {
     @GET
     @Operation(summary = "Finds a project with Id")
     public Response getProject(@PathParam("projectId") int projectId) {
+        log.info("GET " + uriInfo.getPath());
         Optional<Group> project = service.getProject(projectId);
         if (project.isPresent()) {
             return Response.ok(GroupDTO.Converter.toDTO(project.get())).build();
@@ -69,6 +80,7 @@ public class ProjectIdRessource {
     @PUT
     @Operation(summary = "Join a Project", description = "Adds a Student to a project if not already joined another project in that module and if project is not full yet")
     public Response addStudentToProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
+        log.info("PUT " + uriInfo.getPath());
         Optional<Group> group = service.addStudent(matNr, projectId);
         if (group.isPresent()) {
             return Response.ok(GroupDTO.Converter.toDTO(group.get())).build();

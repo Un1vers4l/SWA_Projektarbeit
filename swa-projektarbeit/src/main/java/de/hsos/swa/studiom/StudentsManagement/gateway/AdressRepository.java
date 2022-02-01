@@ -18,14 +18,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
 
-import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
-import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
+import org.jboss.logging.Logger;
+
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @Transactional
 @ApplicationScoped
 public class AdressRepository implements AddressService {
+
+    Logger log = Logger.getLogger(AdressRepository.class);
 
     @Inject
     EntityManager em;
@@ -35,27 +38,35 @@ public class AdressRepository implements AddressService {
         try {
             Student student = em.find(Student.class, matNr);
             if (student.getAdress() != null) {
+                log.error("Student besitzt bereits eine Adresse");
                 return Optional.ofNullable(null);
             }
             student.setAdress(adress);
             em.persist(student);
             return Optional.ofNullable(adress);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public Optional<Adress> getAdress(int matNr) {
+    public Optional<Adress> getAdress(int matNr) throws EntityNotFoundException {
         try {
             Student student = em.find(Student.class, matNr);
+            if(student == null){
+                log.error("Student konnte nicht gefunden werden");
+                throw new EntityNotFoundException(Student.class, matNr);
+            }
             if (student.getAdress() == null) {
+                log.error("Es wurde keine Adresse für den Studenten gefunden");
                 // TODO: Exception: Keine Adresse gefunden
                 return Optional.ofNullable(null);
             }
             return Optional.ofNullable(student.getAdress());
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             // TODO: Exception
             return Optional.ofNullable(null);
         }
@@ -66,6 +77,7 @@ public class AdressRepository implements AddressService {
         try {
             Student student = em.find(Student.class, matNr);
             if (student.getAdress() == null) {
+                log.error("Es wurde keine Adresse für den Studenten gefunden");
                 // TODO: Exception: Keine Adresse gefundent
                 return false;
             }
@@ -73,6 +85,7 @@ public class AdressRepository implements AddressService {
             em.persist(student);
             return true;
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             // TODO: Exception
             return false;
         }
@@ -83,6 +96,7 @@ public class AdressRepository implements AddressService {
         try {
             Student student = em.find(Student.class, matNr);
             if (student.getAdress() == null) {
+                log.error("Es wurde keine Adresse für den Studenten gefunden");
                 // TODO: Exception: Keine Adresse gefunden
                 return Optional.ofNullable(null);
             }
@@ -90,6 +104,7 @@ public class AdressRepository implements AddressService {
             em.persist(student);
             return Optional.ofNullable(adress);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
             // TODO: Exception
             return Optional.ofNullable(null);
         }

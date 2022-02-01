@@ -22,11 +22,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
@@ -44,12 +47,19 @@ import de.hsos.swa.studiom.StudyGroupManagement.gateway.ProjectRepository;
 @Path("/api/v1/projects")
 @ApplicationScoped
 public class ProjectRessource {
+
+    Logger log = Logger.getLogger(ProjectRessource.class);
+
+    @Context
+    UriInfo uriInfo;
+
     @Inject
     ProjectRepository service;
 
     @GET
     @Operation(summary = "Get all Projects")
     public Response getAllProjects() {
+        log.info("GET " + uriInfo.getPath());
         Optional<List<Group>> allProjects = service.getAllProjects();
         if (allProjects.isPresent()) {
             List<GroupDTO> gDTOs = new ArrayList<>();
@@ -70,6 +80,7 @@ public class ProjectRessource {
     @PUT
     @Operation(summary = "Creates a new Project", description = "Creates a new Project for the Module if allowed")
     public Response createProject(@QueryParam("matNr") int matNr, @QueryParam("moduleId") int moduleId) {
+        log.info("PUT " + uriInfo.getPath());
         Optional<Group> createProject = service.createProject(matNr, moduleId);
         if (createProject.isPresent()) {
             return Response.ok(GroupDTO.Converter.toDTO(createProject.get())).build();
