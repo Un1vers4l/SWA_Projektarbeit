@@ -46,7 +46,6 @@ public class AdressRepository implements AddressService {
             return Optional.ofNullable(adress);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
-            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
@@ -55,57 +54,51 @@ public class AdressRepository implements AddressService {
     public Optional<Adress> getAdress(int matNr) throws EntityNotFoundException {
         try {
             Student student = em.find(Student.class, matNr);
-            if(student == null){
+            if (student == null) {
                 log.error("Student konnte nicht gefunden werden");
                 throw new EntityNotFoundException(Student.class, matNr);
             }
             if (student.getAdress() == null) {
                 log.error("Es wurde keine Adresse für den Studenten gefunden");
-                // TODO: Exception: Keine Adresse gefunden
-                return Optional.ofNullable(null);
+                throw new EntityNotFoundException(Adress.class, matNr);
             }
             return Optional.ofNullable(student.getAdress());
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
-            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public boolean deleteAdress(int matNr) {
+    public boolean deleteAdress(int matNr) throws EntityNotFoundException {
         try {
             Student student = em.find(Student.class, matNr);
             if (student.getAdress() == null) {
                 log.error("Es wurde keine Adresse für den Studenten gefunden");
-                // TODO: Exception: Keine Adresse gefundent
-                return false;
+                throw new EntityNotFoundException(Adress.class, matNr);
             }
             student.setAdress(null);
             em.persist(student);
             return true;
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
-            // TODO: Exception
             return false;
         }
     }
 
     @Override
-    public Optional<Adress> changeAdress(int matNr, Adress adress) {
+    public Optional<Adress> changeAdress(int matNr, Adress adress) throws EntityNotFoundException {
         try {
             Student student = em.find(Student.class, matNr);
             if (student.getAdress() == null) {
                 log.error("Es wurde keine Adresse für den Studenten gefunden");
-                // TODO: Exception: Keine Adresse gefunden
-                return Optional.ofNullable(null);
+                throw new EntityNotFoundException(Adress.class, matNr);
             }
             student.setAdress(adress);
             em.persist(student);
             return Optional.ofNullable(adress);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
-            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }

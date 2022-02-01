@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:13:20
- * @modify date 2022-01-31 12:00:49
+ * @modify date 2022-02-01 14:46:27
  * @desc [description]
  */
 
@@ -24,6 +24,7 @@ import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @ApplicationScoped
 @Transactional
@@ -44,59 +45,55 @@ public class StudentRepository implements StudentService {
             em.persist(student);
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public Optional<Student> changeStudent(int matNr, Student newStudent) {
+    public Optional<Student> changeStudent(int matNr, Student newStudent) throws EntityNotFoundException {
         try {
             Student student = em.find(Student.class, matNr);
             if (student == null) {
                 log.error("Student konnte nicht gefunden werden");
-                return Optional.ofNullable(null);
+                throw new EntityNotFoundException(Student.class, matNr);
             }
             student.setName(newStudent.getName());
             student.setEmail(newStudent.getEmail());
             em.persist(student);
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public boolean deleteStudent(int matNr) {
+    public boolean deleteStudent(int matNr) throws EntityNotFoundException {
         try {
             Student student = em.find(Student.class, matNr);
             if (student == null) {
                 log.error("Student konnte nicht gefunden werden");
-                return false;
+                throw new EntityNotFoundException(Student.class, matNr);
             }
             em.remove(student);
             return true;
         } catch (TransactionRequiredException | IllegalArgumentException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return false;
         }
     }
 
     @Override
-    public Optional<Student> getStudent(int matNr) {
+    public Optional<Student> getStudent(int matNr) throws EntityNotFoundException {
         try {
             Student student = em.find(Student.class, matNr);
             if (student == null) {
                 log.error("Student konnte nicht gefunden werden");
-                return Optional.ofNullable(null);
+                throw new EntityNotFoundException(Student.class, matNr);
             }
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }

@@ -1,6 +1,6 @@
 /**
  * @author Joana Wegener, Marcel Sauer(886022)
- * @email joana.wegener@hs-osnabrueck.de, marcel.sauer@hs-osanbrueck.de
+ * @email joana.wegener@hs-osnabrueck.de, marcel.sauer@hs-osnabrueck.de
  * @create date 2022-01-22 19:22:56
  * @modify date 2022-01-31 09:26:34
  * @desc [description]

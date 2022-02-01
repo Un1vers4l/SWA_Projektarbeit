@@ -11,15 +11,16 @@ import java.util.List;
 import java.util.Optional;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 public interface StudentService {
     public Optional<Student> createStudent(String name);
 
-    public Optional<Student> changeStudent(int matNr, Student newStudent);
+    public Optional<Student> changeStudent(int matNr, Student newStudent) throws EntityNotFoundException;
 
-    public boolean deleteStudent(int matNr);
+    public boolean deleteStudent(int matNr) throws EntityNotFoundException;
 
-    public Optional<Student> getStudent(int matNr);
+    public Optional<Student> getStudent(int matNr) throws EntityNotFoundException;
 
     public Optional<List<Student>> getAllStudent();
 }
