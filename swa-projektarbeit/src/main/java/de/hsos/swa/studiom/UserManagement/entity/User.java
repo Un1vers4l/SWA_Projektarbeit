@@ -57,14 +57,6 @@ public class User {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Student student;
 
-
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = this.passwordDecoder(password);
-        this.role = new HashSet<>();
-    }
-
     public User(String username, String password, Set<Role> role) {
         this.username = username;
         this.password = this.passwordDecoder(password);

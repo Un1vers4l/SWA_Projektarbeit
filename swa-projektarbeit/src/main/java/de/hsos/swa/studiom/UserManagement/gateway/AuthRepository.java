@@ -16,17 +16,19 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.logging.Logger;
+
 import de.hsos.swa.studiom.UserManagement.control.AuthService;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
+import de.hsos.swa.studiom.shared.exception.StudentIsNotStudentExeption;
 import de.hsos.swa.studiom.shared.exception.WrongUserDataExeption;
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.jwt.build.JwtClaimsBuilder;
 import io.smallrye.jwt.build.JwtSignatureException;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jboss.logging.Logger;
-import org.eclipse.microprofile.config.ConfigProvider;
 
 
 @RequestScoped
@@ -48,12 +50,10 @@ public class AuthRepository implements AuthService {
     @ConfigProperty(name = "mp.jwt.verify.issuer", defaultValue="http://example.com") 
     private String issuer;
 
-
     public AuthRepository() {
         claimsBuilder = Jwt.claims();
     }
 
-    
     /** 
      * @param username
      * @param password
@@ -68,11 +68,13 @@ public class AuthRepository implements AuthService {
         if(!user.isMyPassword(password)) throw new WrongUserDataExeption();
 
         long duration = this.getDuration(user.getRole());
-
-        if(user.hasRole(Role.STUDENT)){
-            this.addTokenStudent(user);
+        try {
+            if(user.hasRole(Role.STUDENT)){
+                    this.addTokenStudent(user);
+            }
+        } catch (StudentIsNotStudentExeption e) {
+            return null;
         }
-        
         String token = this.generateToken(user.getUserId(), user.getRole(), duration);
         return token;
     }
@@ -109,12 +111,12 @@ public class AuthRepository implements AuthService {
         return token;
     }
 
-    private void addTokenStudent(User user) {
+    private void addTokenStudent(User user) throws StudentIsNotStudentExeption {
 
         if(user.getStudent() == null){
-            log.warn("Achtung Ein User mit der Role Student der kein Eintrag als Student hat");
+            log.warn("Achtung Ein User("+ user.getUserId()+") mit der Role Student der kein Eintrag als Student hat");
             log.debug(user.toString());
-            return;
+            throw new StudentIsNotStudentExeption();
         }
         this.claimsBuilder.claim("matNr", user.getStudent().getMatNr());    
     }

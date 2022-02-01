@@ -77,7 +77,7 @@ public class UserRepository implements UserService {
      * @return User - gibt null zurück falls die erezugung vergeschlagen ist, kann entstehen falls der Username generator kein generierten kann
      */
     @Override
-    public User createUserGenertor(UsernameFactory userGenerator, String password, Set<Role> role){
+    public User createUserGenertor(UsernameFactory userGenerator, String password, Set<Role> role){ //ToDo add password generator
         String username = null;
         boolean isNameFree = false;
 
@@ -101,7 +101,7 @@ public class UserRepository implements UserService {
         } catch (UsernameExistExeption e) {
             log.warn("Es konnte kein Username erzeugt werden");
             log.error(e.getMessage());
-            return null;
+            return user;
         }
     }
 
