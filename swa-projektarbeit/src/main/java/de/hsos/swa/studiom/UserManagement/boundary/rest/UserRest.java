@@ -24,14 +24,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
-
 import de.hsos.swa.studiom.UserManagement.boundary.dto.DataDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.ErrorDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.UserDto;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
-import de.hsos.swa.studiom.UserManagement.exception.UsernameExistExeption;
+import de.hsos.swa.studiom.shared.exception.UsernameExistExeption;
 
 @RequestScoped
 @Path("api/v1/User")

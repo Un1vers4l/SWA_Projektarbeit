@@ -5,7 +5,7 @@
  * @modify date 2022-01-31 15:09:57
  * @desc [description]
  */
-package de.hsos.swa.studiom.UserManagement.algorithm.username;
+package de.hsos.swa.studiom.shared.algorithm.username;
 
 public class SimpleUsernameAlgo extends UsernameFactory {
     private String vorname;

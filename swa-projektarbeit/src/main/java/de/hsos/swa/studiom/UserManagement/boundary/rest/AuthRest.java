@@ -29,7 +29,7 @@ import de.hsos.swa.studiom.UserManagement.boundary.dto.AuthDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.ErrorDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.TokenDto;
 import de.hsos.swa.studiom.UserManagement.control.AuthService;
-import de.hsos.swa.studiom.UserManagement.exception.WrongUserDataExeption;
+import de.hsos.swa.studiom.shared.exception.WrongUserDataExeption;
 
 @RequestScoped
 @Path("api/v1/login")

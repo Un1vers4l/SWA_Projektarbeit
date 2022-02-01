@@ -24,8 +24,8 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
-@Transactional
 @ApplicationScoped
+@Transactional
 public class AdressRepository implements AddressService {
 
     Logger log = Logger.getLogger(AdressRepository.class);

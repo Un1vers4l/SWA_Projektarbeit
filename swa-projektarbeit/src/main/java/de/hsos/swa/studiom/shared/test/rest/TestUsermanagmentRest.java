@@ -5,7 +5,10 @@
  * @modify date 2022-01-24 18:38:26
  * @desc [description]
  */
-package de.hsos.swa.studiom.UserManagement.boundary.rest;
+package de.hsos.swa.studiom.shared.test.rest;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -22,16 +25,17 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.UserManagement.algorithm.username.SimpleUsernameAlgo;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.ErrorDto;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
+import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
+import de.hsos.swa.studiom.shared.algorithm.username.SimpleUsernameAlgo;
 
 @RequestScoped
 @Path("api/v1/test")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.TEXT_PLAIN)
-public class TestRest {
+public class TestUsermanagmentRest {
 
     @Inject
     JsonWebToken jwt;
@@ -66,8 +70,9 @@ public class TestRest {
     @Path("User/Username/Generator")
     public Response creatUser(){
         User user = null;
-     
-        user = userService.createUserStudent(new SimpleUsernameAlgo("Marc", "Kla"), "123");
+        Set<Role> role = new HashSet<>();
+        role.add(Role.USER);
+        user = userService.createUserGenertor(new SimpleUsernameAlgo("Marc", "Kla"), "123", role);
 
         if(user == null) return Response.ok(new ErrorDto("Wurde nicht erzeugt")).build();
 

@@ -5,7 +5,7 @@
  * @modify date 2022-01-31 15:11:16
  * @desc [description]
  */
-package de.hsos.swa.studiom.UserManagement.exception;
+package de.hsos.swa.studiom.shared.exception;
 
 public class UserNotExistExeption extends Exception {
     private String message = "Es gibt kein User mit der UserID";

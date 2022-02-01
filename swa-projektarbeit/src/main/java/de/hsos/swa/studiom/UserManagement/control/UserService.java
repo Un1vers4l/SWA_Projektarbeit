@@ -10,11 +10,11 @@ package de.hsos.swa.studiom.UserManagement.control;
 import java.util.List;
 import java.util.Set;
 
-import de.hsos.swa.studiom.UserManagement.algorithm.username.UsernameFactory;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
-import de.hsos.swa.studiom.UserManagement.exception.UserNotExistExeption;
-import de.hsos.swa.studiom.UserManagement.exception.UsernameExistExeption;
+import de.hsos.swa.studiom.shared.algorithm.username.UsernameFactory;
+import de.hsos.swa.studiom.shared.exception.UserNotExistExeption;
+import de.hsos.swa.studiom.shared.exception.UsernameExistExeption;
 
 public interface UserService {
     public User findUser(long userID);

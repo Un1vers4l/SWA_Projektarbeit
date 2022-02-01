@@ -20,7 +20,7 @@ import de.hsos.swa.studiom.UserManagement.control.AuthService;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
-import de.hsos.swa.studiom.UserManagement.exception.WrongUserDataExeption;
+import de.hsos.swa.studiom.shared.exception.WrongUserDataExeption;
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.jwt.build.JwtClaimsBuilder;
 import io.smallrye.jwt.build.JwtSignatureException;
@@ -39,6 +39,8 @@ public class AuthRepository implements AuthService {
     @Inject
     UserService userService;
 
+    private JwtClaimsBuilder claimsBuilder;
+
     Logger log = Logger.getLogger(AuthRepository.class);
 
     private final long defaultDuration = 1800;
@@ -46,6 +48,18 @@ public class AuthRepository implements AuthService {
     @ConfigProperty(name = "mp.jwt.verify.issuer", defaultValue="http://example.com") 
     private String issuer;
 
+
+    public AuthRepository() {
+        claimsBuilder = Jwt.claims();
+    }
+
+    
+    /** 
+     * @param username
+     * @param password
+     * @return String
+     * @throws WrongUserDataExeption - wird ausgeloest falls die Userdaten nicht uebereinstimmen
+     */
     @Override
     public String userLogin(String username, String password) throws WrongUserDataExeption {
         User user = userService.findUserByUsername(username);
@@ -54,29 +68,39 @@ public class AuthRepository implements AuthService {
         if(!user.isMyPassword(password)) throw new WrongUserDataExeption();
 
         long duration = this.getDuration(user.getRole());
+
+        if(user.hasRole(Role.STUDENT)){
+            this.addTokenStudent(user);
+        }
         
         String token = this.generateToken(user.getUserId(), user.getRole(), duration);
         return token;
     }
 
 
+    
+    /** 
+     * @param userID
+     * @param roles
+     * @param duration
+     * @return String - gibt denn denn JWT in String Form zurueck.
+     */
     private String generateToken(long userID, Set<Role> roles, Long duration) {
 
-        JwtClaimsBuilder claimsBuilder = Jwt.claims();
         long currentTimeInSecs = this.currentTimeInSecs();
 
         Set<String> groups = new HashSet<>();
         for(Role role: roles) groups.add(role.toString());
 
-        claimsBuilder.issuer(this.issuer);
-        claimsBuilder.subject(Long.toString(userID));
-        claimsBuilder.issuedAt(currentTimeInSecs);
-        claimsBuilder.expiresIn(duration);
-        claimsBuilder.groups(groups);
+        this.claimsBuilder.issuer(this.issuer);
+        this.claimsBuilder.subject(Long.toString(userID));
+        this.claimsBuilder.issuedAt(currentTimeInSecs);
+        this.claimsBuilder.expiresIn(duration);
+        this.claimsBuilder.groups(groups);
 
         String token = null;
         try {
-            token = claimsBuilder.jws().sign();
+            token = this.claimsBuilder.jws().sign();
         } catch (JwtSignatureException e) {
             log.error("Bitte pruefen Sie den privateKey.pem oder starten sie den Server neu");
             log.error(e.toString());
@@ -85,11 +109,29 @@ public class AuthRepository implements AuthService {
         return token;
     }
 
+    private void addTokenStudent(User user) {
+
+        if(user.getStudent() == null){
+            log.warn("Achtung Ein User mit der Role Student der kein Eintrag als Student hat");
+            log.debug(user.toString());
+            return;
+        }
+        this.claimsBuilder.claim("matNr", user.getStudent().getMatNr());    
+    }
+    
+    /** 
+     * @return int - gibt denn aktuellen Timestamp
+     */
     private int currentTimeInSecs() {
         long currentTimeMS = System.currentTimeMillis();
         return (int) (currentTimeMS / 1000);
     } 
     
+    
+    /** 
+     * @param role
+     * @return long - gibt die passenden Durations zurueck falls die in der Config vorhanden ist, wenn nicht wird die Default Duration zurueck gegeben.
+     */
     private long getDuration(Set<Role> role){
 
         long duration = Long.MAX_VALUE;
