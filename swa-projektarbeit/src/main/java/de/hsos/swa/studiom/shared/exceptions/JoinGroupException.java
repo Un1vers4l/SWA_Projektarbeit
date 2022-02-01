@@ -10,6 +10,11 @@ public class JoinGroupException extends Exception {
                 type.toString().toLowerCase(), String.valueOf(groupId), reason);
     }
 
+    public JoinGroupException(GroupType type, int matNr, String reason) {
+        this.message = String.format("Student with MatNr: %s could not create %s: %s", String.valueOf(matNr),
+                type.toString().toLowerCase(), reason);
+    }
+
     @Override
     public String getMessage() {
         return message;

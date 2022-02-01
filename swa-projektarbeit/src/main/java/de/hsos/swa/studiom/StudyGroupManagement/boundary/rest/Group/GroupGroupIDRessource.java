@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 20:09:50
- * @modify date 2022-01-31 15:36:09
+ * @modify date 2022-02-01 11:28:28
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
@@ -34,6 +34,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 
 @Produces(MediaType.APPLICATION_JSON)
@@ -84,7 +85,7 @@ public class GroupGroupIDRessource {
                 }
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | GroupManagementException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
@@ -117,7 +118,7 @@ public class GroupGroupIDRessource {
                 return Response.ok().build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | GroupManagementException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }

@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:37:40
- * @modify date 2022-01-31 13:36:20
+ * @modify date 2022-02-01 11:40:35
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
@@ -12,6 +12,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 
@@ -25,8 +26,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 
 import org.jboss.logging.Logger;
 
@@ -37,7 +36,6 @@ public class GroupRepository implements GroupService {
     private final GroupType TYPE = GroupType.STUDYGROUP;
     private final String FULL = "There is no free Space available in this group";
     private final String DUPLICATE = "Student is already a member of the group";
-    private final String OWNER = "Only the owner can manage the group";
 
     Logger log = Logger.getLogger(GroupRepository.class);
 
@@ -66,14 +64,14 @@ public class GroupRepository implements GroupService {
             em.persist(group);
             return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public Optional<Group> changeGroup(int matNr, int groupId, Group newGroup) throws EntityNotFoundException {
+    public Optional<Group> changeGroup(int matNr, int groupId, Group newGroup)
+            throws EntityNotFoundException, GroupManagementException {
         try {
             Group group = em.find(Group.class, groupId);
             if (group == null) {
@@ -82,22 +80,20 @@ public class GroupRepository implements GroupService {
             }
             if (group.getOwner().getMatNr() != matNr) {
                 log.error("Nur der Ersteller der Gruppe darf diese auch verändern");
-                // TODO: Exception: Nicht berechtigt
-                return Optional.ofNullable(null);
+                throw new GroupManagementException(TYPE);
             }
             group.setMaxMembers(newGroup.getMaxMembers());
             group.setName(newGroup.getName());
             em.persist(group);
             return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public boolean deleteGroup(int matNr, int groupId) throws EntityNotFoundException {
+    public boolean deleteGroup(int matNr, int groupId) throws EntityNotFoundException, GroupManagementException {
         try {
             Group group = em.find(Group.class, groupId);
             if (group == null) {
@@ -106,8 +102,7 @@ public class GroupRepository implements GroupService {
             }
             if (group.getOwner().getMatNr() != matNr) {
                 log.error("Nur der Ersteller der Gruppe darf diese auch löschen");
-                // TODO: Exception: Nicht berechtigt
-                return false;
+                throw new GroupManagementException(TYPE);
             }
             for (Student student : group.getMember()) {
                 student.removeGroup(group);
@@ -116,7 +111,6 @@ public class GroupRepository implements GroupService {
             em.remove(group);
             return true;
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return false;
         }
@@ -139,7 +133,6 @@ public class GroupRepository implements GroupService {
             return Optional.ofNullable(group);
 
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
@@ -158,7 +151,6 @@ public class GroupRepository implements GroupService {
             return Optional.ofNullable(returnList);
 
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
@@ -194,7 +186,6 @@ public class GroupRepository implements GroupService {
             em.persist(student);
             return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }

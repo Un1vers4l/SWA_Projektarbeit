@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.hibernate.engine.internal.JoinSequence.Join;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
@@ -41,6 +42,8 @@ import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.ProjectRepository;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -68,7 +71,7 @@ public class ProjectRessource {
             }
             return Response.ok(gDTOs).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
 
     @DELETE
@@ -81,11 +84,15 @@ public class ProjectRessource {
     @Operation(summary = "Creates a new Project", description = "Creates a new Project for the Module if allowed")
     public Response createProject(@QueryParam("matNr") int matNr, @QueryParam("moduleId") int moduleId) {
         log.info("PUT " + uriInfo.getPath());
-        Optional<Group> createProject = service.createProject(matNr, moduleId);
-        if (createProject.isPresent()) {
-            return Response.ok(GroupDTO.Converter.toDTO(createProject.get())).build();
+        try {
+            Optional<Group> createProject = service.createProject(matNr, moduleId);
+            if (createProject.isPresent()) {
+                return Response.ok(GroupDTO.Converter.toDTO(createProject.get())).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException | JoinGroupException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
 }

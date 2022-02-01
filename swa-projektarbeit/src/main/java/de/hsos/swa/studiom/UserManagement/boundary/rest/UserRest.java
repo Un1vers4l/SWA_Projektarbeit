@@ -29,7 +29,7 @@ import de.hsos.swa.studiom.UserManagement.boundary.dto.ErrorDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.UserDto;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
-import de.hsos.swa.studiom.shared.exception.UsernameExistExeption;
+import de.hsos.swa.studiom.shared.exceptions.UsernameExistExeption;
 
 @RequestScoped
 @Path("api/v1/User")

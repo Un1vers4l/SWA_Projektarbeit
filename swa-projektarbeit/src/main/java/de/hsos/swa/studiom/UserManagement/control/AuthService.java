@@ -7,7 +7,7 @@
  */
 package de.hsos.swa.studiom.UserManagement.control;
 
-import de.hsos.swa.studiom.shared.exception.WrongUserDataExeption;
+import de.hsos.swa.studiom.shared.exceptions.WrongUserDataExeption;
 
 public interface AuthService {
     public String userLogin(String username, String password) throws WrongUserDataExeption;

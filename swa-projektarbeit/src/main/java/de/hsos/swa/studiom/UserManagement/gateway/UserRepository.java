@@ -22,8 +22,8 @@ import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
 import de.hsos.swa.studiom.shared.algorithm.username.UsernameFactory;
-import de.hsos.swa.studiom.shared.exception.UserNotExistExeption;
-import de.hsos.swa.studiom.shared.exception.UsernameExistExeption;
+import de.hsos.swa.studiom.shared.exceptions.UserNotExistExeption;
+import de.hsos.swa.studiom.shared.exceptions.UsernameExistExeption;
 
 
 @RequestScoped

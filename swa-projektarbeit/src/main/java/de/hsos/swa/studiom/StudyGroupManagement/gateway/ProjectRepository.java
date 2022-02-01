@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-31 09:28:10
- * @modify date 2022-01-31 13:36:16
+ * @modify date 2022-02-01 11:41:12
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
@@ -17,8 +17,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 
 import org.jboss.logging.Logger;
 
@@ -26,31 +24,36 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
+import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 
 @Transactional
 @ApplicationScoped
 public class ProjectRepository implements ProjectService {
 
-    Logger log = Logger.getLogger(ProjectRepository.class);
+    private final GroupType TYPE = GroupType.PROJECT;
+    private final String FULL = "There is no free Space available in this project";
+    private final String DUPLICATE = "Student is already a member of a project in this module";
 
-    @Context
-    UriInfo uriInfo;
+    Logger log = Logger.getLogger(ProjectRepository.class);
 
     @Inject
     EntityManager em;
 
-    private final GroupType TYPE = GroupType.PROJECT;
-
     @Override
-    public Optional<Group> createProject(int matNr, int moduleId) {
+    public Optional<Group> createProject(int matNr, int moduleId) throws EntityNotFoundException, JoinGroupException {
         try {
             Student owner = em.find(Student.class, matNr);
             MockModule module = em.find(MockModule.class, moduleId);
-            if (owner == null || module == null) {
-                log.error("Owner oder Modul wurden nicht gefunden");
-                // TODO: Exception: Owner oder Modul nicht gefunden
-                return Optional.ofNullable(null);
+            if (module == null) {
+                log.error("Modul wurde nicht gefunden");
+                throw new EntityNotFoundException(MockModule.class, moduleId);
+            }
+            if (owner == null) {
+                log.error("Owner wurde nicht gefunden");
+                throw new EntityNotFoundException(Student.class, matNr);
             }
             if (module.isProject() == false) {
                 log.error("Dieses Modul bietet kein Projekt an");
@@ -60,8 +63,7 @@ public class ProjectRepository implements ProjectService {
             if (!isInProject(matNr, moduleId)) {
                 log.error(
                         "Der Student ist bereits in einem Projekt eingetragen und kann nicht einem weiteren beitreten");
-                // TODO: Exception: Student ist schon in einem Projekt eingetragen
-                return Optional.ofNullable(null);
+                throw new JoinGroupException(TYPE, matNr, DUPLICATE);
             }
             Group projectgroup = new Group(owner, module, module.getName() + " Projektarbeit_" + owner.getMatNr(), 2,
                     TYPE);
@@ -70,28 +72,29 @@ public class ProjectRepository implements ProjectService {
             em.persist(projectgroup);
             return Optional.ofNullable(projectgroup);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public boolean deleteProject(int matNr, int projectId) {
+    public boolean deleteProject(int matNr, int projectId) throws EntityNotFoundException, GroupManagementException {
         try {
             Group project = em.find(Group.class, projectId);
             Student student = em.find(Student.class, matNr);
 
-            if (project == null || student == null) {
+            if (project == null) {
                 log.error("Student oder Projekt konnte nicht gefunden werden");
-                // TODO: Exception: Gruppe oder Student nicht gefunden
-                return false;
+                throw new EntityNotFoundException(Group.class, projectId);
+            }
+            if (student == null) {
+                log.error("Student oder Projekt konnte nicht gefunden werden");
+                throw new EntityNotFoundException(Student.class, matNr);
             }
 
             if (project.getOwner().getMatNr() != matNr) {
                 log.error("Das Projekt kann nur von dem Ersteller des Projektes gelöscht werden");
-                // TODO: Exception: Student ist nicht berechtigt
-                return false;
+                throw new GroupManagementException(TYPE);
             }
 
             if (project.getMaxMembers() == project.getMember().size()) {
@@ -108,19 +111,17 @@ public class ProjectRepository implements ProjectService {
             return true;
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
-            // TODO: Exception
             return false;
         }
     }
 
     @Override
-    public Optional<Group> getProject(int projectId) {
+    public Optional<Group> getProject(int projectId) throws EntityNotFoundException {
         try {
             Group project = em.find(Group.class, projectId);
             if (project == null) {
                 log.error("Es wurde keine Gruppe oder Projekt gefunden");
-                // TODO: Exception: Projekt nich gefunden
-                return Optional.ofNullable(null);
+                throw new EntityNotFoundException(Group.class, projectId);
             }
             if (project.getType() != TYPE) {
                 log.error("Dies ist eine Gruppe und kein Projekt");
@@ -130,7 +131,6 @@ public class ProjectRepository implements ProjectService {
             return Optional.ofNullable(project);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
-            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
@@ -148,39 +148,37 @@ public class ProjectRepository implements ProjectService {
             return Optional.ofNullable(returnList);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
-            // TODO: Exception
             return Optional.ofNullable(null);
         }
     }
 
     @Override
-    public Optional<Group> addStudent(int matNr, int groupId) {
+    public Optional<Group> addStudent(int matNr, int projectId) throws EntityNotFoundException, JoinGroupException {
         try {
             Student student = em.find(Student.class, matNr);
-            Group project = em.find(Group.class, groupId);
-            if (project == null || student == null) {
-                log.error("Projekt oder Student konnten nicht gefunden werden");
-                // TODO: Exception: Projekt oder Student nicht gefunden
-                return Optional.ofNullable(null);
+            Group project = em.find(Group.class, projectId);
+            if (project == null) {
+                log.error("Projekt konnte nicht gefunden werden");
+                throw new EntityNotFoundException(Group.class, projectId);
+            }
+            if (student == null) {
+                log.error("Student konnte nicht gefunden werden");
+                throw new EntityNotFoundException(Student.class, matNr);
             }
             if (project.getMaxMembers() == project.getMember().size()) {
                 log.error("Das Projekt ist bereits voll");
-                // TODO: Exception: Projekt ist voll
-                return Optional.ofNullable(null);
+                throw new JoinGroupException(TYPE, projectId, matNr, FULL);
             }
             if (!isInProject(matNr, project.getModule().getId())) {
                 log.error("Student ist bereits in einem anderen Projekt in diesem Modul eingetragen");
-                // TODO: Exception: Student ist bereits in anderem Modul eingetragen
-                return Optional.ofNullable(null);
+                throw new JoinGroupException(TYPE, projectId, matNr, DUPLICATE);
             }
-
             project.addMember(student);
             student.addGroup(project);
             em.persist(student);
             em.persist(project);
             return Optional.ofNullable(project);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }

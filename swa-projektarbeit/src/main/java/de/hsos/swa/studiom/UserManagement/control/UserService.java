@@ -13,8 +13,8 @@ import java.util.Set;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
 import de.hsos.swa.studiom.shared.algorithm.username.UsernameFactory;
-import de.hsos.swa.studiom.shared.exception.UserNotExistExeption;
-import de.hsos.swa.studiom.shared.exception.UsernameExistExeption;
+import de.hsos.swa.studiom.shared.exceptions.UserNotExistExeption;
+import de.hsos.swa.studiom.shared.exceptions.UsernameExistExeption;
 
 public interface UserService {
     public User findUser(long userID);

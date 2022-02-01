@@ -2,13 +2,11 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-31 10:51:27
- * @modify date 2022-01-31 11:55:57
+ * @modify date 2022-02-01 11:54:43
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Project;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -30,62 +28,70 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
-import de.hsos.swa.studiom.StudentsManagement.control.AddressService;
-import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
-import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
-import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
-import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.ProjectRepository;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
+import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/projects/projectId/{projectId}/{matNr}")
 @ApplicationScoped
 public class ProjectIdRessource {
-    
+
     Logger log = Logger.getLogger(ProjectIdRessource.class);
 
     @Context
     UriInfo uriInfo;
-    
+
     @Inject
     ProjectRepository service;
 
     @DELETE
     @Operation(summary = "Delete a project", description = "Deletes a project, if you are the owner and no one else joined")
     public Response deleteProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
-        log.info("DELETE " + uriInfo.getPath());
-        boolean deleted = service.deleteProject(matNr, projectId);
-        if (deleted) {
-            return Response.ok("true").build();
+        try {
+            log.info("DELETE " + uriInfo.getPath());
+            boolean deleted = service.deleteProject(matNr, projectId);
+            if (deleted) {
+                return Response.ok("true").build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException | GroupManagementException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @GET
     @Operation(summary = "Finds a project with Id")
     public Response getProject(@PathParam("projectId") int projectId) {
-        log.info("GET " + uriInfo.getPath());
-        Optional<Group> project = service.getProject(projectId);
-        if (project.isPresent()) {
-            return Response.ok(GroupDTO.Converter.toDTO(project.get())).build();
+        try {
+            log.info("GET " + uriInfo.getPath());
+            Optional<Group> project = service.getProject(projectId);
+            if (project.isPresent()) {
+                return Response.ok(GroupDTO.Converter.toDTO(project.get())).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @PUT
     @Operation(summary = "Join a Project", description = "Adds a Student to a project if not already joined another project in that module and if project is not full yet")
     public Response addStudentToProject(@PathParam("matNr") int matNr, @PathParam("projectId") int projectId) {
-        log.info("PUT " + uriInfo.getPath());
-        Optional<Group> group = service.addStudent(matNr, projectId);
-        if (group.isPresent()) {
-            return Response.ok(GroupDTO.Converter.toDTO(group.get())).build();
+        try {
+            log.info("PUT " + uriInfo.getPath());
+            Optional<Group> group = service.addStudent(matNr, projectId);
+            if (group.isPresent()) {
+                return Response.ok(GroupDTO.Converter.toDTO(group.get())).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException | JoinGroupException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.BAD_REQUEST).build();
     }
 
     @POST

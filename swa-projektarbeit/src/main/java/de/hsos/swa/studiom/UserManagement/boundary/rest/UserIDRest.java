@@ -34,7 +34,7 @@ import de.hsos.swa.studiom.UserManagement.boundary.dto.UserDto;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
-import de.hsos.swa.studiom.shared.exception.UserNotExistExeption;
+import de.hsos.swa.studiom.shared.exceptions.UserNotExistExeption;
 
 @RequestScoped
 @Path("api/v1/User/{userid}")
