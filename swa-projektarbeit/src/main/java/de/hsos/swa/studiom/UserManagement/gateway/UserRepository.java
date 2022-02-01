@@ -18,12 +18,12 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import org.jboss.logging.Logger;
 
-import de.hsos.swa.studiom.UserManagement.algorithm.username.UsernameFactory;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
-import de.hsos.swa.studiom.UserManagement.exception.UserNotExistExeption;
-import de.hsos.swa.studiom.UserManagement.exception.UsernameExistExeption;
+import de.hsos.swa.studiom.shared.algorithm.username.UsernameFactory;
+import de.hsos.swa.studiom.shared.exception.UserNotExistExeption;
+import de.hsos.swa.studiom.shared.exception.UsernameExistExeption;
 
 
 @RequestScoped

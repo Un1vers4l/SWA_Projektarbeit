@@ -24,6 +24,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
+import de.hsos.swa.studiom.UserManagement.entity.User;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 
 @Entity
@@ -50,6 +51,10 @@ public class Student {
     @OneToOne(cascade = CascadeType.ALL)
     private Adress adress;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", unique = true, nullable = false)
+    private User user;
+
     public Student() {
     }
 
@@ -75,6 +80,15 @@ public class Student {
         return "Student [adress=" + adress + ", email=" + email + ", groups=" + groups + ", matNr=" + matNr
                 + ", modules=" + modules + ", name=" + name + "]";
     }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
     public int getMatNr() {
         return matNr;

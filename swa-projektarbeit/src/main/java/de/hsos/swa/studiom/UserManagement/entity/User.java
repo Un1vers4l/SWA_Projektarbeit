@@ -15,11 +15,13 @@ import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -27,6 +29,8 @@ import javax.persistence.Table;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
 @Vetoed
 @Entity
@@ -50,6 +54,11 @@ public class User {
     @Fetch(FetchMode.JOIN)
     private Set<Role> role;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Student student;
+
+
+
     public User(String username, String password) {
         this.username = username;
         this.password = this.passwordDecoder(password);
@@ -64,6 +73,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public Student getStudent() {
+        return this.student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public String getUsername() {
@@ -126,6 +143,9 @@ public class User {
 
     public boolean addRole(Role role){
         return this.role.add(role);
+    }
+    public boolean hasRole(Role role){
+        return this.role.contains(role);
     }
 
     public boolean isMyPassword(String password) {
