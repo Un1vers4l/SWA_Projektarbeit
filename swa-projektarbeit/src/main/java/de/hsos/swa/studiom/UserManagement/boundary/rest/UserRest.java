@@ -63,7 +63,7 @@ public class UserRest {
 
         Set<Role> role = UserDto.Converter.roleAsEnum(userDto.getRole());
         if(role.isEmpty()){
-            return Response.ok(new ErrorDto("Bitte geben Sie eine mindestens ein Role an die Existiert")).build();
+            return Response.ok(new ErrorDto("Bitte geben Sie mindestens ein Role an die Existiert")).build();
         } 
 
         if(role.contains(Role.STUDENT)){
