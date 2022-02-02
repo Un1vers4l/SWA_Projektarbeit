@@ -47,17 +47,17 @@ INSERT INTO adress(nr, street, town, zipCode, id) VALUES (17, 'Suesterstrasse', 
 INSERT INTO students(adress_id, email, name, matNr, userId) VALUES (3, 'beth.harmon@hs-osnabrueck.de', 'Beth Harmon', 1002, 6);
 INSERT INTO adress(nr, street, town, zipCode, id) VALUES (18, 'Sanstrasse', 'Osnabrueck', 49080, 4);
 INSERT INTO students(adress_id, email, name, matNr, userId) VALUES (4, 'test.name@hs-osnabrueck.de', 'Test Name', 1003, 7);
-INSERT INTO MockModule(name, id, isProject) VALUES ('SWA', 1, true);
-INSERT INTO MockModule(name, id, isProject) VALUES ('Webanwendungen', 2, true);
-INSERT INTO MockModule(name, id, isProject) VALUES ('Spieleprogrammierung', 3, true);
-INSERT INTO MockModule(name, id, isProject) VALUES ('Verteilte Systeme', 4, false);
-INSERT INTO MockModule(name, id, isProject) VALUES ('Theoretische Informatik', 5, false);
-INSERT INTO GROUPS (maxMembers, module_id, name, owner_matNr, type, groupId) VALUES (3, 1, 'SWA Lerngruppe', 1000, 1, 1000);
+INSERT INTO Module(name, moduleID, isProject, description) VALUES ('SWA', 1, true, 'SDASDS');
+INSERT INTO Module(name, moduleID, isProject, description) VALUES ('Webanwendungen', 2, true, 'SDASDS');
+INSERT INTO Module(name, moduleID, isProject, description) VALUES ('Spieleprogrammierung', 3, true, 'SDASDS');
+INSERT INTO Module(name, moduleID, isProject, description) VALUES ('Verteilte Systeme', 4, false, 'SDASDS');
+INSERT INTO Module(name, moduleID, isProject, description) VALUES ('Theoretische Informatik', 5, false, 'SDASDS');
+INSERT INTO GROUPS (maxMembers, module_moduleID, name, owner_matNr, type, groupId) VALUES (3, 1, 'SWA Lerngruppe', 1000, 1, 1000);
 INSERT INTO student_groups (fk_student, fk_group) VALUES (1000, 1000);
-INSERT INTO GROUPS (maxMembers, module_id, name, owner_matNr, type, groupId) VALUES (4, 3, 'Spiele programmieren', 1001, 1, 1001);
+INSERT INTO GROUPS (maxMembers, module_moduleID, name, owner_matNr, type, groupId) VALUES (4, 3, 'Spiele programmieren', 1001, 1, 1001);
 INSERT INTO student_groups (fk_student, fk_group) VALUES (1001, 1001);
 INSERT INTO student_groups (fk_student, fk_group) VALUES (1002, 1001);
-INSERT INTO GROUPS (maxMembers, module_id, name, owner_matNr, type, groupId) VALUES (2, 1, 'SWA Projektarbeit', 1000, 0, 1002);
+INSERT INTO GROUPS (maxMembers, module_moduleID, name, owner_matNr, type, groupId) VALUES (2, 1, 'SWA Projektarbeit', 1000, 0, 1002);
 INSERT INTO student_groups (fk_student, fk_group) VALUES (1000, 1002);
 
 

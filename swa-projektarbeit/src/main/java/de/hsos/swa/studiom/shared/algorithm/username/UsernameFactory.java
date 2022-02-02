@@ -12,7 +12,7 @@ public abstract class UsernameFactory implements UsernameAlgorithm {
     private int count;
 
     public UsernameFactory(int maxCount) {
-        this.maxCount = maxCount + 1;
+        this.maxCount = maxCount;
         this.count = 0;
     }
     public UsernameFactory() {

@@ -91,9 +91,13 @@ public class UserRepository implements UserService {
         if (username == null){
             log.warn("Es konnte kein Username generiert werden");
             log.debug(userGenerator.toString());
-           return null; 
+            return null; 
         } 
-        
+        while(!isNameFree){
+            String usernameTmp = username + this.getRandomNumber(0, 1000);
+            isNameFree = this.findUserByUsername(usernameTmp) == null;
+            if(isNameFree)  username = usernameTmp;
+        }
         User user = null;
         try {
             user = this.createUser(username, password, role);
@@ -120,7 +124,7 @@ public class UserRepository implements UserService {
 
         User user = new User(username, password, role);
         entityManager.persist(user);
-        log.info("User(Username: +"+ username + " + ) wurde erzeugt");
+        log.info("User(Username: "+ username + ") wurde erzeugt");
         return user;
     }
 
@@ -168,6 +172,10 @@ public class UserRepository implements UserService {
     public List<User> getAllUser() {
         TypedQuery<User> query = entityManager.createNamedQuery("User.findAllUser", User.class);
         return query.getResultList();
+    }
+    //Quelle: https://www.baeldung.com/java-generating-random-numbers-in-range
+    public int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
     
 }

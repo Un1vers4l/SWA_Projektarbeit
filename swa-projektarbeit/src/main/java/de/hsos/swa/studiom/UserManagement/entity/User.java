@@ -7,7 +7,6 @@
  */
 package de.hsos.swa.studiom.UserManagement.entity;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
