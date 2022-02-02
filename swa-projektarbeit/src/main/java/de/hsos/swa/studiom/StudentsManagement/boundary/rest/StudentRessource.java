@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -31,13 +32,14 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/student")
 @ApplicationScoped
+@RolesAllowed("SEKT")
 public class StudentRessource {
 
     Logger log = Logger.getLogger(StudentRessource.class);
@@ -45,9 +47,8 @@ public class StudentRessource {
     @Context
     UriInfo uriInfo;
 
-    // Named und interface inj
     @Inject
-    StudentRepository service;
+    StudentService service;
 
     @PUT
     @Operation(summary = "Create a new student", description = "Create a new student with their name")

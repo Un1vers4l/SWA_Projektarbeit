@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -60,6 +61,7 @@ public class ProjectRessource {
     ProjectRepository service;
 
     @GET
+    @RolesAllowed("USER")
     @Operation(summary = "Get all Projects")
     public Response getAllProjects() {
         log.info("GET " + uriInfo.getPath());
@@ -81,6 +83,7 @@ public class ProjectRessource {
     }
 
     @PUT
+    @RolesAllowed("STUDENT")
     @Operation(summary = "Creates a new Project", description = "Creates a new Project for the Module if allowed")
     public Response createProject(@QueryParam("matNr") int matNr, @QueryParam("moduleId") int moduleId) {
         log.info("PUT " + uriInfo.getPath());

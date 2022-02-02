@@ -10,6 +10,7 @@ package de.hsos.swa.studiom.StudentsManagement.boundary.rest;
 
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -50,6 +51,7 @@ public class StudentMatNrRessource {
     StudentRepository service;
 
     @GET
+    @RolesAllowed("USER")
     @Operation(summary = "find a Student", description = "Find a student with their matNr")
     public Response getStudent(@PathParam("matNr") int matNr) {
         try {
@@ -65,6 +67,7 @@ public class StudentMatNrRessource {
     }
 
     @POST
+    @RolesAllowed("SEKT")
     @Operation(summary = "Change a student", description = "Change the E-Mail and name of a student")
     public Response changeStudent(@PathParam("matNr") int matNr, newStudentDTO newStudent) {
         try {
@@ -85,6 +88,7 @@ public class StudentMatNrRessource {
     }
 
     @DELETE
+    @RolesAllowed("SEKT")
     @Operation(summary = "Delete a student")
     public Response deleteStudent(@PathParam("matNr") int matNr) {
         try {

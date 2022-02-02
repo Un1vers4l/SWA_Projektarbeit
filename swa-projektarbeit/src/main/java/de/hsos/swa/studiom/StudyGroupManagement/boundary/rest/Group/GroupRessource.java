@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -51,6 +52,7 @@ public class GroupRessource {
     GroupRepository service;
 
     @PUT
+    @RolesAllowed("STUDENT")
     @Operation(summary = "Create a new Group")
     public Response createGroup(NewGroupDTO gDTO) {
         try {
@@ -67,6 +69,7 @@ public class GroupRessource {
     }
 
     @GET
+    @RolesAllowed("USER")
     @Operation(summary = "Find all groups")
     public Response getAllGroups() {
         log.info("GET " + uriInfo.getPath());

@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 20:09:50
- * @modify date 2022-02-01 16:22:29
+ * @modify date 2022-02-02 08:16:29
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
@@ -32,12 +32,12 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import org.jboss.logging.Logger;
 
+import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
+import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
-import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
@@ -62,10 +62,10 @@ public class GroupGroupIDRessource {
     JsonWebToken jwt;
 
     @Inject
-    GroupRepository service;
+    GroupService service;
 
     @Inject
-    StudentRepository studService;
+    StudentService studService;
 
     @GET
     @Operation(summary = "Find Group with Id")
@@ -121,9 +121,7 @@ public class GroupGroupIDRessource {
                 return Response.ok(GroupDTO.Converter.toDTO(addStudent.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        } catch (JoinGroupException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-        } catch (EntityNotFoundException e) {
+        } catch (JoinGroupException | EntityNotFoundException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
@@ -144,8 +142,10 @@ public class GroupGroupIDRessource {
                 return Response.ok().build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        } catch (EntityNotFoundException | GroupManagementException e) {
+        } catch (EntityNotFoundException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (GroupManagementException e) {
+            return Response.status(Status.UNAUTHORIZED).entity(e.getMessage()).build();
         }
     }
 
