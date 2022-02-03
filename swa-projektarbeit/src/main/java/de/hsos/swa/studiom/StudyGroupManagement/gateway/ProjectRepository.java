@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -21,6 +22,7 @@ import javax.transaction.Transactional;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
@@ -28,38 +30,41 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 import de.hsos.swa.studiom.ModuleManagment.entity.Module;
+import de.hsos.swa.studiom.ModuleManagment.gateway.ModuleRepository;
 
 @Transactional
-@ApplicationScoped
+@RequestScoped
 public class ProjectRepository implements ProjectService {
 
     private final GroupType TYPE = GroupType.PROJECT;
     private final String FULL = "There is no free Space available in this project";
     private final String DUPLICATE = "Student is already a member of a project in this module";
-
+    private final String NOPROJECT = "Module does not offer a project";
     Logger log = Logger.getLogger(ProjectRepository.class);
 
     @Inject
     EntityManager em;
 
+    @Inject
+    ModuleRepository modRepos;
+
+    @Inject
+    StudentRepository studRepos;
+
     @Override
     public Optional<Group> createProject(int matNr, int moduleId) throws EntityNotFoundException, JoinGroupException {
         try {
-            Student owner = em.find(Student.class, matNr);
-            Module module = em.find(Module.class, moduleId);
-            if (module == null) {
-                log.error("Modul wurde nicht gefunden");
-                throw new EntityNotFoundException(Module.class, moduleId);
-            }
-            if (owner == null) {
-                log.error("Owner wurde nicht gefunden");
-                throw new EntityNotFoundException(Student.class, matNr);
-            }
-            if (module.isProject() == false) {
-                log.error("Dieses Modul bietet kein Projekt an");
-                // TODO: Exception: Modul bietet kein Projekt an
+            Student owner = studRepos.getStudent(matNr).get();
+            Module module = modRepos.getModul(moduleId);
+            if (module == null || owner == null) {
                 return Optional.ofNullable(null);
             }
+
+            if (module.isProject() == false) {
+                log.error("Dieses Modul bietet kein Projekt an");
+                throw new JoinGroupException(TYPE, matNr, NOPROJECT);
+            }
+
             if (!isInProject(matNr, moduleId)) {
                 log.error(
                         "Der Student ist bereits in einem Projekt eingetragen und kann nicht einem weiteren beitreten");
@@ -80,16 +85,11 @@ public class ProjectRepository implements ProjectService {
     @Override
     public boolean deleteProject(int matNr, int projectId) throws EntityNotFoundException, GroupManagementException {
         try {
-            Group project = em.find(Group.class, projectId);
-            Student student = em.find(Student.class, matNr);
+            Group project = getProject(projectId).get();
+            Student student = studRepos.getStudent(matNr).get();
 
-            if (project == null) {
-                log.error("Student oder Projekt konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Group.class, projectId);
-            }
-            if (student == null) {
-                log.error("Student oder Projekt konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Student.class, matNr);
+            if (project == null || student == null) {
+                return false;
             }
 
             if (project.getOwner().getMatNr() != matNr) {
@@ -155,15 +155,10 @@ public class ProjectRepository implements ProjectService {
     @Override
     public Optional<Group> addStudent(int matNr, int projectId) throws EntityNotFoundException, JoinGroupException {
         try {
-            Student student = em.find(Student.class, matNr);
-            Group project = em.find(Group.class, projectId);
-            if (project == null) {
-                log.error("Projekt konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Group.class, projectId);
-            }
-            if (student == null) {
-                log.error("Student konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Student.class, matNr);
+            Group project = getProject(projectId).get();
+            Student student = studRepos.getStudent(matNr).get();
+            if (project == null || student == null) {
+                return Optional.ofNullable(null);
             }
             if (project.getMaxMembers() == project.getMember().size()) {
                 log.error("Das Projekt ist bereits voll");

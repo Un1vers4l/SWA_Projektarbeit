@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -39,7 +40,7 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/student/{matNr}")
-@ApplicationScoped
+@RequestScoped
 public class StudentMatNrRessource {
 
     Logger log = Logger.getLogger(StudentMatNrRessource.class);

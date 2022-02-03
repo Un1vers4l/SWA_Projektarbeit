@@ -15,7 +15,7 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 
 public interface AddressService {
-    public Optional<Adress> createAdress(int matNr, Adress adress);
+    public Optional<Adress> createAdress(int matNr, Adress adress) throws EntityNotFoundException;
 
     public Optional<Adress> getAdress(int matNr) throws EntityNotFoundException;
 

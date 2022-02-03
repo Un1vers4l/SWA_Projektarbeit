@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 20:09:50
- * @modify date 2022-02-02 08:16:29
+ * @modify date 2022-02-03 09:23:52
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
@@ -10,7 +10,7 @@ package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import javax.ws.rs.Consumes;
@@ -46,7 +46,7 @@ import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 @Consumes(MediaType.APPLICATION_JSON)
 
 @Path("/api/v1/group/{groupId}")
-@ApplicationScoped
+@RequestScoped
 
 public class GroupGroupIDRessource {
 

@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ import javax.persistence.Table;
 
 import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-
+import de.hsos.swa.studiom.shared.mock.MockModule;
 @Entity
 @Table(name = "groups")
 @NamedQuery(name = "Groups.findAll", query = "SELECT g FROM Group g")
@@ -33,6 +34,7 @@ public class Group {
     @GeneratedValue(generator = "groupIdSequence")
     private int groupId;
 
+    @Column(nullable = false)
     private int maxMembers;
     private String name;
 

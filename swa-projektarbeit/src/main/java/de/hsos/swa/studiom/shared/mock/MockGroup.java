@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,7 +21,7 @@ import javax.persistence.SequenceGenerator;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
 @Entity
-@ApplicationScoped
+@RequestScoped
 public class MockGroup {
     @Id
     @SequenceGenerator(name = "mockGroupSeq", sequenceName = "mock_group_seq", allocationSize = 1, initialValue = 1)

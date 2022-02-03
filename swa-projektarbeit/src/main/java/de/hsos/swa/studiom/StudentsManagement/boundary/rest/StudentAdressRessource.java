@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -40,7 +41,7 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/student/{matNr}/adress")
 @RolesAllowed("SEKT")
-@ApplicationScoped
+@RequestScoped
 public class StudentAdressRessource {
 
     Logger log = Logger.getLogger(StudentAdressRessource.class);
@@ -76,11 +77,15 @@ public class StudentAdressRessource {
     @Operation(summary = "Create a new adress", description = "Create a new adress for a student")
     public Response createAdress(@PathParam("matNr") int matNr, AdressDTO adress) {
         log.info("PUT " + uriInfo.getPath());
-        Optional<Adress> opt = adressService.createAdress(matNr, AdressDTO.Converter.toAdress(adress));
-        if (opt.isPresent()) {
-            return Response.ok(AdressDTO.Converter.toDto(opt.get())).build();
+        try {
+            Optional<Adress> opt = adressService.createAdress(matNr, AdressDTO.Converter.toAdress(adress));
+            if (opt.isPresent()) {
+                return Response.ok(AdressDTO.Converter.toDto(opt.get())).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
 
     @POST

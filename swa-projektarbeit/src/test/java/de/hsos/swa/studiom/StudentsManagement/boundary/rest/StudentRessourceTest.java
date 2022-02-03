@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 public class StudentRessourceTest {
     @Test
     void testCreateStudent() {
-        given().contentType(MediaType.APPLICATION_JSON).body("JUnitTest")
+        given().contentType(MediaType.APPLICATION_JSON).body("Student2")
                 .when().put("/api/v1/student")
                 .then()
                 .statusCode(200);

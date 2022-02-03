@@ -8,6 +8,7 @@
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
@@ -15,12 +16,14 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 import de.hsos.swa.studiom.ModuleManagment.entity.Module;
+import de.hsos.swa.studiom.ModuleManagment.gateway.ModuleRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -29,7 +32,7 @@ import javax.transaction.Transactional;
 
 import org.jboss.logging.Logger;
 
-@ApplicationScoped
+@RequestScoped
 @Transactional
 public class GroupRepository implements GroupService {
 
@@ -42,23 +45,24 @@ public class GroupRepository implements GroupService {
     @Inject
     EntityManager em;
 
+    @Inject
+    ModuleRepository modRepos;
+
+    @Inject
+    StudentRepository studRepos;
+
     @Override
     public Optional<Group> createGroup(int matNr, String name, int maxMember, int moduleId)
             throws EntityNotFoundException {
         try {
-            Student owner = em.find(Student.class, matNr);
-            Module module = em.find(Module.class, moduleId);
+
+            Student owner = studRepos.getStudent(matNr).get();
+            Module module = modRepos.getModul(moduleId);
             if (module == null || owner == null) {
-                if (module == null) {
-                    log.error("Modul konnte nicht gefunden werden");
-                    throw new EntityNotFoundException(Module.class, moduleId);
-                } else {
-                    log.error("Student konnte nicht gefunden werden");
-                    throw new EntityNotFoundException(Student.class, matNr);
-                }
+                return Optional.ofNullable(null);
             }
             Group group = new Group(owner, module, name, maxMember, TYPE);
-            // group.addMember(owner);
+            group.addMember(owner);
             owner.addGroup(group);
             em.persist(owner);
             em.persist(group);
@@ -73,10 +77,9 @@ public class GroupRepository implements GroupService {
     public Optional<Group> changeGroup(int matNr, int groupId, Group newGroup)
             throws EntityNotFoundException, GroupManagementException {
         try {
-            Group group = em.find(Group.class, groupId);
+            Group group = getGroup(groupId).get();
             if (group == null) {
-                log.error("Gruppe konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Group.class, groupId);
+                return Optional.ofNullable(null);
             }
             if (group.getOwner().getMatNr() != matNr) {
                 log.error("Nur der Ersteller der Gruppe darf diese auch verändern");
@@ -95,10 +98,9 @@ public class GroupRepository implements GroupService {
     @Override
     public boolean deleteGroup(int matNr, int groupId) throws EntityNotFoundException, GroupManagementException {
         try {
-            Group group = em.find(Group.class, groupId);
+            Group group = getGroup(groupId).get();
             if (group == null) {
-                log.error("Gruppe konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Group.class, groupId);
+                return false;
             }
             if (group.getOwner().getMatNr() != matNr) {
                 log.error("Nur der Ersteller der Gruppe darf diese auch löschen");
@@ -159,15 +161,10 @@ public class GroupRepository implements GroupService {
     @Override
     public Optional<Group> addStudent(int groupId, int matNr) throws JoinGroupException, EntityNotFoundException {
         try {
-            Student student = em.find(Student.class, matNr);
-            Group group = em.find(Group.class, groupId);
-            if (student == null) {
-                log.error("Student konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Student.class, matNr);
-            }
-            if (group == null) {
-                log.error("Gruppe konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Group.class, groupId);
+            Student student = studRepos.getStudent(matNr).get();
+            Group group = getGroup(groupId).get();
+            if (student == null || group == null) {
+                return Optional.ofNullable(null);
             }
             if (group.getMaxMembers() <= group.getMember().size()) {
                 log.error(FULL);
@@ -194,15 +191,10 @@ public class GroupRepository implements GroupService {
     @Override
     public Optional<Group> removeStudent(int groupId, int matNr) throws EntityNotFoundException {
         try {
-            Student student = em.find(Student.class, matNr);
-            if (student == null) {
-                log.error("Student konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Student.class, matNr);
-            }
-            Group group = em.find(Group.class, groupId);
-            if (group == null) {
-                log.error("Gruppe konnte nicht gefunden werden");
-                throw new EntityNotFoundException(Group.class, groupId);
+            Student student = studRepos.getStudent(matNr).get();
+            Group group = getGroup(groupId).get();
+            if (group == null || student == null) {
+                return Optional.ofNullable(null);
             }
             if (group.getMember().size() <= 1) {
                 log.error("Ersteller der Gruppe kann nicht austreten");
@@ -227,7 +219,6 @@ public class GroupRepository implements GroupService {
             em.persist(student);
             return Optional.ofNullable(group);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
-            // TODO: Exception
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
 
