@@ -126,6 +126,13 @@ public class Student {
         return groups;
     }
 
+    public boolean addModule(Module module) {
+        return this.modules.add(module);
+    }
+    public boolean removeModule(Module module) {
+        return this.modules.remove(module);
+    }
+
     public void setGroups(Set<Group> groups) {
         this.groups = groups;
     }

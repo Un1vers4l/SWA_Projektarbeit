@@ -34,8 +34,8 @@ public class ModuleRepository implements ModuleService{
     Logger log = Logger.getLogger(ModuleRepository.class);
 
     @Override
-    public Module getModul(int modulId){
-        return em.find(Module.class, modulId);
+    public Optional<Module> getModul(int modulId){
+        return Optional.ofNullable(em.find(Module.class, modulId));
     }
     @Override
     public List<Module> getAllModul(){
@@ -44,22 +44,27 @@ public class ModuleRepository implements ModuleService{
     }
     @Override
     public Module createdModule(String name, String description, boolean isProject){
-        return null;
-    }
-    @Override
-    public Module changeModule(int modulId, Module changes) throws EntityNotFoundException{
-        Module module = this.getModul(modulId);
-        if(module == null){
-            log.warn("Module mit der ID "+ modulId + "konnte nicht gefunden");
-            throw new EntityNotFoundException(Module.class, modulId);
-        }
-        module.changeMyData(changes);
+        if(name == null || description == null) throw new IllegalArgumentException();
+        Module module = new Module(name, description, isProject);
+        
+        em.persist(module);
+        log.info("Mdoule(module: "+ module.getModuleID() + ") wurde erzeugt");
         return module;
     }
     @Override
+    public Module changeModule(int modulId, Module changes) throws EntityNotFoundException{
+        if(changes == null) throw new IllegalArgumentException();
+
+        Module module = this.getModuleWithExeption(modulId);
+
+        module.changeMyData(changes);
+        return module;
+    }
+
+    @Override
     public boolean deleteModule(int modulId){
-        Module module = this.getModul(modulId);
-        if (module == null) return false;
+        Optional<Module> module = this.getModul(modulId);
+        if (!module.isPresent()) return false;
 
         em.remove(module);
 
@@ -68,8 +73,28 @@ public class ModuleRepository implements ModuleService{
         return true;
     }
     @Override
-    public boolean addStudentToModule(int matNr) throws EntityNotFoundException{
+    public boolean addStudentToModule(int modulId, int matNr) throws EntityNotFoundException{
         Optional<Student> student = studentService.getStudent(matNr);
-        return false;
+
+        Module module = this.getModuleWithExeption(modulId);
+    
+        return student.get().addModule(module);
+    }
+    @Override
+    public boolean removeStudentToModule(int modulId, int matNr) throws EntityNotFoundException {
+        Optional<Student> student = studentService.getStudent(matNr);
+
+        Module module = this.getModuleWithExeption(modulId);
+
+        return student.get().removeModule(module);
+    }
+    @Override
+    public Module getModuleWithExeption(int modulId) throws EntityNotFoundException{
+        Optional<Module> module = this.getModul(modulId);
+        if(!module.isPresent()){
+            log.warn("Module mit der ID "+ modulId + "konnte nicht gefunden");
+            throw new EntityNotFoundException(Module.class, modulId);
+        }
+        return module.get();
     }
 }

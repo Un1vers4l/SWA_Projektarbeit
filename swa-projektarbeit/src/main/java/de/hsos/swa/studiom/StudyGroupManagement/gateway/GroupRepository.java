@@ -57,7 +57,7 @@ public class GroupRepository implements GroupService {
         try {
 
             Student owner = studRepos.getStudent(matNr).get();
-            Module module = modRepos.getModul(moduleId);
+            Module module = modRepos.getModul(moduleId).get();
             if (module == null || owner == null) {
                 return Optional.ofNullable(null);
             }

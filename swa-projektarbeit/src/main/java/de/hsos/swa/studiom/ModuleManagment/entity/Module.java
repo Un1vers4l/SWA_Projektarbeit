@@ -58,8 +58,7 @@ public class Module {
     }
 
 
-    public Module(int moduleID, String name, String description, boolean isProject) {
-        this.setModuleID(moduleID);
+    public Module(String name, String description, boolean isProject) {
         this.setName(name);
         this.setDescription(description);
         this.setIsProject(isProject);

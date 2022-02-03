@@ -55,7 +55,7 @@ public class ProjectRepository implements ProjectService {
     public Optional<Group> createProject(int matNr, int moduleId) throws EntityNotFoundException, JoinGroupException {
         try {
             Student owner = studRepos.getStudent(matNr).get();
-            Module module = modRepos.getModul(moduleId);
+            Module module = modRepos.getModul(moduleId).get();
             if (module == null || owner == null) {
                 return Optional.ofNullable(null);
             }
