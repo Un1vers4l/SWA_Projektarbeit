@@ -57,10 +57,10 @@ public class User {
     private Student student;
 
     public User(String username, String password, Set<Role> role) {
-        this.username = username;
-        this.password = this.passwordDecoder(password);
-        this.role = role;
-        role.add(Role.USER);
+        this.setUsername(username);
+        this.setPassword(password);
+        this.setRole(role);
+        this.addRole(Role.USER);
     }
 
     public User() {

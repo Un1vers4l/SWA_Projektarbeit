@@ -51,7 +51,7 @@ public class Student {
     @OneToOne(cascade = CascadeType.ALL)
     private Adress adress;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", unique = true, nullable = false)
     private User user;
 
