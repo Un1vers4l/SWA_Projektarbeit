@@ -14,7 +14,9 @@ import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -34,12 +36,14 @@ import org.jboss.logging.Logger;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.UserManagement.control.UserService;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/student")
-@ApplicationScoped
+@RequestScoped
 @RolesAllowed("SEKT")
+@Transactional
 public class StudentRessource {
 
     Logger log = Logger.getLogger(StudentRessource.class);

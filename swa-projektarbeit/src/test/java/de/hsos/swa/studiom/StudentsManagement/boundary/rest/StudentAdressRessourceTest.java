@@ -6,6 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
+import javax.ws.rs.core.MediaType;
+
 @QuarkusTest
 public class StudentAdressRessourceTest {
     @Test
@@ -19,7 +21,6 @@ public class StudentAdressRessourceTest {
 
     @Test
     void testDeleteAdress() {
-
     }
 
     @Test

@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-31 10:51:27
- * @modify date 2022-02-02 08:13:49
+ * @modify date 2022-02-02 08:22:04
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Project;
@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -41,7 +42,7 @@ import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/projects/projectId/{projectId}")
-@ApplicationScoped
+@RequestScoped
 public class ProjectIdRessource {
 
     Logger log = Logger.getLogger(ProjectIdRessource.class);

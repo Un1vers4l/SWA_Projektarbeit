@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.annotation.Generated;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,7 @@ import javax.persistence.SequenceGenerator;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
 @Entity
-@ApplicationScoped
+@RequestScoped
 public class MockModule {
     @Id
     @SequenceGenerator(name = "mockModuleSeq", sequenceName = "mock_module_seq", allocationSize = 1, initialValue = 6)

@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:42:50
- * @modify date 2022-02-01 11:28:26
+ * @modify date 2022-02-03 09:08:49
  * @desc [description]
  */
 
@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -40,7 +41,7 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/v1/group")
-@ApplicationScoped
+@RequestScoped
 public class GroupRessource {
 
     Logger log = Logger.getLogger(GroupRessource.class);
@@ -55,11 +56,14 @@ public class GroupRessource {
     @RolesAllowed("STUDENT")
     @Operation(summary = "Create a new Group")
     public Response createGroup(NewGroupDTO gDTO) {
+        log.info("PUT " + uriInfo.getPath());
+        if (gDTO.maxMember <= 0) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
         try {
-            log.info("PUT " + uriInfo.getPath());
             Optional<Group> created = service.createGroup(gDTO.ownerMatNr, gDTO.name, gDTO.maxMember, gDTO.moduleId);
             if (created.isPresent()) {
-                NewGroupDTO group = NewGroupDTO.Converter.toDTO(created.get());
+                GroupDTO group = GroupDTO.Converter.toDTO(created.get());
                 return Response.ok(group).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();

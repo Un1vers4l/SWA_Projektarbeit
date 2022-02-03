@@ -11,7 +11,6 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 
-
 public class NewGroupDTO {
     public int ownerMatNr;
     public String name;
