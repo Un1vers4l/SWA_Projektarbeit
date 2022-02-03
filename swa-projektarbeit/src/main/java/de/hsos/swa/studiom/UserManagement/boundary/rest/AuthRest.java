@@ -7,6 +7,7 @@
  */
 package de.hsos.swa.studiom.UserManagement.boundary.rest;
 
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.security.PermitAll;
@@ -59,14 +60,14 @@ public class AuthRest {
         }
 
  
-        String token;
+        Optional<String> token;
         try {
             token = authService.userLogin(authDto.getUsername(), authDto.getPassword());
         } catch (WrongUserDataExeption e) {
             return Response.ok(new ErrorDto(e)).build();
         }
 
-        if(token == null){ 
+        if(!token.isPresent()){ 
             log.warn("Beim erzeugen vom Token ist ein fehler aufgetreten");
             return Response.ok(
                 new ErrorDto("es ist ein fehler aufgetreten bitte kontaktieren Sie denn Support oder versuchen Sie es nochmal")
@@ -74,6 +75,6 @@ public class AuthRest {
         };
 
         log.debug("Username: "+ authDto.getUsername() + ", Token: " + token);
-        return Response.ok(new TokenDto(token)).build();
+        return Response.ok(new TokenDto(token.get())).build();
     }
 }

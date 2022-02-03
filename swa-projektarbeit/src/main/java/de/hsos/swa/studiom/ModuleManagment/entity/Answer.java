@@ -8,7 +8,6 @@
 package de.hsos.swa.studiom.ModuleManagment.entity;
 
 import javax.enterprise.inject.Vetoed;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

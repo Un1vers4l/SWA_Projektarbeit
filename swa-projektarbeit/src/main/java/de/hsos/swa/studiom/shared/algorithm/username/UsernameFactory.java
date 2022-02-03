@@ -7,6 +7,8 @@
  */
 package de.hsos.swa.studiom.shared.algorithm.username;
 
+import java.util.Optional;
+
 public abstract class UsernameFactory implements UsernameAlgorithm {
     private final int maxCount;
     private int count;
@@ -21,7 +23,7 @@ public abstract class UsernameFactory implements UsernameAlgorithm {
     }
 
     @Override
-    public String getUsername() {
+    public Optional<String> getUsername() {
         this.count++;
         return null;
     }

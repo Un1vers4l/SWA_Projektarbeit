@@ -76,7 +76,7 @@ public class UserIDRest {
 
         long tokenUserID = Long.valueOf(ctx.getUserPrincipal().getName());
 
-        if(!ctx.isUserInRole(Role.ADMIN.toString()) && tokenUserID != userID){
+        if(!ctx.isUserInRole(Role.ADMIN.name()) && tokenUserID != userID){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 

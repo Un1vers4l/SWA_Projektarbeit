@@ -7,6 +7,8 @@
  */
 package de.hsos.swa.studiom.shared.algorithm.username;
 
+import java.util.Optional;
+
 public class SimpleUsernameAlgo extends UsernameFactory {
     private String vorname;
     private String nachname;
@@ -22,10 +24,9 @@ public class SimpleUsernameAlgo extends UsernameFactory {
 
 
     @Override
-    public String getUsername() {
-        if(!this.hasNext()) return null;
+    public Optional<String> getUsername() {
+        if(!this.hasNext()) return Optional.ofNullable(null);;
         
-
         String username = vorname.substring(0, index) + nachname;
         index--;
         if(index == 0){
@@ -35,7 +36,7 @@ public class SimpleUsernameAlgo extends UsernameFactory {
             index = vorname.length();
         }
         super.getUsername();
-        return username;
+        return Optional.ofNullable(username);
     }
     @Override
     public boolean hasNext(){

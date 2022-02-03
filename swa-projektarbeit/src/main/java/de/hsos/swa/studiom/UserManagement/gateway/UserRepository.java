@@ -64,7 +64,7 @@ public class UserRepository implements UserService {
      * @param userGenerator - Hier wird ein Obejekt erwartet das vom UsernameFactory gerebt hat und implementiert wurde. Wird dazu benutzt um einen Username zu erzuegen.
      * @param password
      * @return User - gibt den erzuegten User zurueck
-     * @throws UserNotExistExeption - wird geschmissen falls es keinen User erzeuegen koennte
+     * @throws CanNotGeneratUserExeption - wird geschmissen falls es keinen User erzeuegen koennte
      */
     @Override
     public User createUserStudent(UsernameFactory userGenerator, String password) throws CanNotGeneratUserExeption{
@@ -79,7 +79,7 @@ public class UserRepository implements UserService {
      * @param password
      * @param role
      * @return User - gibt den erzuegten User zurueck
-     * @throws UserNotExistExeption - wird geschmissen falls es keinen User erzeuegen koennte
+     * @throws CanNotGeneratUserExeption - wird geschmissen falls es keinen User erzeuegen koennte
      */
     //ToDo add password generator
     @Override
@@ -89,7 +89,7 @@ public class UserRepository implements UserService {
         boolean isNameFree = false;
 
         while(userGenerator.hasNext() && !isNameFree){
-            username =  Optional.ofNullable(userGenerator.getUsername());
+            username =  userGenerator.getUsername();
             if(username.isPresent()){
                 isNameFree = !this.findUserByUsername(username.get()).isPresent();
             }
@@ -107,6 +107,7 @@ public class UserRepository implements UserService {
         } catch (UsernameExistExeption e) {
             log.warn("Es konnte kein Username erzeugt werden");
             log.error(e.getMessage());
+            log.debug(userGenerator.toString());
             throw new CanNotGeneratUserExeption();
         }
     }

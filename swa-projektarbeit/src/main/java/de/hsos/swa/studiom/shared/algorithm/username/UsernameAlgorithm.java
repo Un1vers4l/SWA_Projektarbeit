@@ -7,6 +7,8 @@
  */
 package de.hsos.swa.studiom.shared.algorithm.username;
 
+import java.util.Optional;
+
 public interface UsernameAlgorithm {
-    public String getUsername(); 
+    public Optional<String> getUsername(); 
 }

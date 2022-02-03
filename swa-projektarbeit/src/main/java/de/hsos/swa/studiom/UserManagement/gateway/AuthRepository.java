@@ -7,9 +7,9 @@
  */
 package de.hsos.swa.studiom.UserManagement.gateway;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -61,7 +61,7 @@ public class AuthRepository implements AuthService {
      * @throws WrongUserDataExeption - wird ausgeloest falls die Userdaten nicht uebereinstimmen
      */
     @Override
-    public String userLogin(String username, String password) throws WrongUserDataExeption {
+    public Optional<String> userLogin(String username, String password) throws WrongUserDataExeption {
         Optional<User> userOptin = userService.findUserByUsername(username);
 
         if(!userOptin.isPresent()) throw new WrongUserDataExeption();
@@ -75,9 +75,9 @@ public class AuthRepository implements AuthService {
                     this.addTokenStudent(user);
             }
         } catch (StudentIsNotStudentExeption e) {
-            return null;
+            return Optional.ofNullable(null);
         }
-        String token = this.generateToken(user.getUserId(), user.getRole(), duration);
+        Optional<String> token = this.generateToken(user.getUserId(), user.getRole(), duration);
         return token;
     }
 
@@ -89,12 +89,11 @@ public class AuthRepository implements AuthService {
      * @param duration
      * @return String - gibt denn denn JWT in String Form zurueck.
      */
-    private String generateToken(long userID, Set<Role> roles, Long duration) {
+    private Optional<String> generateToken(long userID, Set<Role> roles, Long duration) {
 
         long currentTimeInSecs = this.currentTimeInSecs();
 
-        Set<String> groups = new HashSet<>();
-        for(Role role: roles) groups.add(role.toString());
+        Set<String> groups = roles.stream().map(Role::name).collect(Collectors.toSet());
 
         this.claimsBuilder.issuer(this.issuer);
         this.claimsBuilder.subject(Long.toString(userID));
@@ -102,9 +101,9 @@ public class AuthRepository implements AuthService {
         this.claimsBuilder.expiresIn(duration);
         this.claimsBuilder.groups(groups);
 
-        String token = null;
+        Optional<String> token = Optional.ofNullable(null);
         try {
-            token = this.claimsBuilder.jws().sign();
+            token = Optional.ofNullable(this.claimsBuilder.jws().sign());
         } catch (JwtSignatureException e) {
             log.error("Bitte pruefen Sie den privateKey.pem oder starten sie den Server neu");
             log.error(e.toString());
@@ -115,12 +114,12 @@ public class AuthRepository implements AuthService {
 
     private void addTokenStudent(User user) throws StudentIsNotStudentExeption {
 
-        if(user.getStudent() == null){
+        if(!user.getStudent().isPresent()){
             log.warn("Achtung Ein User("+ user.getUserId()+") mit der Role Student der kein Eintrag als Student hat");
             log.debug(user.toString());
             throw new StudentIsNotStudentExeption();
         }
-        this.claimsBuilder.claim("matNr", user.getStudent().getMatNr());    
+        this.claimsBuilder.claim("matNr", user.getStudent().get().getMatNr());    
     }
     
     /** 

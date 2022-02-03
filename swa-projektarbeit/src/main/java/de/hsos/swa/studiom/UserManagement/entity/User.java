@@ -7,7 +7,9 @@
  */
 package de.hsos.swa.studiom.UserManagement.entity;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.enterprise.inject.Vetoed;
@@ -51,7 +53,7 @@ public class User {
     @ElementCollection(targetClass = Role.class)
     @JoinTable(name = "User_Roles", joinColumns = @JoinColumn(name = "userID"))
     @Fetch(FetchMode.JOIN)
-    private Set<Role> role;
+    private Set<Role> role = new HashSet<>();
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Student student;
@@ -66,8 +68,8 @@ public class User {
     public User() {
     }
 
-    public Student getStudent() {
-        return this.student;
+    public Optional<Student> getStudent() {
+        return Optional.ofNullable(this.student);
     }
 
     public void setStudent(Student student) {
