@@ -23,7 +23,6 @@ public class SimpleUsernameAlgo extends UsernameFactory {
 
     @Override
     public String getUsername() {
-        super.getUsername();
         if(!this.hasNext()) return null;
         
 
@@ -35,6 +34,7 @@ public class SimpleUsernameAlgo extends UsernameFactory {
             nachname = tmp;
             index = vorname.length();
         }
+        super.getUsername();
         return username;
     }
     @Override

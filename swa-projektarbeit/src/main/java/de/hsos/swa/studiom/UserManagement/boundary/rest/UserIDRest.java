@@ -8,6 +8,7 @@
 package de.hsos.swa.studiom.UserManagement.boundary.rest;
 
 
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
@@ -54,12 +55,13 @@ public class UserIDRest {
     @GET
     public Response getUser(@PathParam("userid") long userID){
 
-        User user = userService.findUser(userID);
-        if(user == null){
+        Optional<User> user = userService.findUser(userID);
+        
+        if(!user.isPresent()){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.ok(UserDto.Converter.UserToDto(user)).build();
+        return Response.ok(UserDto.Converter.UserToDto(user.get())).build();
     }
 
 

@@ -30,6 +30,7 @@ import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
 import de.hsos.swa.studiom.shared.algorithm.username.SimpleUsernameAlgo;
+import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
 
 @RequestScoped
 @Path("api/v1/test")
@@ -72,10 +73,11 @@ public class TestUsermanagmentRest {
         User user = null;
         Set<Role> role = new HashSet<>();
         role.add(Role.USER);
-        user = userService.createUserGenertor(new SimpleUsernameAlgo("Marc", "Kla"), "123", role);
-
-        if(user == null) return Response.ok(new ErrorDto("Wurde nicht erzeugt")).build();
-
+        try {
+            user = userService.createUserGenertor(new SimpleUsernameAlgo("Marc", "Kla"), "123", role);
+        } catch (CanNotGeneratUserExeption e) {
+            return Response.ok(new ErrorDto(e)).build();
+        }
         return Response.ok(user).build();
     }
 }

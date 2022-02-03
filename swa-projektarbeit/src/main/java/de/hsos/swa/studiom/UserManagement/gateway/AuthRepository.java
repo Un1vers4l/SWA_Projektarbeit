@@ -62,9 +62,11 @@ public class AuthRepository implements AuthService {
      */
     @Override
     public String userLogin(String username, String password) throws WrongUserDataExeption {
-        User user = userService.findUserByUsername(username);
-        
-        if(user == null) throw new WrongUserDataExeption();
+        Optional<User> userOptin = userService.findUserByUsername(username);
+
+        if(!userOptin.isPresent()) throw new WrongUserDataExeption();
+
+        User user = userOptin.get();
         if(!user.isMyPassword(password)) throw new WrongUserDataExeption();
 
         long duration = this.getDuration(user.getRole());

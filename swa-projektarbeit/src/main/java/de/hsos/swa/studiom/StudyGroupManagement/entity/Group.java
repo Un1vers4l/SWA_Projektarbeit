@@ -21,8 +21,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.shared.mock.MockModule;
 
 @Entity
 @Table(name = "groups")
@@ -37,7 +37,7 @@ public class Group {
     private String name;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private MockModule module;
+    private Module module;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Student owner;
@@ -50,14 +50,14 @@ public class Group {
     public Group() {
     }
 
-    public Group(Student owner, MockModule module, String name, int maxMembers) {
+    public Group(Student owner, Module module, String name, int maxMembers) {
         this.maxMembers = maxMembers;
         this.name = name;
         this.module = module;
         this.owner = owner;
     }
 
-    public Group(Student owner, MockModule module, String name, int maxMembers, GroupType type) {
+    public Group(Student owner, Module module, String name, int maxMembers, GroupType type) {
 
         this.maxMembers = maxMembers;
         this.name = name;
@@ -90,11 +90,11 @@ public class Group {
         this.maxMembers = maxMembers;
     }
 
-    public MockModule getModule() {
+    public Module getModule() {
         return module;
     }
 
-    public void setModule(MockModule module) {
+    public void setModule(Module module) {
         this.module = module;
     }
 

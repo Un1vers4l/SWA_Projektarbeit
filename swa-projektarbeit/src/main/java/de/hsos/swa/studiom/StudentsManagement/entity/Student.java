@@ -23,9 +23,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.UserManagement.entity.User;
-import de.hsos.swa.studiom.shared.mock.MockModule;
 
 @Entity
 @Table(name = "students")
@@ -41,7 +41,7 @@ public class Student {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "student_modules", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
             @JoinColumn(name = "fk_module") })
-    private Set<MockModule> modules = new HashSet<>();
+    private Set<Module> modules = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "student_groups", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
@@ -51,7 +51,7 @@ public class Student {
     @OneToOne(cascade = CascadeType.ALL)
     private Adress adress;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", unique = true, nullable = false)
     private User user;
 
@@ -114,11 +114,11 @@ public class Student {
         this.email = email;
     }
 
-    public Set<MockModule> getModules() {
+    public Set<Module> getModules() {
         return modules;
     }
 
-    public void setModules(Set<MockModule> modules) {
+    public void setModules(Set<Module> modules) {
         this.modules = modules;
     }
 
@@ -150,7 +150,7 @@ public class Student {
         this.adress = new Adress(street, nr, zipCode, town);
     }
 
-    public Student(int matNr, String name, String email, Set<MockModule> modules, Set<Group> groups,
+    public Student(int matNr, String name, String email, Set<Module> modules, Set<Group> groups,
             Adress adress) {
         this.matNr = matNr;
         this.name = name;

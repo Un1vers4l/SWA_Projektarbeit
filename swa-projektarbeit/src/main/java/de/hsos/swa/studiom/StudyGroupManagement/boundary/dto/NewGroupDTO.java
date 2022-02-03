@@ -9,7 +9,7 @@ package de.hsos.swa.studiom.StudyGroupManagement.boundary.dto;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
-import de.hsos.swa.studiom.shared.mock.MockModule;
+import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 
 
 public class NewGroupDTO {
@@ -31,10 +31,10 @@ public class NewGroupDTO {
     public static class Converter {
         public static NewGroupDTO toDTO(Group group) {
             return new NewGroupDTO(group.getOwner().getMatNr(), group.getName(), group.getMaxMembers(),
-                    group.getModule().getId());
+                    group.getModule().getModuleID());
         }
 
-        public static Group toGroup(NewGroupDTO gDTO, Student owner, MockModule module) {
+        public static Group toGroup(NewGroupDTO gDTO, Student owner, Module module) {
             return new Group(owner, module, gDTO.name, gDTO.maxMember);
         }
     }

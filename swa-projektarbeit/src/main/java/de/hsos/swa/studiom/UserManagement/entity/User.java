@@ -7,7 +7,6 @@
  */
 package de.hsos.swa.studiom.UserManagement.entity;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -58,10 +57,10 @@ public class User {
     private Student student;
 
     public User(String username, String password, Set<Role> role) {
-        this.username = username;
-        this.password = this.passwordDecoder(password);
-        this.role = role;
-        role.add(Role.USER);
+        this.setUsername(username);
+        this.setPassword(password);
+        this.setRole(role);
+        this.addRole(Role.USER);
     }
 
     public User() {

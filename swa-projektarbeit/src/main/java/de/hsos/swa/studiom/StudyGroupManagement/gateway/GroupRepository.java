@@ -14,7 +14,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
-import de.hsos.swa.studiom.shared.mock.MockModule;
+import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +47,11 @@ public class GroupRepository implements GroupService {
             throws EntityNotFoundException {
         try {
             Student owner = em.find(Student.class, matNr);
-            MockModule module = em.find(MockModule.class, moduleId);
+            Module module = em.find(Module.class, moduleId);
             if (module == null || owner == null) {
                 if (module == null) {
                     log.error("Modul konnte nicht gefunden werden");
-                    throw new EntityNotFoundException(MockModule.class, moduleId);
+                    throw new EntityNotFoundException(Module.class, moduleId);
                 } else {
                     log.error("Student konnte nicht gefunden werden");
                     throw new EntityNotFoundException(Student.class, matNr);

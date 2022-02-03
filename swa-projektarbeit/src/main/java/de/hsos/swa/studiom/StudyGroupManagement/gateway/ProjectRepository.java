@@ -27,7 +27,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
-import de.hsos.swa.studiom.shared.mock.MockModule;
+import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 
 @Transactional
 @ApplicationScoped
@@ -46,10 +46,10 @@ public class ProjectRepository implements ProjectService {
     public Optional<Group> createProject(int matNr, int moduleId) throws EntityNotFoundException, JoinGroupException {
         try {
             Student owner = em.find(Student.class, matNr);
-            MockModule module = em.find(MockModule.class, moduleId);
+            Module module = em.find(Module.class, moduleId);
             if (module == null) {
                 log.error("Modul wurde nicht gefunden");
-                throw new EntityNotFoundException(MockModule.class, moduleId);
+                throw new EntityNotFoundException(Module.class, moduleId);
             }
             if (owner == null) {
                 log.error("Owner wurde nicht gefunden");
@@ -169,7 +169,7 @@ public class ProjectRepository implements ProjectService {
                 log.error("Das Projekt ist bereits voll");
                 throw new JoinGroupException(TYPE, projectId, matNr, FULL);
             }
-            if (!isInProject(matNr, project.getModule().getId())) {
+            if (!isInProject(matNr, project.getModule().getModuleID())) {
                 log.error("Student ist bereits in einem anderen Projekt in diesem Modul eingetragen");
                 throw new JoinGroupException(TYPE, projectId, matNr, DUPLICATE);
             }

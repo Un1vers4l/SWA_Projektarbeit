@@ -31,7 +31,7 @@ public class GroupDTO {
             gDTO.owner = StudentDTO.Converter.toDTO(group.getOwner());
             gDTO.name = group.getName();
             gDTO.maxMember = group.getMaxMembers();
-            gDTO.moduleId = group.getModule().getId();
+            gDTO.moduleId = group.getModule().getModuleID();
             for (Student member : group.getMember()) {
                 gDTO.members.add(StudentDTO.Converter.toDTO(member));
             }
