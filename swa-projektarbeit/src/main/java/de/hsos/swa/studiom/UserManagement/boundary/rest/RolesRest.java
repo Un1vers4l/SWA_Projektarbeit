@@ -16,6 +16,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
+
 import de.hsos.swa.studiom.UserManagement.boundary.dto.RoleDto;
 
 @RequestScoped
@@ -23,8 +26,12 @@ import de.hsos.swa.studiom.UserManagement.boundary.dto.RoleDto;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class RolesRest {
+
+    Logger log = Logger.getLogger(RolesRest.class);
+
     @RolesAllowed("ADMIN")
     @GET
+    @Operation(summary = "Gibt Alle Rolle aus Rechte: {ADMIN}")
     public Response getAllRole(){
         return Response.ok(new RoleDto()).build();
     }

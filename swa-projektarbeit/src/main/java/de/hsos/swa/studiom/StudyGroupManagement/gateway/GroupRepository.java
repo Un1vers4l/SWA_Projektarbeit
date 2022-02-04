@@ -7,6 +7,8 @@
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.ModulManagment.gateway.ModulRepository;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
@@ -15,8 +17,6 @@ import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
-import de.hsos.swa.studiom.ModuleManagment.entity.Module;
-import de.hsos.swa.studiom.ModuleManagment.gateway.ModuleRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class GroupRepository implements GroupService {
     EntityManager em;
 
     @Inject
-    ModuleRepository modRepos;
+    ModulRepository modRepos;
 
     @Inject
     StudentRepository studRepos;
@@ -57,7 +57,7 @@ public class GroupRepository implements GroupService {
         try {
 
             Student owner = studRepos.getStudent(matNr).get();
-            Module module = modRepos.getModul(moduleId).get();
+            Modul module = modRepos.getModul(moduleId).get();
             if (module == null || owner == null) {
                 return Optional.ofNullable(null);
             }

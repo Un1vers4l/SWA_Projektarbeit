@@ -9,15 +9,15 @@ package de.hsos.swa.studiom.shared.algorithm.username;
 
 import java.util.Optional;
 
-public abstract class UsernameFactory implements UsernameAlgorithm {
+public abstract class UsernameGenerator implements UsernameAlgorithm {
     private final int maxCount;
     private int count;
 
-    public UsernameFactory(int maxCount) {
+    public UsernameGenerator(int maxCount) {
         this.maxCount = maxCount;
         this.count = 0;
     }
-    public UsernameFactory() {
+    public UsernameGenerator() {
         this.maxCount = 500;
         this.count = 0;
     }

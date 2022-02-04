@@ -8,6 +8,7 @@
 package de.hsos.swa.studiom.StudyGroupManagement.entity;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,7 +23,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import de.hsos.swa.studiom.ModuleManagment.entity.Module;
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.mock.MockModule;
 @Entity
@@ -38,10 +39,10 @@ public class Group {
     private int maxMembers;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Module module;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Modul modul;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Student owner;
 
     @ManyToMany(mappedBy = "groups", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -52,18 +53,18 @@ public class Group {
     public Group() {
     }
 
-    public Group(Student owner, Module module, String name, int maxMembers) {
+    public Group(Student owner, Modul module, String name, int maxMembers) {
         this.maxMembers = maxMembers;
         this.name = name;
-        this.module = module;
+        this.modul = module;
         this.owner = owner;
     }
 
-    public Group(Student owner, Module module, String name, int maxMembers, GroupType type) {
+    public Group(Student owner, Modul modul, String name, int maxMembers, GroupType type) {
 
         this.maxMembers = maxMembers;
         this.name = name;
-        this.module = module;
+        this.modul = modul;
         this.owner = owner;
         this.type = type;
     }
@@ -92,12 +93,12 @@ public class Group {
         this.maxMembers = maxMembers;
     }
 
-    public Module getModule() {
-        return module;
+    public Modul getModul() {
+        return modul;
     }
 
-    public void setModule(Module module) {
-        this.module = module;
+    public void setModul(Modul module) {
+        this.modul = module;
     }
 
     public Student getOwner() {
@@ -132,12 +133,29 @@ public class Group {
         this.member = member;
     }
 
-    public void addMember(Student student) {
-        this.member.add(student);
+    public boolean addMember(Student student) {
+        return this.member.add(student);
     }
 
     public boolean removeMember(Student student) {
         return this.member.remove(student);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Group)) {
+            return false;
+        }
+        Group group = (Group) o;
+        return groupId == group.groupId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(groupId);
+    }
+
 
 }

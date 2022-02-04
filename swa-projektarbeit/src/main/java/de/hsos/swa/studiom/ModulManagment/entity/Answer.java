@@ -5,7 +5,7 @@
  * @modify date 2022-02-02 22:08:39
  * @desc [description]
  */
-package de.hsos.swa.studiom.ModuleManagment.entity;
+package de.hsos.swa.studiom.ModulManagment.entity;
 
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;

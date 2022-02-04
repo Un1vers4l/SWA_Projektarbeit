@@ -7,7 +7,7 @@
  */
 package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
 
-import de.hsos.swa.studiom.ModuleManagment.entity.Module;
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 
 public class ModuleDTO {
     public String name;
@@ -17,12 +17,12 @@ public class ModuleDTO {
     }
 
     public static class Converter {
-        public static ModuleDTO toDTO(Module module) {
+        public static ModuleDTO toDTO(Modul module) {
             return new ModuleDTO(module.getName());
         }
 
-        public static Module toModule(ModuleDTO mDto) {
-            Module mockModule = new Module();
+        public static Modul toModule(ModuleDTO mDto) {
+            Modul mockModule = new Modul();
             mockModule.setName(mDto.name);
             return mockModule;
         }

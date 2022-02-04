@@ -5,7 +5,7 @@
  * @modify date 2022-02-02 22:08:37
  * @desc [description]
  */
-package de.hsos.swa.studiom.ModuleManagment.entity;
+package de.hsos.swa.studiom.ModulManagment.entity;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -23,18 +23,20 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
 @Vetoed
 @Entity
-@NamedQuery(name = "Module.findAll", query = "SELECT f from Module f", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-public class Module {
+@Table(name = "Module")
+@NamedQuery(name = "Modul.findAll", query = "SELECT f from Modul f", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+public class Modul {
     @Id
     @SequenceGenerator(name = "moduleIdSequence", sequenceName = "Modules_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "moduleIdSequence")
-    private int moduleID;
+    private int modulID;
 
     @Column(nullable = false)
     private String name;
@@ -43,34 +45,34 @@ public class Module {
     private String description;
 
     @Column(nullable = false)
-    private boolean isProject;
+    private Boolean isProject;
 
     @ManyToMany(mappedBy = "modules", fetch = FetchType.LAZY)
     private Set<Student> studenten = new HashSet<>();
 
-    @OneToMany(mappedBy="module", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy="modul", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Group> projects = new HashSet<>();
 
-    @OneToMany(mappedBy="module", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy="modul", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Question> questions = new HashSet<>();
 
-    public Module() {
+    public Modul() {
     }
 
 
-    public Module(String name, String description, boolean isProject) {
+    public Modul(String name, String description, Boolean isProject) {
         this.setName(name);
         this.setDescription(description);
         this.setIsProject(isProject);
     }
 
 
-    public int getModuleID() {
-        return this.moduleID;
+    public int getModulID() {
+        return this.modulID;
     }
 
-    public void setModuleID(int moduleID) {
-        this.moduleID = moduleID;
+    public void setModulID(int moduleID) {
+        this.modulID = moduleID;
     }
 
     public String getName() {
@@ -89,15 +91,15 @@ public class Module {
         this.description = description;
     }
 
-    public boolean isIsProject() {
+    public Boolean isIsProject() {
         return this.isProject;
     }
 
-    public boolean getIsProject() {
+    public Boolean getIsProject() {
         return this.isProject;
     }
 
-    public void setIsProject(boolean isProject) {
+    public void setIsProject(Boolean isProject) {
         this.isProject = isProject;
     }
 
@@ -134,22 +136,22 @@ public class Module {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof Module)) {
+        if (!(o instanceof Modul)) {
             return false;
         }
-        Module module = (Module) o;
-        return moduleID == module.moduleID;
+        Modul module = (Modul) o;
+        return modulID == module.modulID;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moduleID);
+        return Objects.hash(modulID);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " moduleID='" + getModuleID() + "'" +
+            " moduleID='" + getModulID() + "'" +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", isProject='" + isIsProject() + "'" +
@@ -159,13 +161,12 @@ public class Module {
             "}";
     }
 
-    public void changeMyData(Module other){
+    public void changeMyData(Modul other){
         if(other.name != null) this.name = new String(other.name);
         if(other.description != null) this.description = new String(other.description);
-        if(other.isProject != this.isProject) this.isProject = other.isProject;
     }
 
-    public boolean addStudent(Student student){
-        return this.studenten.add(student);
+    public int studentenAnzahl(){
+        return this.studenten.size();
     }
-}
+}   

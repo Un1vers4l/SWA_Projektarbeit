@@ -9,7 +9,7 @@ package de.hsos.swa.studiom.shared.algorithm.username;
 
 import java.util.Optional;
 
-public class SimpleUsernameAlgo extends UsernameFactory {
+public class SimpleUsernameAlgo extends UsernameGenerator {
     private String vorname;
     private String nachname;
 

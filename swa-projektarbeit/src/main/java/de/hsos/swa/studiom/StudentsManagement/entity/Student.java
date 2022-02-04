@@ -23,7 +23,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import de.hsos.swa.studiom.ModuleManagment.entity.Module;
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.UserManagement.entity.User;
 
@@ -40,8 +40,8 @@ public class Student {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "student_modules", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
-            @JoinColumn(name = "fk_module") })
-    private Set<Module> modules = new HashSet<>();
+            @JoinColumn(name = "fk_modul") })
+    private Set<Modul> modules = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "student_groups", joinColumns = { @JoinColumn(name = "fk_student") }, inverseJoinColumns = {
@@ -114,11 +114,11 @@ public class Student {
         this.email = email;
     }
 
-    public Set<Module> getModules() {
+    public Set<Modul> getModules() {
         return modules;
     }
 
-    public void setModules(Set<Module> modules) {
+    public void setModules(Set<Modul> modules) {
         this.modules = modules;
     }
 
@@ -126,10 +126,10 @@ public class Student {
         return groups;
     }
 
-    public boolean addModule(Module module) {
+    public boolean addModule(Modul module) {
         return this.modules.add(module);
     }
-    public boolean removeModule(Module module) {
+    public boolean removeModule(Modul module) {
         return this.modules.remove(module);
     }
 
@@ -157,7 +157,7 @@ public class Student {
         this.adress = new Adress(street, nr, zipCode, town);
     }
 
-    public Student(int matNr, String name, String email, Set<Module> modules, Set<Group> groups,
+    public Student(int matNr, String name, String email, Set<Modul> modules, Set<Group> groups,
             Adress adress) {
         this.matNr = matNr;
         this.name = name;
@@ -166,5 +166,10 @@ public class Student {
         this.groups = groups;
         this.adress = adress;
     }
-
+    public void removeFromModule(Modul module){
+        this.getModules().remove(module);
+    }
+    public void removeFromGroups(Set<Group> groups){
+        this.getModules().removeAll(groups);
+    }
 }

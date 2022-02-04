@@ -5,7 +5,7 @@
  * @modify date 2022-02-02 22:08:34
  * @desc [description]
  */
-package de.hsos.swa.studiom.ModuleManagment.entity;
+package de.hsos.swa.studiom.ModulManagment.entity;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,17 +19,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 
-import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-
 @Vetoed
 @Entity
 @NamedQuery(name = "Question.findAll", query = "SELECT f from Question f", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "Question.find", query = "SELECT f from Question f Where f.questionId = :questionId AND f.modul = :modul", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
 public class Question {
 
     @Id
@@ -41,11 +39,11 @@ public class Question {
     @Column(nullable = false)
     private String text;
 
+    @Column(nullable = false)
+    private String studentName;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("userId")
-    private Module module;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Student owner;
+    private Modul modul;
 
     @OneToMany(mappedBy="question", cascade = CascadeType.REMOVE)
     private Set<Answer> answers = new HashSet<>();
@@ -61,12 +59,11 @@ public class Question {
     public Question() {
     }
 
-    public Question(int questionId, String topic, String text, Module module, Student owner) {
-        this.questionId = questionId;
+    public Question(String topic, String text, Modul modul, String studentName) {
         this.topic = topic;
         this.text = text;
-        this.module = module;
-        this.owner = owner;
+        this.modul = modul;
+        this.studentName = studentName;
     }
 
 
@@ -94,21 +91,22 @@ public class Question {
         this.text = text;
     }
 
-    public Module getModule() {
-        return this.module;
+    public Modul getModul() {
+        return this.modul;
     }
 
-    public void setModule(Module module) {
-        this.module = module;
+    public void setModul(Modul modul) {
+        this.modul = modul;
     }
 
-    public Student getOwner() {
-        return this.owner;
+    public String getStudentName() {
+        return this.studentName;
     }
 
-    public void setOwner(Student owner) {
-        this.owner = owner;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
+
 
     public Set<Answer> getAnswers() {
         return this.answers;
@@ -140,8 +138,8 @@ public class Question {
             " questionId='" + getquestionId() + "'" +
             ", topic='" + getTopic() + "'" +
             ", text='" + getText() + "'" +
-            ", module='" + getModule() + "'" +
-            ", owner='" + getOwner() + "'" +
+            ", module='" + getModul() + "'" +
+            ", owner='" + getStudentName() + "'" +
             ", answers='" + getAnswers() + "'" +
             "}";
     }

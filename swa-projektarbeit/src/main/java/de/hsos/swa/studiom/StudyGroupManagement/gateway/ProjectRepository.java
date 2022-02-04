@@ -21,6 +21,8 @@ import javax.transaction.Transactional;
 
 import org.jboss.logging.Logger;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.ModulManagment.gateway.ModulRepository;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
@@ -29,8 +31,6 @@ import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
-import de.hsos.swa.studiom.ModuleManagment.entity.Module;
-import de.hsos.swa.studiom.ModuleManagment.gateway.ModuleRepository;
 
 @Transactional
 @RequestScoped
@@ -46,7 +46,7 @@ public class ProjectRepository implements ProjectService {
     EntityManager em;
 
     @Inject
-    ModuleRepository modRepos;
+    ModulRepository modRepos;
 
     @Inject
     StudentRepository studRepos;
@@ -55,7 +55,7 @@ public class ProjectRepository implements ProjectService {
     public Optional<Group> createProject(int matNr, int moduleId) throws EntityNotFoundException, JoinGroupException {
         try {
             Student owner = studRepos.getStudent(matNr).get();
-            Module module = modRepos.getModul(moduleId).get();
+            Modul module = modRepos.getModul(moduleId).get();
             if (module == null || owner == null) {
                 return Optional.ofNullable(null);
             }
@@ -164,7 +164,7 @@ public class ProjectRepository implements ProjectService {
                 log.error("Das Projekt ist bereits voll");
                 throw new JoinGroupException(TYPE, projectId, matNr, FULL);
             }
-            if (!isInProject(matNr, project.getModule().getModuleID())) {
+            if (!isInProject(matNr, project.getModul().getModulID())) {
                 log.error("Student ist bereits in einem anderen Projekt in diesem Modul eingetragen");
                 throw new JoinGroupException(TYPE, projectId, matNr, DUPLICATE);
             }

@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
-import de.hsos.swa.studiom.shared.algorithm.username.UsernameFactory;
+import de.hsos.swa.studiom.shared.algorithm.username.UsernameGenerator;
 import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
 import de.hsos.swa.studiom.shared.exceptions.UserNotExistExeption;
 import de.hsos.swa.studiom.shared.exceptions.UsernameExistExeption;
@@ -67,7 +67,7 @@ public class UserRepository implements UserService {
      * @throws CanNotGeneratUserExeption - wird geschmissen falls es keinen User erzeuegen koennte
      */
     @Override
-    public User createUserStudent(UsernameFactory userGenerator, String password) throws CanNotGeneratUserExeption{
+    public User createUserStudent(UsernameGenerator userGenerator, String password) throws CanNotGeneratUserExeption{
         Set<Role> role = new HashSet<>();
         role.add(Role.STUDENT);
         return this.createUserGenertor(userGenerator, password, role);
@@ -83,7 +83,7 @@ public class UserRepository implements UserService {
      */
     //ToDo add password generator
     @Override
-    public User createUserGenertor(UsernameFactory userGenerator, String password, Set<Role> role) throws CanNotGeneratUserExeption{
+    public User createUserGenertor(UsernameGenerator userGenerator, String password, Set<Role> role) throws CanNotGeneratUserExeption{
         if(userGenerator == null || password == null || role == null) throw new IllegalArgumentException(); 
         Optional<String> username = Optional.ofNullable(null);
         boolean isNameFree = false;

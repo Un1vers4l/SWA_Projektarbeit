@@ -6,35 +6,35 @@
  * @desc [description]
  * @Quelle https://quarkus.io/guides/validation
  */
-package de.hsos.swa.studiom.UserManagement.boundary.dto;
+package de.hsos.swa.studiom.shared.dto;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 
-public class ErrorDto {
+public class StatusDto {
     private boolean success;
     private String message;
 
-    public ErrorDto() {
+    public StatusDto() {
     }
 
-    public ErrorDto(String message) {
+    public StatusDto(String message) {
         this.message = message;
         success = false;
     }
 
-    public ErrorDto(String message, boolean success) {
+    public StatusDto(String message, boolean success) {
         this.message = message;
         this.success = success;
     }
 
-    public ErrorDto(Exception e) {
+    public StatusDto(Exception e) {
         this.message = e.getMessage();
         this.success = false;
     }
-    public ErrorDto(Set<? extends ConstraintViolation<?>> violations) {
+    public StatusDto(Set<? extends ConstraintViolation<?>> violations) {
         this.success = false;
         this.message = violations.stream()
              .map(cv -> cv.getMessage())

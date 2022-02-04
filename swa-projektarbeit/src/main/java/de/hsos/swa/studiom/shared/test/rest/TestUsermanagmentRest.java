@@ -25,11 +25,11 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.UserManagement.boundary.dto.ErrorDto;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
 import de.hsos.swa.studiom.UserManagement.entity.User;
 import de.hsos.swa.studiom.shared.algorithm.username.SimpleUsernameAlgo;
+import de.hsos.swa.studiom.shared.dto.StatusDto;
 import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
 
 @RequestScoped
@@ -76,7 +76,7 @@ public class TestUsermanagmentRest {
         try {
             user = userService.createUserGenertor(new SimpleUsernameAlgo("Marc", "Kla"), "123", role);
         } catch (CanNotGeneratUserExeption e) {
-            return Response.ok(new ErrorDto(e)).build();
+            return Response.ok(new StatusDto(e)).build();
         }
         return Response.ok(user).build();
     }

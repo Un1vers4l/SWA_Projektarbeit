@@ -12,18 +12,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
-import de.hsos.swa.studiom.ModuleManagment.entity.Module;
 
 public class StudentDTO {
     public int matNr;
     public String name;
     public String email;
-    public Set<ModuleDTO> modules = new HashSet<>();
-    public Set<MockGroupDTO> groups = new HashSet<>();
+    public Set<ModuleDTO> modules = null;
+    public Set<MockGroupDTO> groups = null;
     public AdressDTO adress;
+
+
+    public StudentDTO() {
+    }
+
 
     public StudentDTO(int matNr, String name, String email, Set<ModuleDTO> modules, Set<MockGroupDTO> groups,
             AdressDTO adress) {
@@ -35,12 +40,62 @@ public class StudentDTO {
         this.adress = adress;
     }
 
+
+    public int getMatNr() {
+        return this.matNr;
+    }
+
+    public void setMatNr(int matNr) {
+        this.matNr = matNr;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Set<ModuleDTO> getModules() {
+        return this.modules;
+    }
+
+    public void setModules(Set<ModuleDTO> modules) {
+        this.modules = modules;
+    }
+
+    public Set<MockGroupDTO> getGroups() {
+        return this.groups;
+    }
+
+    public void setGroups(Set<MockGroupDTO> groups) {
+        this.groups = groups;
+    }
+
+    public AdressDTO getAdress() {
+        return this.adress;
+    }
+
+    public void setAdress(AdressDTO adress) {
+        this.adress = adress;
+    }
+
+
     public static class Converter {
         public static StudentDTO toStudentDTO(Student student) {
             Set<ModuleDTO> modules = new HashSet<>();
             Set<MockGroupDTO> groups = new HashSet<>();
 
-            for (Module module : student.getModules()) {
+            for (Modul module : student.getModules()) {
                 modules.add(ModuleDTO.Converter.toDTO(module));
             }
 
