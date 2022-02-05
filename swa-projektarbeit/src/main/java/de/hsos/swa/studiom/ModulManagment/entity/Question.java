@@ -24,6 +24,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 
+import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+
 @Vetoed
 @Entity
 @NamedQuery(name = "Question.findAll", query = "SELECT f from Question f", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
@@ -41,6 +43,9 @@ public class Question {
 
     @Column(nullable = false)
     private String studentName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Student owner;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Modul modul;

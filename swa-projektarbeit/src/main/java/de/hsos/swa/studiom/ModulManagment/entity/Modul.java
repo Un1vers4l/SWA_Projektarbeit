@@ -45,6 +45,9 @@ public class Modul {
     private String description;
 
     @Column(nullable = false)
+    private String studentName;
+
+    @Column(nullable = false)
     private Boolean isProject;
 
     @ManyToMany(mappedBy = "modules", fetch = FetchType.LAZY)

@@ -25,7 +25,6 @@ import javax.persistence.Table;
 
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.shared.mock.MockModule;
 @Entity
 @Table(name = "groups")
 @NamedQuery(name = "Groups.findAll", query = "SELECT g FROM Group g")
@@ -39,13 +38,13 @@ public class Group {
     private int maxMembers;
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Modul modul;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Student owner;
 
-    @ManyToMany(mappedBy = "groups", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
     private Set<Student> member = new HashSet<>();
 
     private GroupType type;

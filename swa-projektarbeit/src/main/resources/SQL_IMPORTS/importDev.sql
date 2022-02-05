@@ -20,7 +20,6 @@ VALUES (1, 0),
     (2, 3),
     (3, 3);
 
-
 /*Password: "student"*/
 INSERT INTO Account (userId, username, password)
 VALUES (4,'student','264c8c381bf16c982a4e59b0dd4c6f7808c51a05f64c35db42cc78a2a72875bb'),
@@ -37,7 +36,6 @@ VALUES (4, 0),
     (6, 3),
     (7, 0),
     (7, 3);
-
 
 INSERT INTO adress(nr, street, town, zipCode, id) 
 VALUES (12, 'Eisenbahnstrasse', 'Osnabrueck', 49074, 1),

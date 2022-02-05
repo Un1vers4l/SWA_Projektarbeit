@@ -100,13 +100,11 @@ public class ModulRepository implements ModulService{
         for(Group projekt : modul.getProjects()){
             for (Student student: projekt.getStudents()){
                 student.removeGroup(projekt);
-                //em.persist(student);
             }
         }
 
         for(Student student : modul.getStudenten()){
             student.removeFromModule(modul);
-            //em.persist(student);
         }
 
         em.remove(modul);
