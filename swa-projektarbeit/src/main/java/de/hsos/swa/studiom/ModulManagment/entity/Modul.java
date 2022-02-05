@@ -41,7 +41,7 @@ public class Modul {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 511)
+    @Column(nullable = false, length = 1000)
     private String description;
 
     @Column(nullable = false)
@@ -50,22 +50,20 @@ public class Modul {
     @ManyToMany(mappedBy = "modules", fetch = FetchType.LAZY)
     private Set<Student> studenten = new HashSet<>();
 
-    @OneToMany(mappedBy="modul", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "modul", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Group> projects = new HashSet<>();
 
-    @OneToMany(mappedBy="modul", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "modul", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Question> questions = new HashSet<>();
 
     public Modul() {
     }
-
 
     public Modul(String name, String description, Boolean isProject) {
         this.setName(name);
         this.setDescription(description);
         this.setIsProject(isProject);
     }
-
 
     public int getModulID() {
         return this.modulID;
@@ -127,7 +125,6 @@ public class Modul {
         this.questions = question;
     }
 
-
     public boolean isProject() {
         return this.isProject;
     }
@@ -151,22 +148,24 @@ public class Modul {
     @Override
     public String toString() {
         return "{" +
-            " moduleID='" + getModulID() + "'" +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", isProject='" + isIsProject() + "'" +
-            ", studenten='" + getStudenten() + "'" +
-            ", projects='" + getProjects() + "'" +
-            ", questions='" + getQuestions() + "'" +
-            "}";
+                " moduleID='" + getModulID() + "'" +
+                ", name='" + getName() + "'" +
+                ", description='" + getDescription() + "'" +
+                ", isProject='" + isIsProject() + "'" +
+                ", studenten='" + getStudenten() + "'" +
+                ", projects='" + getProjects() + "'" +
+                ", questions='" + getQuestions() + "'" +
+                "}";
     }
 
-    public void changeMyData(Modul other){
-        if(other.name != null) this.name = new String(other.name);
-        if(other.description != null) this.description = new String(other.description);
+    public void changeMyData(Modul other) {
+        if (other.name != null)
+            this.name = new String(other.name);
+        if (other.description != null)
+            this.description = new String(other.description);
     }
 
-    public int studentenAnzahl(){
+    public int studentenAnzahl() {
         return this.studenten.size();
     }
-}   
+}

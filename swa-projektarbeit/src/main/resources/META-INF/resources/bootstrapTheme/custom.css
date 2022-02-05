@@ -92,7 +92,7 @@ a {
 
 .nav_logo-icon {
     font-size: 1.25rem;
-    color: var(--bs-info)
+    color: var(--bs-primary)
 }
 
 .nav_logo-name {
@@ -165,11 +165,15 @@ a {
         padding: 1rem 1rem 0 0
     }
 
-    .show {
-        width: calc(var(--nav-width) + 156px)
-    }
-
     .body-pd {
         padding-left: calc(var(--nav-width) + 188px)
+    }
+
+    .card{
+        word-wrap: normal;
+    }
+
+    .accordion-header .accordion-body{
+        text-align: left;
     }
 }

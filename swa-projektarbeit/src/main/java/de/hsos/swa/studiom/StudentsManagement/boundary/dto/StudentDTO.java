@@ -106,11 +106,5 @@ public class StudentDTO {
             return new StudentDTO(student.getMatNr(), student.getName(), student.getEmail(), modules,
                     groups, AdressDTO.Converter.toDto(student.getAdress()));
         }
-        /*
-         * public static Student toStudent(StudentDTO sDto) {
-         * return new Student(sDto.matNr, sDto.name, sDto.email, sDto.modules,
-         * sDto.groups, sDto.adress);
-         * }
-         */
     }
 }

@@ -194,4 +194,17 @@ public class ProjectRepository implements ProjectService {
         }
         return true;
     }
+
+    @Override
+    public Optional<List<Group>> getProjectsForStudent(int matNr) {
+        try {
+            List<Group> resultList = em
+                    .createQuery("SELECT p FROM Group p WHERE p.type = :type AND p.owner.matNr = :matNr", Group.class)
+                    .setParameter("type", TYPE).setParameter("matNr", matNr).getResultList();
+            return Optional.ofNullable(resultList);
+        } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
+            log.error("Eine Exception wurde geworfen \n" + e.toString());
+            return Optional.ofNullable(null);
+        }
+    }
 }

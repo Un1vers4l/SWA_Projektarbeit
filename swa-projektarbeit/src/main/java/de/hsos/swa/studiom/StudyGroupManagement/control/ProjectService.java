@@ -25,4 +25,6 @@ public interface ProjectService {
     public Optional<List<Group>> getAllProjects();
 
     public Optional<Group> addStudent(int matNr, int groupId) throws EntityNotFoundException, JoinGroupException;
+
+    public Optional<List<Group>> getProjectsForStudent(int matNr);
 }
