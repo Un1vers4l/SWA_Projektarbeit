@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="/bootstrapTheme/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrapTheme/login_custom.css">
+
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title>Login</title>
+</head>
+
+<body>
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+
+            <!-- Icon -->
+            <div class="fadeIn first">
+                <a class="material-icons md-48 pt-3">face</a>
+            </div>
+
+            <!-- Login Form -->
+            <form id="form" action="/login" method="post">
+                <input type="text" id="login" class="fadeIn second" value="student" name="user" placeholder="login">
+                <input type="text" id="password" class="fadeIn third" value="student" name="password"
+                    placeholder="password">
+                <input id="submitButton" type="button" class="fadeIn fourth " value="Log In">
+            </form>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="#">Forgot Password?</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="/loginJS.js"></script>
+
+</html>

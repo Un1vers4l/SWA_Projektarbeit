@@ -7,13 +7,18 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.HTTPStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
@@ -24,13 +29,13 @@ import io.quarkus.qute.Template;
 @Transactional
 @Produces(MediaType.TEXT_HTML)
 @Consumes(MediaType.TEXT_HTML)
-@Path("/me")
+@Path("/student")
 public class ProfileRessource {
     @Inject
-    Template meModules;
+    Template studentModules;
 
     @Inject
-    Template meGroups;
+    Template studentGroups;
 
     @Inject
     StudentService studService;
@@ -38,22 +43,55 @@ public class ProfileRessource {
     @Inject
     ProjectService projectService;
 
+    @Inject
+    JsonWebToken jwt;
+
     @GET
-    public Response me(@DefaultValue("1000") @QueryParam("matNr") int matNr) {
-        return Response.seeOther(UriBuilder.fromPath("/index/kunde/").queryParam("matNr", matNr).build()).build();
+    public Response me() {
+        return Response.seeOther(UriBuilder.fromPath("/me/modules").build()).build();
     }
 
     @GET
-    @Path("/modules")
-    public Response meModules(@DefaultValue("1000") @QueryParam("matNr") int matNr) throws EntityNotFoundException {
+    @Path("/me/modules")
+    public Response meModules() throws EntityNotFoundException {
+        Object claim = jwt.getClaim("matNr");
+        if (claim == null) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        int matNr = Integer.valueOf(claim.toString());
         HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
-        return Response.ok(meModules.data("student", stud).render()).build();
+        return Response.ok(studentModules.data("student", stud).render()).build();
     }
 
     @GET
-    @Path("/groups")
-    public Response meGroups(@DefaultValue("1000") @QueryParam("matNr") int matNr) throws EntityNotFoundException {
+    @Path("/me/groups")
+    public Response meGroups() throws EntityNotFoundException {
+        Object claim = jwt.getClaim("matNr");
+        if (claim == null) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        int matNr = Integer.valueOf(claim.toString());
         HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
-        return Response.ok(meGroups.data("student", stud).render()).build();
+        return Response.ok(studentGroups.data("student", stud).render()).build();
+    }
+
+    @GET
+    @Path("/modules/{matNr}")
+    public Response studentModules(@PathParam ("matNr") int matNr) throws EntityNotFoundException {
+        if (matNr == 0) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+        return Response.ok(studentModules.data("student", stud).render()).build();
+    }
+
+    @GET
+    @Path("/groups/{matNr}")
+    public Response studentGroups(@PathParam("matNr") int matNr) throws EntityNotFoundException {
+        if (matNr == 0) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+        return Response.ok(studentGroups.data("student", stud).render()).build();
     }
 }

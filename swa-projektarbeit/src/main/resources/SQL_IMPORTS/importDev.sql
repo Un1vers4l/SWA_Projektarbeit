@@ -81,13 +81,18 @@ INSERT INTO student_groups (fk_student, fk_group)
 VALUES (1000, 1000),
     (1001, 1001),
     (1002, 1001),
-    (1000, 1002);
+    (1000, 1002),
+    (1001, 1000);
 
 INSERT INTO student_modules (fk_student, fk_modul) 
 VALUES (1000, 1), 
     (1000,2), 
     (1000,3),
     (1001, 1),
-    (1002, 2);
+    (1002, 2),
+    (1001, 3), 
+    (1001,4),
+    (1001,5),
+    (1001,2);
 
 

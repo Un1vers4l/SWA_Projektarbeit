@@ -26,6 +26,11 @@ public class HTTPGroup {
         this.type = type;
     }
 
+    
+    public HTTPGroup() {
+    }
+
+
     public static class Converter {
         public static HTTPGroup toDTO(Group group) {
             HTTPGroup httpGroup = new HTTPGroup(group.getGroupId(), group.getName(), group.getMaxMembers(),

@@ -1,5 +1,6 @@
 package de.hsos.swa.studiom.StudentsManagement.boundary.http;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -13,6 +14,7 @@ import io.quarkus.qute.Template;
 @Produces(MediaType.TEXT_HTML)
 @Consumes(MediaType.TEXT_HTML)
 @Path("/index")
+@RolesAllowed("STUDENT")
 public class IndexRessource {
     @Inject
     Template index;
