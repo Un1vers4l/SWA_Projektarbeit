@@ -1,7 +1,10 @@
-
 :root {
     --header-height: 3rem;
     --nav-width: 68px;
+    --first-color: var(--bs-primary);
+    --first-color-light: var(--bs-light);
+    --white-color: var(--bs-light);
+    --body-font: 'Nunito', sans-serif;
     --normal-font-size: 1rem;
     --z-fixed: 100
 }
@@ -16,6 +19,8 @@ body {
     position: relative;
     margin: var(--header-height) 0 0 0;
     padding: 0 1rem;
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
     transition: .5s
 }
 
@@ -63,7 +68,7 @@ a {
     left: -30%;
     width: var(--nav-width);
     height: 100vh;
-    background-color: var(--bs-secondary);
+    background-color: var(--first-color);
     padding: .5rem 1rem 0 0;
     transition: .5s;
     z-index: var(--z-fixed)
@@ -92,23 +97,23 @@ a {
 
 .nav_logo-icon {
     font-size: 1.25rem;
-    color: var(--bs-info)
+    color: var(--first-color)
 }
 
 .nav_logo-name {
-    color: var(--bs-secondary);
+    color: var(--white-color);
     font-weight: 700
 }
 
 .nav_link {
     position: relative;
-    color: var(--bs-secondary);
+    color: var(--first-color-light);
     margin-bottom: 1.5rem;
     transition: .3s
 }
 
 .nav_link:hover {
-    color: var(--bs-secondary)
+    color: var(--white-color)
 }
 
 .nav_icon {
@@ -165,11 +170,52 @@ a {
         padding: 1rem 1rem 0 0
     }
 
-    .show {
+    .showw {
         width: calc(var(--nav-width) + 156px)
     }
 
     .body-pd {
         padding-left: calc(var(--nav-width) + 188px)
     }
+}
+@media screen and (min-width: 768px) {
+    body {
+        margin: calc(var(--header-height) + 1rem) 0 0 0;
+        padding-left: calc(var(--nav-width) + 2rem)
+    }
+
+    .header {
+        height: calc(var(--header-height) + 1rem);
+        padding: 0 2rem 0 calc(var(--nav-width) + 2rem)
+    }
+
+    .header_img {
+        width: 40px;
+        height: 40px
+    }
+
+    .header_img img {
+        width: 45px
+    }
+
+    .l-navbar {
+        left: 0;
+        padding: 1rem 1rem 0 0
+    }
+
+    .body-pd {
+        padding-left: calc(var(--nav-width) + 188px)
+    }
+
+    .accordion-header .accordion-body{
+        text-align: left;
+    }
+}
+
+.card-header{
+    background-color: var(--bs-body-bg);
+}
+
+.card{
+    word-wrap: normal;
 }

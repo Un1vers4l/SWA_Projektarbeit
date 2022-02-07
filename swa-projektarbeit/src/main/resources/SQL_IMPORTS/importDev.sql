@@ -50,11 +50,25 @@ VALUES (1, 'daisy.jones@hs-osnabrueck.de', 'Daisy Jones', 1000, 4),
     (4, 'test.name@hs-osnabrueck.de', 'Test Name', 1003, 7);
 
 INSERT INTO Module(name, modulID, isProject, description) 
-VALUES ('SWA', 1, true, 'SDASDS'),
-    ('Webanwendungen', 2, true, 'SDASDS'),
-    ('Spieleprogrammierung', 3, true, 'SDASDS'),
-    ('Verteilte Systeme', 4, false, 'SDASDS'),
-    ('Theoretische Informatik', 5, false, 'SDASDS');
+VALUES ('Software Architektur - Konzepte und Anwendungen', 1, true, 'Die Software-Architektur legt die wesentlichen Softwarebausteine (Komponenten) zur Strukturierung eines
+        Softwaresystems fest und definiert Vorgaben zum erwarteten dynamischen Verhalten einer Software,
+        unter Einhaltung definierter nicht-funktionaler Anforderungen. Studierende lernen typische SoftwareArchitektur-Stile, -Muster und Prinzipien kennen, strukturieren die Software in Komponenten, definieren
+        Interaktionsformen zwischen Komponenten und weisen die Tragfähigkeit der Entscheidungen nach.'),
+    ('Webanwendungen', 2, true, 'Webanwendungen dienen dazu, dem Benutzer den Zugriff auf Services über Webbrowser oder Mobilgeräte
+        ermöglichen. In diesem Modul werden die Grundlagen solcher Webanwendungen behandelt, sowie anhand von
+        ausgewählten Technologien direkt angewandt'),
+    ('Spieleprogrammierung und 3D-Animation', 3, true, 'Digitale Spiele sind aus dem Alltag vieler Menschen nicht mehr wegzudenken. Ob nun vor dem
+        heimischen PC, auf der Couch zusammen mit Freunden oder während der Zugfahrt mit dem Smartphone,
+        Spiele haben unseren Alltag durchdrungen und sind zu einer milliardenschweren Industrie avanciert.
+        Obwohl sich digitale Spiele in ihrer Ausprägung stark unterscheiden können und darüber hinaus für
+        unterschiedliche Plattformen entwickelt werden (PC, Konsole, Handheld, Smartphone, Browser, etc.),
+        lassen sich dennoch viele Konzepte verallgemeinern und bilden so einen Grundstock, der für erfolgreiche
+        Spieleentwicklungen von besonderem Wert ist.'),
+    ('Verteilte Systeme', 4, false, 'Die Studierenden sollen dem schnell wachsenden Bedarf an Know-How im Bereich verteilter Systeme und
+        Anwendungen (dazu zählen insbesondere web-orientierte Anwendungen) mit Kompetenz und technischer
+        Tiefe begegnen können'),
+    ('Theoretische Informatik', 5, false, 'Die theoretische Informatik bildet sowohl hinsichtlich der Begrifflichkeiten als auch der Betrachtungen und
+    Schlußweisen eine sehr wichtige Grundlage des Informatikstudiums und ist als Kernfach anzusehen.');
 
 INSERT INTO GROUPS (maxMembers, modul_modulID, name, owner_matNr, type, groupId)
 VALUES (3, 1, 'SWA Lerngruppe', 1000, 1, 1000),
@@ -65,11 +79,18 @@ INSERT INTO student_groups (fk_student, fk_group)
 VALUES (1000, 1000),
     (1001, 1001),
     (1002, 1001),
-    (1000, 1002);
+    (1000, 1002),
+    (1001, 1000);
 
 INSERT INTO student_modules (fk_student, fk_modul) 
-VALUES (1000, 1),
+VALUES (1000, 1), 
+    (1000,2), 
+    (1000,3),
     (1001, 1),
-    (1002, 2);
+    (1002, 2),
+    (1001, 3), 
+    (1001,4),
+    (1001,5),
+    (1001,2);
 
 
