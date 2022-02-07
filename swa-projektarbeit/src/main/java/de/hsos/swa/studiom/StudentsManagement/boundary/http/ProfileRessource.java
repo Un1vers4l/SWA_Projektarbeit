@@ -3,6 +3,7 @@ package de.hsos.swa.studiom.StudentsManagement.boundary.http;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -30,6 +31,7 @@ import io.quarkus.qute.Template;
 @Produces(MediaType.TEXT_HTML)
 @Consumes(MediaType.TEXT_HTML)
 @Path("/student")
+@RolesAllowed("STUDENT")
 public class ProfileRessource {
     @Inject
     Template studentModules;
@@ -77,7 +79,7 @@ public class ProfileRessource {
 
     @GET
     @Path("/modules/{matNr}")
-    public Response studentModules(@PathParam ("matNr") int matNr) throws EntityNotFoundException {
+    public Response studentModules(@PathParam("matNr") int matNr) throws EntityNotFoundException {
         if (matNr == 0) {
             return Response.status(Status.UNAUTHORIZED).build();
         }

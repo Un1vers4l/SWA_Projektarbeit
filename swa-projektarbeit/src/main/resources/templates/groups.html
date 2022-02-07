@@ -24,7 +24,7 @@
 </head>
 
 
-<body id="body-pd">
+<body id="body-pd" onload="showModal()">
     <header class="header" id="header">
         <div class="header_toggle">
             <i class='nav_icon material-icons md-48' id="header-toggle"> menu</i>
@@ -38,7 +38,7 @@
                     <span class="nav_logo-name">StudyOM</span>
                 </a>
                 <div class="nav_list">
-                    <a href="student/me/modules" class="nav_link ">
+                    <a href="/student/me/modules" class="nav_link ">
                         <i class='nav_icon material-icons '> account_circle</i>
                         <span class="nav_name">Profile</span>
                     </a>
@@ -52,8 +52,8 @@
                     </a>
                 </div>
             </div>
-            <a href="/login" class="nav_link">
-                <i class='nav_icon material-icons md-36 md-light'>logout</i>
+            <a class="nav_link" href="#">
+                <i onclick="logout()" class='nav_icon material-icons md-36 md-light'>logout</i>
                 <span class="nav_name">SignOut</span>
             </a>
         </nav>
@@ -114,10 +114,38 @@
                         <b>{groupDetail.type}</b>
                     </div>
                 </div>
+                {#if inGroup == false}
                 <div class="col-1 pt-5 ">
-                    <a class="material-icons md-48 " type="button">add_circle_outline</a>
+                    <form method="Post" action="/groups/{groupDetail.id}/join">
+                        <button type="submit" class=" btn btn-light-outline">
+                            <i class="material-icons md-48 ">add_circle_outline</i>
+                        </button>
+                    </form>
                 </div>
                 {/if}
+                {#if inGroup == true}
+                <div class=" col-1 pt-5 ">
+                    <form method="Post" action="/groups/{groupDetail.id}/leave">
+                        <button type="submit" class=" btn btn-light-outline">
+                            <i class="material-icons md-48 ">remove_circle_outline</i>
+                        </button>
+                    </form>
+                </div>
+                {/if}
+                {/if}
+
+                {#if error is "error"}
+
+                {#else}
+                <div class="col-2"></div>
+                <div class="col-4 pt-5 ">
+                    <div class="card-body px-2 py-2">
+                        <b>{error}</b>
+                    </div>
+                </div>
+
+                {/if}
+
             </div>
         </div>
         <!--Container Main end-->

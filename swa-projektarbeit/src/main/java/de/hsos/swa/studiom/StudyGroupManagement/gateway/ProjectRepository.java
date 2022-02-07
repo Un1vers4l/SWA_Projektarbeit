@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
@@ -154,6 +153,7 @@ public class ProjectRepository implements ProjectService {
 
     @Override
     public Optional<Group> addStudent(int matNr, int projectId) throws EntityNotFoundException, JoinGroupException {
+        log.debug("addStudent");
         try {
             Group project = getProject(projectId).get();
             Student student = studRepos.getStudent(matNr).get();
@@ -180,6 +180,7 @@ public class ProjectRepository implements ProjectService {
     }
 
     private boolean isInProject(int matNr, int moduleId) {
+        System.out.println(matNr + "  " + moduleId);
         List<Group> resultList = em
                 .createQuery("SELECT g FROM Group g WHERE g.module.id= :moduleId AND g.type = :type",
                         Group.class)

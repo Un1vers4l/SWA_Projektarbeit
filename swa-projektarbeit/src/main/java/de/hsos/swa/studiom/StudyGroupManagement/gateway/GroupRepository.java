@@ -221,7 +221,6 @@ public class GroupRepository implements GroupService {
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
-
         }
     }
 
