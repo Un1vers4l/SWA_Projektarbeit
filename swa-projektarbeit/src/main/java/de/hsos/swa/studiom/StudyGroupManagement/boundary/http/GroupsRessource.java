@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.print.attribute.standard.Media;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -34,7 +33,6 @@ import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
-import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 import io.quarkus.qute.Template;

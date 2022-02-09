@@ -21,8 +21,13 @@ import javax.ws.rs.PATCH;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.PostModulDto;
@@ -38,16 +43,22 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 @Produces(MediaType.APPLICATION_JSON)
 public class ModulNrRest {
     
+    Logger log = Logger.getLogger(ModulNrRest.class);
+
+    @Context
+    UriInfo uriInfo;
+
     @Inject 
     ModulService moduleService;
 
     @Inject
     Validator validator;
 
+    @Operation(summary = "Zeigt detailliert ein Modul an Rechte: {SEKT, STUDENT}")
     @RolesAllowed({"STUDENT", "SEKT"})
     @GET
     public Response getModule(@PathParam("moduleId") int modulId){
-
+        log.info("GET " +  uriInfo.getPath());
         Optional<Modul> module = moduleService.getModul(modulId);
         
         if(!module.isPresent()){
@@ -57,10 +68,11 @@ public class ModulNrRest {
         return Response.ok(ModulDto.Converter.ModuleToDto(module.get())).build();
     }
 
+    @Operation(summary = "Verändert ein Modul Rechte: {SEKT}")
     @RolesAllowed("SEKT")
     @PATCH
     public Response patchModule(@PathParam("moduleId") int modulId, PostModulDto patchModul){
-
+        log.info("PATCH " +  uriInfo.getPath());
         try {
             this.moduleService.changeModule(modulId, PostModulDto.Converter.DtoToModul(patchModul));
         } catch (EntityNotFoundException e) {
@@ -69,10 +81,11 @@ public class ModulNrRest {
 
         return Response.ok(new StatusDto("Aenderungen wurden gespeichert", true)).build();
     }
+    @Operation(summary = "Löscht ein Modul Rechte: {SEKT}")
     @RolesAllowed("SEKT")
     @DELETE
     public Response deleteModule(@PathParam("moduleId") int modulId){
-
+        log.info("DELETE " +  uriInfo.getPath());
         if(!this.moduleService.deleteModule(modulId)){
             return Response.status(Response.Status.NOT_FOUND).build();
         }

@@ -83,6 +83,7 @@ public class ModulRepository implements ModulService{
         Modul modul = this.getModulWithExeption(modulId);
 
         modul.changeMyData(changes);
+        log.info("Change Modul: " + modulId);
         return modul;
     }
 
@@ -130,6 +131,7 @@ public class ModulRepository implements ModulService{
         if(!success) return success;
 
         em.persist(student.get());
+        log.info("Student("+ matNr +") wurde zum Modul("+ modulId + ") hinzugefuegt");
         return success;
     }
     
@@ -149,6 +151,7 @@ public class ModulRepository implements ModulService{
         if(!success) return success;
 
         em.persist(student.get());
+        log.info("Student("+ matNr +") wurde aus dem Modul("+ modulId + ") entfernt");
         return success;
     }
     

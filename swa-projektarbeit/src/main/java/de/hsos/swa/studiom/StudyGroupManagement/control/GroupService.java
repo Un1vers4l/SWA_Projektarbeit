@@ -10,7 +10,6 @@ package de.hsos.swa.studiom.StudyGroupManagement.control;
 import java.util.List;
 import java.util.Optional;
 
-import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;

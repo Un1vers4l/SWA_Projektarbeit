@@ -21,10 +21,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.UserManagement.boundary.dto.UserDto;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
@@ -39,6 +42,11 @@ import de.hsos.swa.studiom.shared.exceptions.UsernameExistExeption;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserRest {
 
+    Logger log = Logger.getLogger(UserRest.class);
+
+    @Context
+    UriInfo uriInfo;
+
     @Inject
     Validator validator;
 
@@ -49,6 +57,7 @@ public class UserRest {
     @GET
     @Operation(summary = "Gibt alle User aus Rechte: {ADMIN}")
     public Response getUser(){
+        log.info("GET " +  uriInfo.getPath());
         List<UserDto> list = userService.getAllUser()
         .stream()
         .map(UserDto.Converter::SimpleDto)
@@ -60,6 +69,7 @@ public class UserRest {
     @POST
     @Operation(summary = "Erzeugt einen User Rechte {ADMIN}", description = "Einen Studenten kann man hier nicht erzeugen")
     public Response creatUser(UserDto userDto){
+        log.info("POST " +  uriInfo.getPath());
         Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
         if(!violations.isEmpty()){
             return Response.ok(new StatusDto(violations)).build();

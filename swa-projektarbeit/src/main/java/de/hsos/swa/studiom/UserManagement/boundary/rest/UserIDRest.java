@@ -21,8 +21,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -45,6 +47,11 @@ import de.hsos.swa.studiom.shared.exceptions.UserNotExistExeption;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserIDRest {
 
+    Logger log = Logger.getLogger(UserIDRest.class);
+
+    @Context
+    UriInfo uriInfo;
+
     @Inject
     Validator validator;
 
@@ -57,7 +64,7 @@ public class UserIDRest {
     @GET
     @Operation(summary = "Findet einen User ueber die ID Rechte: {ADMIN}", description = "Gibt den User zurueck")
     public Response getUser(@PathParam("userid") long userID){
-
+        log.info("GET " +  uriInfo.getPath());
         Optional<User> user = userService.findUser(userID);
         
         if(!user.isPresent()){
@@ -72,6 +79,7 @@ public class UserIDRest {
     @PUT
     @Operation(summary = "Aendert das Password vom User Rechte: {ALLE}", description = "Als Admin koennen Sie von jedem das Password aendern und als User nur Ihr eigenes")
     public Response changeUserPassword(@PathParam("userid") long userID, ChangePasswordDto newPassword){
+        log.info("PUT " +  uriInfo.getPath());
         //TODO validator fur bedingungen eines Password 
         Set<ConstraintViolation<ChangePasswordDto>> violations = validator.validate(newPassword);
         if(!violations.isEmpty()){
@@ -96,6 +104,14 @@ public class UserIDRest {
     @DELETE
     @Operation(summary = "Loescht ein User Rechte: {ADMIN}")
     public Response deleteUser(@PathParam("userid") long userID){
+        log.info("DELETE " +  uriInfo.getPath());
+        Optional<User> user = this.userService.findUser(userID);
+        if(user.isPresent()){
+            if(user.get().hasRole(Role.STUDENT)){
+                return Response.ok(new StatusDto("Diser User muss ueber die Studenten Ressource geloescht werden", false)).build();
+            }
+        }
+
         if(!userService.deleteUser(userID)){
             return Response.status(Response.Status.NOT_FOUND).build();
         }

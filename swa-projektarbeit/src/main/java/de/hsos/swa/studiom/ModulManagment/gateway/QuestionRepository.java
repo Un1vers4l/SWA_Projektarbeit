@@ -1,3 +1,10 @@
+/**
+ * @author Marcel Sauer(886022)
+ * @email marcel.sauer@hs-osanbrueck.de
+ * @create date 2022-02-09 14:39:26
+ * @modify date 2022-02-09 14:39:26
+ * @desc [description]
+ */
 package de.hsos.swa.studiom.ModulManagment.gateway;
 
 import java.util.List;
@@ -33,8 +40,14 @@ public class QuestionRepository implements QuestionService {
     @Inject
     EntityManager em;
 
-    Logger log = Logger.getLogger(ModulRepository.class);
+    Logger log = Logger.getLogger(QuestionService.class);
 
+    
+    /** 
+     * @param modulId
+     * @param questionId
+     * @return Optional<Question>
+     */
     @Override
     public Optional<Question> getQuestion(int modulId, int questionId) {
         Optional<Modul> modul = modulService.getModul(modulId);
@@ -46,12 +59,27 @@ public class QuestionRepository implements QuestionService {
         return query.getResultStream().findFirst();
     }
 
+    
+    /** 
+     * @param modulId
+     * @return List<Question>
+     * @throws EntityNotFoundException
+     */
     @Override
     public List<Question> getAllQuestion(int modulId) throws EntityNotFoundException {
         Modul modul = modulService.getModulWithExeption(modulId);
         return modul.getQuestions().stream().collect(Collectors.toList());
     }
 
+    
+    /** 
+     * @param matNr
+     * @param modulId
+     * @param topic
+     * @param text
+     * @return Question
+     * @throws EntityNotFoundException
+     */
     @Override
     public Question createdQuestion(int matNr, int modulId, String topic, String text) throws EntityNotFoundException {
         if(topic == null || text == null) throw new IllegalArgumentException();
@@ -61,26 +89,52 @@ public class QuestionRepository implements QuestionService {
 
         Question question = new Question(topic, text, modul, student.getFullName(), student);
         em.persist(question);
+        log.info("Question wurde erzeugt");
         return question;
     }
 
+    
+    /** 
+     * @param modulId
+     * @param questionId
+     * @param changQuestion
+     * @return Question
+     * @throws EntityNotFoundException
+     */
     @Override
     public Question changeQuestion(int modulId, int questionId, Question changQuestion) throws EntityNotFoundException {
+        if(changQuestion == null) throw new IllegalArgumentException();
         Question question = this.getWithExeption(modulId, questionId);
 
         question.changeMyData(changQuestion);
+        log.info("Change Question");
         return question;
     }
 
+    
+    /** 
+     * @param questionId
+     * @param modulId
+     * @return boolean
+     */
     @Override
     public boolean deleteQuestion(int questionId, int modulId) {
         Optional<Question> qOptional = this.getQuestion(modulId, questionId);
         if(!qOptional.isPresent()) return false;
 
         em.remove(qOptional.get());
+
+        log.info("Remove Question");
         return true;
     }
 
+    
+    /** 
+     * @param modulId
+     * @param questionId
+     * @return Question
+     * @throws EntityNotFoundException
+     */
     @Override
     public Question getWithExeption(int modulId, int questionId) throws EntityNotFoundException {
         Optional<Question> qOptional = this.getQuestion(modulId, questionId);
@@ -89,10 +143,19 @@ public class QuestionRepository implements QuestionService {
         return qOptional.get();
     }
 
+    
+    /** 
+     * @param matNr
+     * @param modulId
+     * @param questionId
+     * @return boolean
+     * @throws EntityNotFoundException
+     */
     @Override
-    public boolean isStudentOwner(int matNr, int modulId, int questionId) throws EntityNotFoundException {
+    public boolean isQuestionOwner(int matNr, int modulId, int questionId) throws EntityNotFoundException {
         Question question = this.getWithExeption(modulId, questionId);
 
+        if(question.getOwner() == null) return false;
         return question.getOwner().getMatNr() == matNr;
     }
     

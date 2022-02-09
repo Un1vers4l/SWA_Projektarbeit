@@ -20,5 +20,5 @@ public interface QuestionService {
     public Question changeQuestion(int modulId, int questionId, Question question) throws EntityNotFoundException;
     public boolean deleteQuestion(int questionId, int modulId);
     public Question getWithExeption(int modulId, int questionId) throws EntityNotFoundException;
-    public boolean isStudentOwner(int matNr, int modulId, int questionId) throws EntityNotFoundException;
+    public boolean isQuestionOwner(int matNr, int modulId, int questionId) throws EntityNotFoundException;
 }

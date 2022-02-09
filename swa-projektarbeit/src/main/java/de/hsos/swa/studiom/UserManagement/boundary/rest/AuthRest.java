@@ -41,14 +41,14 @@ public class AuthRest {
 
     Logger log = Logger.getLogger(AuthRest.class);
 
+    @Context
+    UriInfo uriInfo;
+
     @Inject
     AuthService authService;
     
     @Inject
     Validator validator;
-
-    @Context
-    UriInfo uriInfo;
 
     @PermitAll
     @POST

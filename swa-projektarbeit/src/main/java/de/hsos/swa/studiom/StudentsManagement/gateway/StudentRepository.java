@@ -8,10 +8,8 @@
 
 package de.hsos.swa.studiom.StudentsManagement.gateway;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -24,11 +22,11 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.logging.Logger;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.User;
@@ -104,6 +102,7 @@ public class StudentRepository implements StudentService {
             }
 
             for(Question question: student.getMyQuestion()) question.setOwner(null);
+            for(Answer answer: student.getMyAnswer()) answer.setOwner(null);
 
             em.remove(student);
             return true;

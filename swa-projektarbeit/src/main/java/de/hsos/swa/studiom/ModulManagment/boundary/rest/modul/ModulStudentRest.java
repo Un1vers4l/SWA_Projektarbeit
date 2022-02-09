@@ -18,10 +18,13 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.ModulManagment.control.ModulService;
@@ -34,6 +37,11 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ModulStudentRest {
+
+    Logger log = Logger.getLogger(ModulStudentRest.class);
+
+    @Context
+    UriInfo uriInfo;
     
     @Inject 
     ModulService moduleService;
@@ -44,11 +52,11 @@ public class ModulStudentRest {
     @Inject
     JsonWebToken jwt;
 
-    Logger log = Logger.getLogger(ModulStudentRest.class);
-
+    @Operation(summary = "Added den eingeloggten Student ins Modul Rechte: {STUDENT}")
     @POST
     @RolesAllowed("STUDENT")
     public Response addStudent(@PathParam("moduleId") int modulId){
+        log.info("POST " +  uriInfo.getPath());
         Integer matNr = Integer.parseInt(jwt.getClaim("matNr").toString());
         boolean success = true;
         try {
@@ -61,10 +69,11 @@ public class ModulStudentRest {
         }
         return Response.ok(new StatusDto("Du wurde zu diesem Modul hinzugefuegt", true)).build();
     }
-
+    @Operation(summary = "Removet den eingeloggten Student aus dem Modul Rechte: {STUDENT}")
     @DELETE
     @RolesAllowed("STUDENT")
     public Response removeStudent(@PathParam("moduleId") int modulId){
+        log.info("DELETE " +  uriInfo.getPath());
         Integer matNr = Integer.parseInt(jwt.getClaim("matNr").toString());
         boolean success = true;
         try {

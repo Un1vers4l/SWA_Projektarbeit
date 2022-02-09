@@ -1,11 +1,11 @@
 /**
  * @author Marcel Sauer(886022)
  * @email marcel.sauer@hs-osanbrueck.de
- * @create date 2022-02-09 14:39:47
- * @modify date 2022-02-09 14:39:47
+ * @create date 2022-02-09 20:50:36
+ * @modify date 2022-02-09 20:50:36
  * @desc [description]
  */
-package de.hsos.swa.studiom.ModulManagment.boundary.rest.question;
+package de.hsos.swa.studiom.ModulManagment.boundary.rest.answer;
 
 import java.util.List;
 import java.util.Set;
@@ -32,27 +32,27 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
-import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.PostQuestionDto;
-import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
-import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
-import de.hsos.swa.studiom.ModulManagment.entity.Question;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.PostAnswerDto;
+import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
+import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.shared.dto.DataDto;
 import de.hsos.swa.studiom.shared.dto.StatusDto;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @RequestScoped
 @Transactional
-@Path("api/v1/Modul/{moduleId}/Question")
+@Path("api/v1/Modul/{moduleId}/Question/{questionId}/Answer")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class  QuestionRest {
-    Logger log = Logger.getLogger(QuestionRest.class);
+public class AnswerRest {
+    Logger log = Logger.getLogger(AnswerRest.class);
 
     @Context
     UriInfo uriInfo;
 
     @Inject
-    QuestionService questionService;
+    AnswerService answerService;
 
     @Inject
     Validator validator;
@@ -60,43 +60,41 @@ public class  QuestionRest {
     @Inject
     JsonWebToken jwt;
 
-    @Operation(summary = "Zeigt alle Questions vom Modul an Rechte: {SEKT, STUDENT}")
+    @Operation(summary = "Zeigt alle Answers vom Question an Rechte: {SEKT, STUDENT}")
     @RolesAllowed({"STUDENT", "SEKT"})
     @GET
-    public Response getAllQuestion(@PathParam("moduleId") int modulId){
+    public Response getAllAnswer(@PathParam("moduleId") int modulId, @PathParam("questionId") int questionId){
         log.info("GET " +  uriInfo.getPath());
         try {
-            List<QuestionDto> uDto =  this.questionService.getAllQuestion(modulId)
+            List<AnswerDto> aDto = this.answerService.getAllAnswer(modulId, questionId)
                 .stream()
-                .map(QuestionDto.Converter::SimpleDto)
+                .map(AnswerDto.Converter::SimpleDto)
                 .collect(Collectors.toList());
 
-            return Response.ok(new DataDto<QuestionDto>(uDto)).build();
-
-        } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }   
-
-    @Operation(summary = "Erzeugt eine Question Rechte: {STUDENT}")
-    @RolesAllowed({"STUDENT"})
-    @POST
-    public Response creatQuestion(@PathParam("moduleId") int modulId, PostQuestionDto newQuestion){
-        log.info("POST " +  uriInfo.getPath());
-        Set<ConstraintViolation<PostQuestionDto>> violations = validator.validate(newQuestion);
-        if(!violations.isEmpty()){
-            return Response.ok(new StatusDto(violations)).build();
-        }
-
-        Integer matNr = Integer.parseInt(jwt.getClaim("matNr").toString());
-        try {
-            Question question = this.questionService
-                .createdQuestion(matNr, modulId, newQuestion.getTopic(), newQuestion.getText());
-
-            return Response.ok(QuestionDto.Converter.QuestionToDto(question)).build();
+            return Response.ok(new DataDto<AnswerDto>(aDto)).build();
 
         } catch (EntityNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+    @Operation(summary = "Erzeugt eine Answer: {STUDENT}")
+    @RolesAllowed({"STUDENT"})
+    @POST
+    public Response creatAnswer(@PathParam("moduleId") int modulId, @PathParam("questionId") int questionId, PostAnswerDto newAnswer){
+        log.info("POST " +  uriInfo.getPath());
+        Set<ConstraintViolation<PostAnswerDto>> violations = validator.validate(newAnswer);
+        if(!violations.isEmpty()){
+            return Response.ok(new StatusDto(violations)).build();
+        }
+        Integer matNr = Integer.parseInt(jwt.getClaim("matNr").toString());
+
+        try {
+            Answer answer = this.answerService.createdAnswer(matNr, modulId, questionId, newAnswer.getText());
+
+            return Response.ok(AnswerDto.Converter.AnswerToDto(answer)).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 }

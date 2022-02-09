@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -37,7 +36,6 @@ import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
-import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.shared.dto.StatusDto;
 import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
 

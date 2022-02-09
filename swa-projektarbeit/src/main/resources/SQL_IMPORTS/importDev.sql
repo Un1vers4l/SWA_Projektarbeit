@@ -93,8 +93,13 @@ VALUES (1000, 1),
     (1001,5),
     (1001,2);
 
-INSERT INTO Question (questionId, topic, text, studentName, owner_matNr, modul_modulID)
-VALUES (0, 'Frage zum Projekt', 'Hallo ich wollte mal fragen wie, das mit dem Projekt Anmeldung aus sieht?', 'Daisy Jones', 1000, 2),
-    (1, 'Test Topic' , 'Hier steht die Frage', 'Nina Chuba', 1001, 2);
+INSERT INTO Question (questionId, topic, text, studentName, owner_matNr, modul_modulID, hasSolution)
+VALUES (0, 'Frage zum Projekt', 'Hallo ich wollte mal fragen wie, das mit dem Projekt Anmeldung aus sieht?', 'Daisy Jones', 1000, 2, true),
+    (1, 'Test Topic' , 'Hier steht die Frage', 'Nina Chuba', 1001, 2, false);
+
+INSERT INTO Answer (answerID, question_modul_modulID, question_questionId, owner_matNr, isSolution, studentName, text)
+VALUES (0, 2, 0, 1002, true,'Beth Harmon', 'Hier steht die Atwort 42!!!'),
+    (1, 2, 0, 1000, false,'Daisy Jones', 'Nein 41'),
+    (0, 2, 1, 1002, false,'Beth Harmon', 'Ich weiß die antwort nicht :)');
 
 

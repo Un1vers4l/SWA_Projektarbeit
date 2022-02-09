@@ -7,6 +7,19 @@
  */
 package de.hsos.swa.studiom.ModulManagment.control;
 
-public interface AnswerService {
+import java.util.List;
+import java.util.Optional;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Answer;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
+
+public interface AnswerService {
+    public Optional<Answer> getAnswer(int modulId, int questionId, int answerID);
+    public List<Answer> getAllAnswer(int modulId, int questionId) throws EntityNotFoundException;
+    public Answer createdAnswer(int matNr, int modulID, int questionId, String text) throws EntityNotFoundException;
+    public Answer changeAnswer(int modulId, int questionId, int answerID, Answer changAnswer) throws EntityNotFoundException;
+    public boolean deleteAnswer(int modulId, int questionId, int answerID);
+    public Answer getWithExeption(int modulId, int questionId, int answerID) throws EntityNotFoundException;
+    public boolean changeIsSolution(int modulId, int questionId, int answerID) throws EntityNotFoundException;
+    public boolean isAnswerOwner(int matNr, int modulId, int questionId, int answerID) throws EntityNotFoundException;
 }

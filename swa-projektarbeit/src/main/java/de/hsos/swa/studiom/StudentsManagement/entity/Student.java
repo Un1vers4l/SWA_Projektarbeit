@@ -25,6 +25,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
@@ -53,18 +54,21 @@ public class Student {
             @JoinColumn(name = "fk_group") })
     private Set<Group> groups = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Adress adress;
 
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", unique = true, nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<Group> myGroups = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Question> myQuestion = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private Set<Answer> myAnswer = new HashSet<>();
 
     public Student() {
     }
@@ -190,6 +194,14 @@ public class Student {
 
     public void setAdress(Adress adress) {
         this.adress = adress;
+    }
+
+    public Set<Answer> getMyAnswer() {
+        return this.myAnswer;
+    }
+
+    public void setMyAnswer(Set<Answer> myAnswer) {
+        this.myAnswer = myAnswer;
     }
 
     public void addAdress(String street, int nr, int zipCode, String town) {

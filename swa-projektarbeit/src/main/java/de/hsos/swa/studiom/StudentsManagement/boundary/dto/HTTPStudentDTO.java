@@ -8,13 +8,10 @@ package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
 * @desc [description]
 */
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
-import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 

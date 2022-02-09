@@ -10,6 +10,7 @@ package de.hsos.swa.studiom.ModulManagment.boundary.dto.modul;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
@@ -28,13 +29,18 @@ public class ModulDto {
 
     private List<StudentDTO> students;
 
-    public ModulDto(int modulID, String name, String description, boolean isProject, int studentenAnzahl, List<StudentDTO> students) {
+    private List<QuestionDto> questions;
+
+    
+
+    public ModulDto(int modulID, String name, String description, boolean isProject, Integer studentenAnzahl, List<StudentDTO> students, List<QuestionDto> questions) {
         this.modulID = modulID;
         this.name = name;
         this.description = description;
         this.isProject = isProject;
         this.studentenAnzahl = studentenAnzahl;
         this.students = students;
+        this.questions = questions;
     }
 
 
@@ -93,6 +99,15 @@ public class ModulDto {
         this.students = students;
     }
 
+    public List<QuestionDto> getQuestions() {
+        return this.questions;
+    }
+
+    public void setQuestions(List<QuestionDto> question) {
+        this.questions = question;
+    }
+
+
     public static class Converter {
 
         public static ModulDto SimpleDto(Modul modul){
@@ -110,6 +125,7 @@ public class ModulDto {
             uDto.setDescription(modul.getDescription());
             uDto.setIsProject(modul.getIsProject());
             uDto.setStudents(modul.getStudenten().stream().map(Converter::StudentToDto).collect(Collectors.toList()));
+            uDto.setQuestions(modul.getQuestions().stream().map(QuestionDto.Converter::SimpleDto).collect(Collectors.toList()));
             return uDto;
         }
 

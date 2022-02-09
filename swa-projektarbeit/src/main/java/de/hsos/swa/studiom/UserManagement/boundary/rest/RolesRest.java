@@ -13,8 +13,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
@@ -29,10 +31,14 @@ public class RolesRest {
 
     Logger log = Logger.getLogger(RolesRest.class);
 
+    @Context
+    UriInfo uriInfo;
+
     @RolesAllowed("ADMIN")
     @GET
     @Operation(summary = "Gibt Alle Rolle aus Rechte: {ADMIN}")
     public Response getAllRole(){
+        log.info("GET " +  uriInfo.getPath());
         return Response.ok(new RoleDto()).build();
     }
 }

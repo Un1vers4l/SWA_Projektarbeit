@@ -1,5 +1,16 @@
+/**
+ * @author Marcel Sauer(886022)
+ * @email marcel.sauer@hs-osanbrueck.de
+ * @create date 2022-02-09 14:40:03
+ * @modify date 2022-02-09 14:40:03
+ * @desc [description]
+ */
 package de.hsos.swa.studiom.ModulManagment.boundary.dto.question;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
 
 public class QuestionDto {
@@ -12,19 +23,24 @@ public class QuestionDto {
 
     private String studentName;
 
+    private boolean hasSolution;
+
+    private List<AnswerDto> answers;
 
     public QuestionDto() {
     }
 
 
-    public QuestionDto(int questionId, String topic, String text, String studentName) {
+
+    public QuestionDto(int questionId, String topic, String text, String studentName, boolean hasSolution, List<AnswerDto> answers) {
         this.questionId = questionId;
         this.topic = topic;
         this.text = text;
         this.studentName = studentName;
+        this.hasSolution = hasSolution;
+        this.answers = answers;
     }
-
-
+    
     public int getQuestionId() {
         return this.questionId;
     }
@@ -57,6 +73,26 @@ public class QuestionDto {
         this.studentName = studentName;
     }
 
+    public boolean isHasSolution() {
+        return this.hasSolution;
+    }
+
+    public boolean getHasSolution() {
+        return this.hasSolution;
+    }
+
+    public void setHasSolution(boolean hasSolution) {
+        this.hasSolution = hasSolution;
+    }
+
+    public List<AnswerDto> getAnswers() {
+        return this.answers;
+    }
+
+    public void setAnswers(List<AnswerDto> answers) {
+        this.answers = answers;
+    }
+
     public static class Converter {
 
         public static QuestionDto SimpleDto(Question question){
@@ -64,6 +100,7 @@ public class QuestionDto {
             uDto.setQuestionId(question.getquestionId());
             uDto.setStudentName(question.getStudentName());
             uDto.setTopic(question.getTopic());
+            uDto.setHasSolution(question.getHasSolution());
             return uDto;
         }
         public static QuestionDto QuestionToDto(Question question){
@@ -72,6 +109,7 @@ public class QuestionDto {
             uDto.setStudentName(question.getStudentName());
             uDto.setTopic(question.getTopic());
             uDto.setText(question.getText());
+            uDto.setAnswers(question.getAnswers().stream().map(AnswerDto.Converter::SimpleDto).collect(Collectors.toList()));
             return uDto;
         }
     }

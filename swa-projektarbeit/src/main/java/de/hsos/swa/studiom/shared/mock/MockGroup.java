@@ -10,7 +10,6 @@ package de.hsos.swa.studiom.shared.mock;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

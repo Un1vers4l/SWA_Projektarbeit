@@ -22,10 +22,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.PostModulDto;
@@ -40,6 +44,11 @@ import de.hsos.swa.studiom.shared.dto.StatusDto;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ModulRest {
+    
+    Logger log = Logger.getLogger(ModulRest.class);
+
+    @Context
+    UriInfo uriInfo;
 
     @Inject 
     ModulService moduleService;
@@ -50,10 +59,11 @@ public class ModulRest {
     @Inject
     JsonWebToken jwt;
 
-
+    @Operation(summary = "Zeigt alle Moduls an Rechte: {SEKT, STUDENT}")
     @RolesAllowed({"STUDENT", "SEKT"})
     @GET
     public Response getAllModul(){
+        log.info("GET " +  uriInfo.getPath());
         List<ModulDto> list = moduleService.getAllModul()
         .stream()
         .map(ModulDto.Converter::SimpleDto)
@@ -61,9 +71,11 @@ public class ModulRest {
   
         return Response.ok(new DataDto<ModulDto>(list)).build();
     }
+    @Operation(summary = "Erstellt ein Modul Rechte: {SEKT}")
     @POST
     @RolesAllowed("SEKT")
     public Response creatModule(PostModulDto newModul){
+        log.info("POST " +  uriInfo.getPath());
         Set<ConstraintViolation<PostModulDto>> violations = validator.validate(newModul);
         if(!violations.isEmpty()){
             return Response.ok(new StatusDto(violations)).build();

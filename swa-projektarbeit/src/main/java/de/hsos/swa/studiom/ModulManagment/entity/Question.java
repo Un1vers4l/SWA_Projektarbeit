@@ -45,6 +45,9 @@ public class Question implements Serializable {
     @Column(nullable = false)
     private String studentName;
 
+    @Column(nullable = false)
+    private boolean hasSolution;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Student owner;
 
@@ -72,6 +75,7 @@ public class Question implements Serializable {
         this.modul = modul;
         this.studentName = studentName;
         this.owner = owner;
+        this.hasSolution = false;
     }
 
 
@@ -131,6 +135,18 @@ public class Question implements Serializable {
         this.owner = owner;
     }
 
+    public boolean hasSolution() {
+        return this.hasSolution;
+    }
+
+    public boolean getHasSolution() {
+        return this.hasSolution;
+    }
+
+    public void setHasSolution(boolean hasSolution) {
+        this.hasSolution = hasSolution;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -139,13 +155,14 @@ public class Question implements Serializable {
             return false;
         }
         Question question = (Question) o;
-        return questionId == question.questionId;
+        return questionId == question.questionId && Objects.equals(answers, question.answers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(questionId);
+        return Objects.hash(questionId, modul);
     }
+    
 
     @Override
     public String toString() {
@@ -159,5 +176,8 @@ public class Question implements Serializable {
     public void changeMyData(Question other){
         if(other.topic != null) this.topic = other.topic;
         if(other.text != null) this.text = other.text;
+    }
+    public void changeHasSolution(){
+        this.hasSolution = !this.hasSolution;
     }
 }

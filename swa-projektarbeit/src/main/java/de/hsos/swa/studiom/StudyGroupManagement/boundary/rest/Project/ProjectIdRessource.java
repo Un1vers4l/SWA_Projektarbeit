@@ -10,7 +10,6 @@ package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Project;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
