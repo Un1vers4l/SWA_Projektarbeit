@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 20:09:50
- * @modify date 2022-02-03 09:23:52
+ * @modify date 2022-02-09 19:27:15
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
@@ -42,6 +42,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
+import de.hsos.swa.studiom.shared.exceptions.OwnerException;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -168,7 +169,7 @@ public class GroupGroupIDRessource {
                 return Response.ok(GroupDTO.Converter.toDTO(removeStudent.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | OwnerException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }

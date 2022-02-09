@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-02-07 09:02:36
- * @modify date 2022-02-07 09:02:36
+ * @modify date 2022-02-09 19:27:10
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.http;
@@ -19,6 +19,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -35,6 +36,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
+import de.hsos.swa.studiom.shared.exceptions.OwnerException;
 import io.quarkus.qute.Template;
 
 @Produces(MediaType.TEXT_HTML)
@@ -80,7 +82,8 @@ public class GroupsRessource {
     @GET
     @Path("/{groupId}")
     public Response getGroups(@PathParam("groupId") int groupId,
-            @DefaultValue("error") @PathParam("error") String error) {
+            @DefaultValue("error") @QueryParam("error") String error) {
+        System.out.println("ERROR " + error);
         Object claim = jwt.getClaim("matNr");
         if (claim == null) {
             return Response.status(Status.UNAUTHORIZED).build();
@@ -106,6 +109,7 @@ public class GroupsRessource {
                 inGroup = true;
             }
         }
+        System.out.println("ERROR " + error);
         return Response.ok(groups.data("student", stud).data("groupDetail", groupDTO).data("inGroup", inGroup)
                 .data("error", error).render()).build();
     }
@@ -114,7 +118,6 @@ public class GroupsRessource {
     @Path("/{groupId}/join")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response joinGroup(@PathParam("groupId") int groupId) {
-        System.out.println("joinGroup");
         Object claim = jwt.getClaim("matNr");
         if (claim == null) {
             return Response.status(Status.UNAUTHORIZED).build();
@@ -138,6 +141,35 @@ public class GroupsRessource {
                 try {
                     groupService.addStudent(groupId, matNr);
                 } catch (JoinGroupException | EntityNotFoundException e) {
+                    error = e.getMessage();
+                }
+                break;
+        }
+        return Response.seeOther(UriBuilder.fromPath("/groups/" + groupId).queryParam("error", error).build()).build();
+    }
+
+    @POST
+    @Path("/{groupId}/leave")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response leaveGroup(@PathParam("groupId") int groupId) {
+        Object claim = jwt.getClaim("matNr");
+        if (claim == null) {
+            return Response.status(Status.UNAUTHORIZED).build();
+        }
+        int matNr = Integer.valueOf(claim.toString());
+        Group group = getGroup(groupId);
+        if (group == null) {
+            return Response.seeOther(UriBuilder.fromPath("/groups/" + groupId).build()).build();
+        }
+        String error = "";
+        switch (group.getType()) {
+            case PROJECT:
+                error = "You can not leave a Project!";
+                break;
+            case STUDYGROUP:
+                try {
+                    groupService.removeStudent(groupId, matNr);
+                } catch (EntityNotFoundException | OwnerException e) {
                     error = e.getMessage();
                 }
                 break;

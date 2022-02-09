@@ -86,69 +86,67 @@
                             {#for group in student.groups}
                             <a href="/groups/{group.id}" class="list-group-item list-group-item-action ">
                                 {group.name}</a>
+                            {/for}
                         </div>
-                        {/for}
                     </div>
                 </div>
-                {#if groupDetail != null}
-                <div class="col-2"></div>
-                <div class="col-4 pt-5 ">
-                    <div class="card-body px-2 py-2">
-                        <b>Group ID:</b>
-                        <a>{groupDetail.id}</a>
-                        <br>
-                        <b>Module:</b>
-                        <a href="/modules/{groupDetail.module.id}">{groupDetail.module.name}</a>
-                        <br>
-                        <b>Owner:</b>
-                        <a href=" /student/modules/{groupDetail.owner.matNr}">{groupDetail.owner.name}
-                            ({groupDetail.owner.matNr})</a> <br>
-                        <b>Members:</b>
-                        <a>{groupDetail.member.size}/{groupDetail.maxMembers}</a>
-                        <br>
-                        {#for student in groupDetail.member}
-                        <div style="text-indent:20px">
-                            <a href="/student/modules/{student.matNr}">{student.name} ({student.matNr})</a> <br>
-                        </div>
-                        {/for}
-                        <b>{groupDetail.type}</b>
-                    </div>
-                </div>
-                {#if inGroup == false}
-                <div class="col-1 pt-5 ">
-                    <form method="Post" action="/groups/{groupDetail.id}/join">
-                        <button type="submit" class=" btn btn-light-outline">
-                            <i class="material-icons md-48 ">add_circle_outline</i>
-                        </button>
-                    </form>
-                </div>
-                {/if}
-                {#if inGroup == true}
-                <div class=" col-1 pt-5 ">
-                    <form method="Post" action="/groups/{groupDetail.id}/leave">
-                        <button type="submit" class=" btn btn-light-outline">
-                            <i class="material-icons md-48 ">remove_circle_outline</i>
-                        </button>
-                    </form>
-                </div>
-                {/if}
-                {/if}
-
-                {#if error is "error"}
-
-                {#else}
-                <div class="col-2"></div>
-                <div class="col-4 pt-5 ">
-                    <div class="card-body px-2 py-2">
-                        <b>{error}</b>
-                    </div>
-                </div>
-
-                {/if}
-
             </div>
+            {#if groupDetail != null}
+            <div class="col-2"></div>
+            <div class="col-4 pt-5 ">
+                <div class="card-body px-2 py-2">
+                    <b>Group ID:</b>
+                    <a>{groupDetail.id}</a>
+                    <br>
+                    <b>Module:</b>
+                    <a href="/modules/{groupDetail.module.id}">{groupDetail.module.name}</a>
+                    <br>
+                    <b>Owner:</b>
+                    <a href=" /student/modules/{groupDetail.owner.matNr}">{groupDetail.owner.name}
+                        ({groupDetail.owner.matNr})</a> <br>
+                    <b>Members:</b>
+                    <a>{groupDetail.member.size}/{groupDetail.maxMembers}</a>
+                    <br>
+                    {#for student in groupDetail.member}
+                    <div style="text-indent:20px">
+                        <a href="/student/modules/{student.matNr}">{student.name} ({student.matNr})</a> <br>
+                    </div>
+                    {/for}
+                    <b>{groupDetail.type}</b>
+                </div>
+            </div>
+            {#if inGroup == false}
+            <div class="col-1 pt-5 ">
+                <form method="Post" action="/groups/{groupDetail.id}/join">
+                    <button type="submit" class=" btn btn-light-outline">
+                        <i class="material-icons md-48 ">add_circle_outline</i>
+                    </button>
+                </form>
+            </div>
+            {/if}
+            {#if inGroup == true}
+            <div class=" col-1 pt-5 ">
+                <form method="Post" action="/groups/{groupDetail.id}/leave">
+                    <button type="submit" class=" btn btn-light-outline">
+                        <i class="material-icons md-48 ">remove_circle_outline</i>
+                    </button>
+                </form>
+            </div>
+            {/if}
+            {/if}
+            {#if error != "error"}
+            <div class="col-2"></div>
+            <div class="col-4 pt-5 ">
+                <div class="card-body px-2 py-2">
+                    <b>{error}</b>
+                </div>
+            </div>
+
+            {/if}
+
         </div>
-        <!--Container Main end-->
+    </div>
+    <!--Container Main end-->
 </body>
 
 </html>

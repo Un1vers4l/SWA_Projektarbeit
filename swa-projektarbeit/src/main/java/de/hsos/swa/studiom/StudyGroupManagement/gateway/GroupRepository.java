@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:37:40
- * @modify date 2022-02-01 11:40:35
+ * @modify date 2022-02-09 19:27:12
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
@@ -17,6 +17,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
+import de.hsos.swa.studiom.shared.exceptions.OwnerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class GroupRepository implements GroupService {
     private final GroupType TYPE = GroupType.STUDYGROUP;
     private final String FULL = "There is no free Space available in this group";
     private final String DUPLICATE = "Student is already a member of the group";
+    private final String LEAVE = "leave the group";
 
     Logger log = Logger.getLogger(GroupRepository.class);
 
@@ -128,7 +130,6 @@ public class GroupRepository implements GroupService {
 
             if (group.getType() != TYPE) {
                 log.error("Dies ist ein projekt und keine Gruppe");
-                // TODO: Exception: Keine Gruppe vom Typ Projekt
                 return Optional.ofNullable(null);
             }
             return Optional.ofNullable(group);
@@ -188,7 +189,7 @@ public class GroupRepository implements GroupService {
     }
 
     @Override
-    public Optional<Group> removeStudent(int groupId, int matNr) throws EntityNotFoundException {
+    public Optional<Group> removeStudent(int groupId, int matNr) throws EntityNotFoundException, OwnerException {
         try {
             Student student = studRepos.getStudent(matNr).get();
             Group group = getGroup(groupId).get();
@@ -198,12 +199,11 @@ public class GroupRepository implements GroupService {
             if (group.getMember().size() <= 1) {
                 log.error("Ersteller der Gruppe kann nicht austreten");
                 // TODO: Exception: Gruppe hat nur den Owner als Mitglied
-                return Optional.ofNullable(null);
+                throw new OwnerException(matNr, TYPE, groupId, LEAVE);
             }
             if (student.getMatNr() == group.getOwner().getMatNr()) {
                 log.error("Ersteller der Gruppe kann nicht austreten");
-                // TODO: Exception: Owner kann nicht entfernt werden
-                return Optional.ofNullable(null);
+                throw new OwnerException(matNr, TYPE, groupId, LEAVE);
             }
             if (!group.removeMember(student)) {
                 log.error("Fehler beim Entfernen des Studenten");

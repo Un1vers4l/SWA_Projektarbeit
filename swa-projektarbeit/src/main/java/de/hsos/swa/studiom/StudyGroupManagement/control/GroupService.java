@@ -14,6 +14,7 @@ import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import de.hsos.swa.studiom.shared.exceptions.GroupManagementException;
 import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
+import de.hsos.swa.studiom.shared.exceptions.OwnerException;
 
 public interface GroupService {
     public Optional<Group> createGroup(int matNr, String name, int maxMember, int moduleId) throws EntityNotFoundException;
@@ -28,5 +29,5 @@ public interface GroupService {
 
     public Optional<Group> addStudent(int groupId, int matNr) throws JoinGroupException, EntityNotFoundException;
 
-    public Optional<Group> removeStudent(int groupId, int matNr) throws EntityNotFoundException;
+    public Optional<Group> removeStudent(int groupId, int matNr) throws EntityNotFoundException, OwnerException;
 }

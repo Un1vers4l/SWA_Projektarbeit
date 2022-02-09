@@ -80,7 +80,8 @@ VALUES (1000, 1000),
     (1001, 1001),
     (1002, 1001),
     (1000, 1002),
-    (1001, 1000);
+    (1001, 1000),
+    (1003, 1002);
 
 INSERT INTO student_modules (fk_student, fk_modul) 
 VALUES (1000, 1), 
