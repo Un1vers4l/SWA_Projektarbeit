@@ -17,7 +17,8 @@ public interface QuestionService {
     public Optional<Question> getQuestion(int modulId, int questionId);
     public List<Question> getAllQuestion(int modulId) throws EntityNotFoundException;
     public Question createdQuestion(int matNr, int modulID, String topic, String text) throws EntityNotFoundException;
-    public Question changeQuestion(int questionId, Question question) throws EntityNotFoundException;
-    public boolean deleteQuestion(int questionId);
-    public Question getWithExeption(int modulId) throws EntityNotFoundException;
+    public Question changeQuestion(int modulId, int questionId, Question question) throws EntityNotFoundException;
+    public boolean deleteQuestion(int questionId, int modulId);
+    public Question getWithExeption(int modulId, int questionId) throws EntityNotFoundException;
+    public boolean isStudentOwner(int matNr, int modulId, int questionId) throws EntityNotFoundException;
 }

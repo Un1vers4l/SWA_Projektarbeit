@@ -94,6 +94,7 @@ VALUES (1000, 1),
     (1001,2);
 
 INSERT INTO Question (questionId, topic, text, studentName, owner_matNr, modul_modulID)
-VALUES (0, 'Frage zum Projekt', 'Hallo ich wollte mal fragen wie, das mit dem Projekt Anmeldung aus sieht?', 'Daisy Jones', 1000, 2);
+VALUES (0, 'Frage zum Projekt', 'Hallo ich wollte mal fragen wie, das mit dem Projekt Anmeldung aus sieht?', 'Daisy Jones', 1000, 2),
+    (1, 'Test Topic' , 'Hier steht die Frage', 'Nina Chuba', 1001, 2);
 
 

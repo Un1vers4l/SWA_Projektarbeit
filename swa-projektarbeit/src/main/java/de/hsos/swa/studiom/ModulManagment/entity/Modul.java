@@ -157,9 +157,9 @@ public class Modul {
 
     public void changeMyData(Modul other) {
         if (other.name != null)
-            this.name = new String(other.name);
+            this.name = other.name;
         if (other.description != null)
-            this.description = new String(other.description);
+            this.description = other.description;
     }
 
     public int studentenAnzahl() {

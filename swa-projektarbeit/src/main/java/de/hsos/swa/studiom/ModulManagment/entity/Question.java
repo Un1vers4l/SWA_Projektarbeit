@@ -7,6 +7,7 @@
  */
 package de.hsos.swa.studiom.ModulManagment.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -28,9 +29,9 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
 @Vetoed
 @Entity
-@NamedQuery(name = "Question.findAll", query = "SELECT f from Question f", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "Question.findAll", query = "SELECT f from Question f Where f.modul = :modul", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
 @NamedQuery(name = "Question.find", query = "SELECT f from Question f Where f.questionId = :questionId AND f.modul = :modul", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-public class Question {
+public class Question implements Serializable {
 
     @Id
     @SequenceGenerator(name = "questionIdSequence", sequenceName = "Questions_seq", allocationSize = 1, initialValue = 10)
@@ -47,6 +48,7 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     private Student owner;
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Modul modul;
 
@@ -154,5 +156,8 @@ public class Question {
             "}";
     }
 
-    
+    public void changeMyData(Question other){
+        if(other.topic != null) this.topic = other.topic;
+        if(other.text != null) this.text = other.text;
+    }
 }

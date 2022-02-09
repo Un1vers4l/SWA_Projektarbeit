@@ -37,9 +37,12 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public Optional<Question> getQuestion(int modulId, int questionId) {
-        TypedQuery<Question> query = em.createNamedQuery("Modul.find", Question.class);
+        Optional<Modul> modul = modulService.getModul(modulId);
+        if(!modul.isPresent()) return Optional.ofNullable(null);
+
+        TypedQuery<Question> query = em.createNamedQuery("Question.find", Question.class);
         query.setParameter("questionId", questionId);
-        query.setParameter("modul", modulId);
+        query.setParameter("modul", modul.get());
         return query.getResultStream().findFirst();
     }
 
@@ -62,21 +65,35 @@ public class QuestionRepository implements QuestionService {
     }
 
     @Override
-    public Question changeQuestion(int questionId, Question question) throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public Question changeQuestion(int modulId, int questionId, Question changQuestion) throws EntityNotFoundException {
+        Question question = this.getWithExeption(modulId, questionId);
+
+        question.changeMyData(changQuestion);
+        return question;
     }
 
     @Override
-    public boolean deleteQuestion(int questionId) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean deleteQuestion(int questionId, int modulId) {
+        Optional<Question> qOptional = this.getQuestion(modulId, questionId);
+        if(!qOptional.isPresent()) return false;
+
+        em.remove(qOptional.get());
+        return true;
     }
 
     @Override
-    public Question getWithExeption(int modulId) throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-        return null;
+    public Question getWithExeption(int modulId, int questionId) throws EntityNotFoundException {
+        Optional<Question> qOptional = this.getQuestion(modulId, questionId);
+
+        if(!qOptional.isPresent()) throw new EntityNotFoundException(Question.class, questionId);
+        return qOptional.get();
+    }
+
+    @Override
+    public boolean isStudentOwner(int matNr, int modulId, int questionId) throws EntityNotFoundException {
+        Question question = this.getWithExeption(modulId, questionId);
+
+        return question.getOwner().getMatNr() == matNr;
     }
     
 }
