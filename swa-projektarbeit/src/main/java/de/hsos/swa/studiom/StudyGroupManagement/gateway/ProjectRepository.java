@@ -2,7 +2,7 @@
  * @author Joana Wegener
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-31 09:28:10
- * @modify date 2022-02-01 11:41:12
+ * @modify date 2022-02-09 19:27:18
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudyGroupManagement.gateway;
@@ -182,7 +182,7 @@ public class ProjectRepository implements ProjectService {
     private boolean isInProject(int matNr, int moduleId) {
         System.out.println(matNr + "  " + moduleId);
         List<Group> resultList = em
-                .createQuery("SELECT g FROM Group g WHERE g.module.id= :moduleId AND g.type = :type",
+                .createQuery("SELECT g FROM Group g WHERE g.modul.id= :moduleId AND g.type = :type",
                         Group.class)
                 .setParameter("moduleId", moduleId).setParameter("type", TYPE).getResultList();
         for (Group group : resultList) {

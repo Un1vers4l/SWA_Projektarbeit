@@ -1,3 +1,10 @@
+/**
+ * @author Joana Wegener
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-02-09 19:27:59
+ * @modify date 2022-02-09 19:28:00
+ * @desc [description]
+ */
 document.addEventListener("DOMContentLoaded", function (event) {
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
         const toggle = document.getElementById(toggleId),
