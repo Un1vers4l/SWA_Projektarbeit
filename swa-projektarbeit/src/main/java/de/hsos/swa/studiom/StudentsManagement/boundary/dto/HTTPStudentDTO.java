@@ -53,7 +53,7 @@ public class HTTPStudentDTO {
                 groups.add(HTTPGroup.Converter.toDTO(group));
             }
 
-            return new HTTPStudentDTO(student.getMatNr(), student.getName(), student.getEmail(), modules,
+            return new HTTPStudentDTO(student.getMatNr(), student.getFullName(), student.getEmail(), modules,
                     groups, AdressDTO.Converter.toDto(student.getAdress()));
         }
     }

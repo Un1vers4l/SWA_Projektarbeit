@@ -69,12 +69,12 @@ public class StudentMatNrRessource {
         }
     }
 
-    @POST
+    @PUT
     @RolesAllowed("SEKT")
     @Operation(summary = "Change a student", description = "Change the E-Mail and name of a student")
     public Response changeStudent(@PathParam("matNr") int matNr, newStudentDTO newStudent) {
         try {
-            log.info("POST " + uriInfo.getPath());
+            log.info("PUT " + uriInfo.getPath());
             Optional<Student> opt = service.changeStudent(matNr, newStudentDTO.Converter.toStudent(newStudent));
             if (opt.isPresent()) {
                 return Response.ok(StudentDTO.Converter.toStudentDTO(opt.get())).build();

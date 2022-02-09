@@ -8,11 +8,15 @@
 
 package de.hsos.swa.studiom.StudentsManagement.entity;
 
+import java.util.Objects;
+
+import javax.enterprise.inject.Vetoed;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+@Vetoed
 @Entity
 public class Adress {
     @Id
@@ -73,5 +77,34 @@ public class Adress {
     public void setTown(String town) {
         this.town = town;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Adress)) {
+            return false;
+        }
+        Adress adress = (Adress) o;
+        return id == adress.id && Objects.equals(street, adress.street) && nr == adress.nr && zipCode == adress.zipCode && Objects.equals(town, adress.town);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, street, nr, zipCode, town);
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", street='" + getStreet() + "'" +
+            ", nr='" + getNr() + "'" +
+            ", zipCode='" + getZipCode() + "'" +
+            ", town='" + getTown() + "'" +
+            "}";
+    }
+
+
 
 }

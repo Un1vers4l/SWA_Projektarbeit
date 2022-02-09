@@ -12,11 +12,12 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -46,6 +47,7 @@ import de.hsos.swa.studiom.shared.exceptions.JoinGroupException;
 @Consumes(MediaType.APPLICATION_JSON)
 
 @Path("/api/v1/group/{groupId}")
+@Transactional
 @RequestScoped
 
 public class GroupGroupIDRessource {
@@ -104,12 +106,12 @@ public class GroupGroupIDRessource {
         }
     }
 
-    @POST
+    @PUT
     @RolesAllowed("STUDENT")
     @Path("/student")
     @Operation(summary = "Join a Group", description = "Adds a Student to a group if group is not full yet")
     public Response addStudent(@PathParam("groupId") int groupId) {
-        log.info("POST " + uriInfo.getPath());
+        log.info("PUT " + uriInfo.getPath());
         Object claim = jwt.getClaim("matNr");
         if (claim == null) {
             return Response.status(Status.UNAUTHORIZED).build();

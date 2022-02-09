@@ -20,7 +20,7 @@ public class HTTPStudentMin {
     public static class Converter {
         public static HTTPStudentMin toDTO(Student student){
             HTTPStudentMin studentDTO  = new HTTPStudentMin();
-            studentDTO.name = student.getName();
+            studentDTO.name = student.getFullName();
             studentDTO.email = student.getEmail();
             studentDTO.matNr= student.getMatNr();
             return studentDTO;

@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,6 +25,7 @@ import javax.persistence.Table;
 
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+@Vetoed
 @Entity
 @Table(name = "groups")
 @NamedQuery(name = "Groups.findAll", query = "SELECT g FROM Group g")
@@ -60,7 +61,6 @@ public class Group {
     }
 
     public Group(Student owner, Modul modul, String name, int maxMembers, GroupType type) {
-
         this.maxMembers = maxMembers;
         this.name = name;
         this.modul = modul;
@@ -154,6 +154,15 @@ public class Group {
     @Override
     public int hashCode() {
         return Objects.hash(groupId);
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " groupId='" + getGroupId() + "'" +
+            ", maxMembers='" + getMaxMembers() + "'" +
+            ", name='" + getName() + "'" +
+            "}";
     }
 
 

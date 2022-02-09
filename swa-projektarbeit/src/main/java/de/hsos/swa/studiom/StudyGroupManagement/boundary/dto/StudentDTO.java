@@ -19,7 +19,7 @@ public class StudentDTO {
     public static class Converter{
         public static StudentDTO toDTO(Student student){
             StudentDTO studentDTO  = new StudentDTO();
-            studentDTO.name = student.getName();
+            studentDTO.name = student.getFullName();
             studentDTO.matNr = student.getMatNr();
             return studentDTO;
         }

@@ -10,6 +10,7 @@ package de.hsos.swa.studiom.StudentsManagement.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.enterprise.inject.Vetoed;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,9 +26,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.UserManagement.entity.User;
 
+@Vetoed
 @Entity
 @Table(name = "students")
 @NamedQuery(name = "Students.findAll", query = "SELECT s FROM Student s")
@@ -36,7 +39,8 @@ public class Student {
     @SequenceGenerator(name = "matNrSequence", sequenceName = "students_seq", allocationSize = 1, initialValue = 1004)
     @GeneratedValue(generator = "matNrSequence")
     private int matNr;
-    private String name;
+    private String vorname;
+    private String nachname;
     private String email;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -56,33 +60,40 @@ public class Student {
     @JoinColumn(name = "userId", unique = true, nullable = false)
     private User user;
 
-    /*@OneToMany(mappedBy = "students", fetch = FetchType.LAZY)
-    private Set<Group> member = new HashSet<>();*/
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private Set<Group> myGroups = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private Set<Question> myQuestion = new HashSet<>();
 
     public Student() {
     }
 
-    public Student(String name, String email) {
-        this.name = name;
+    public Student(String vorname,String nachname, String email) {
+        this.vorname = vorname;
+        this.nachname = nachname;
         this.email = email;
     }
 
-    public Student(String name) {
-        this.name = name.trim();
-        this.email = generateEmail(name);
+    public Student(String vorname, String nachname) {
+        this.vorname = vorname;
+        this.nachname = nachname;
+        this.email = generateEmail(vorname, nachname);
     }
 
-    public String generateEmail(String name) {
-        name = name.trim();
-        name = name.replace(" ", ".");
-        name = name.toLowerCase();
-        return name + "@hs-osnabrueck.de";
+    public String generateEmail(String vorname, String nachname) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(vorname.toLowerCase());
+        sb.append(".");
+        sb.append(vorname.toLowerCase());
+        sb.append("@hs-osnabrueck.de");
+        return sb.toString();
     }
 
     @Override
     public String toString() {
-        return "Student [adress=" + adress + ", email=" + email + ", groups=" + groups + ", matNr=" + matNr
-                + ", modules=" + modules + ", name=" + name + "]";
+        return "Student [adress=" + adress + ", email=" + email + ", matNr=" + matNr
+                + ", vorname=" + vorname + ", nachname= " + nachname + "]";
     }
 
     public User getUser() {
@@ -102,16 +113,40 @@ public class Student {
         this.matNr = matNr;
     }
 
-    public String getName() {
-        return name;
+    public String getVorname() {
+        return this.vorname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setVorname(String vorname) {
+        this.vorname = vorname;
+    }
+
+    public String getNachname() {
+        return this.nachname;
+    }
+
+    public void setNachname(String nachname) {
+        this.nachname = nachname;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public Set<Group> getMyGroups() {
+        return this.myGroups;
+    }
+
+    public void setMyGroups(Set<Group> myGroups) {
+        this.myGroups = myGroups;
+    }
+
+    public Set<Question> getMyQuestion() {
+        return this.myQuestion;
+    }
+
+    public void setMyQuestion(Set<Question> myQuestion) {
+        this.myQuestion = myQuestion;
     }
 
     public void setEmail(String email) {
@@ -127,7 +162,7 @@ public class Student {
     }
 
     public Set<Group> getGroups() {
-        return groups;
+        return this.groups;
     }
 
     public boolean addModule(Modul module) {
@@ -161,19 +196,18 @@ public class Student {
         this.adress = new Adress(street, nr, zipCode, town);
     }
 
-    public Student(int matNr, String name, String email, Set<Modul> modules, Set<Group> groups,
+    public Student(int matNr, String vorname, String nachname, String email, Set<Modul> modules, Set<Group> groups,
             Adress adress) {
         this.matNr = matNr;
-        this.name = name;
+        this.vorname = vorname;
+        this.nachname = nachname;
         this.email = email;
         this.modules = modules;
         this.groups = groups;
         this.adress = adress;
     }
-    public void removeFromModule(Modul module){
-        this.getModules().remove(module);
-    }
-    public void removeFromGroups(Set<Group> groups){
-        this.getModules().removeAll(groups);
+
+    public String getFullName() {
+        return this.vorname + " " + this.nachname;
     }
 }

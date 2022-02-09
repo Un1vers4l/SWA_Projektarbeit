@@ -109,7 +109,7 @@ public class GroupRepository implements GroupService {
             for (Student student : group.getMember()) {
                 student.removeGroup(group);
             }
-            group.setOwner(null);
+            //group.setOwner(null);
             em.remove(group);
             return true;
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {

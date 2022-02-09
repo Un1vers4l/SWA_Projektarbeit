@@ -36,8 +36,8 @@ public class Answer {
     @Column(nullable = false)
     private boolean isSolution;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Student owner;
+    @Column(nullable = false)
+    private String studentName;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Question question;

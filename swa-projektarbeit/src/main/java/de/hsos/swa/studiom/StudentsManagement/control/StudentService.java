@@ -11,10 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 public interface StudentService {
-    public Optional<Student> createStudent(String name);
+    public Optional<Student> createStudent(String voranme, String nachname) throws CanNotGeneratUserExeption;
 
     public Optional<Student> changeStudent(int matNr, Student newStudent) throws EntityNotFoundException;
 

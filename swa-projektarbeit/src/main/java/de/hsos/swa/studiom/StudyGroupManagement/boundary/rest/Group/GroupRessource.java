@@ -16,6 +16,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -40,6 +41,7 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Transactional
 @Path("/api/v1/group")
 @RequestScoped
 public class GroupRessource {
@@ -52,11 +54,11 @@ public class GroupRessource {
     @Inject
     GroupRepository service;
 
-    @PUT
+    @POST
     @RolesAllowed("STUDENT")
     @Operation(summary = "Create a new Group")
     public Response createGroup(NewGroupDTO gDTO) {
-        log.info("PUT " + uriInfo.getPath());
+        log.info("POST " + uriInfo.getPath());
         if (gDTO.maxMember <= 0) {
             return Response.status(Status.BAD_REQUEST).build();
         }

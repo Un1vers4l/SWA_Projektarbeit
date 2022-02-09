@@ -58,7 +58,7 @@ public class UserRest {
 
     @RolesAllowed("ADMIN")
     @POST
-    @Operation(summary = "Erzeugt einen User {ADMIN}", description = "Einen Studenten kann man hier nicht erzeugen")
+    @Operation(summary = "Erzeugt einen User Rechte {ADMIN}", description = "Einen Studenten kann man hier nicht erzeugen")
     public Response creatUser(UserDto userDto){
         Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
         if(!violations.isEmpty()){

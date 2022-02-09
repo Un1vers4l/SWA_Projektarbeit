@@ -46,8 +46,8 @@ public class AdressRepository implements AddressService {
                 log.error("Student besitzt bereits eine Adresse");
                 return Optional.ofNullable(null);
             }
+            em.persist(adress);
             student.setAdress(adress);
-            em.persist(student);
             return Optional.ofNullable(adress);
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
@@ -84,8 +84,9 @@ public class AdressRepository implements AddressService {
                 log.error("Es wurde keine Adresse für den Studenten gefunden");
                 throw new EntityNotFoundException(Adress.class, matNr);
             }
+            Adress oldAdress = student.getAdress();
             student.setAdress(null);
-            em.persist(student);
+            em.remove(oldAdress);
             return true;
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
@@ -104,8 +105,13 @@ public class AdressRepository implements AddressService {
                 log.error("Es wurde keine Adresse für den Studenten gefunden");
                 throw new EntityNotFoundException(Adress.class, matNr);
             }
+            Adress oldAdress = student.getAdress();
+
+            em.persist(adress);
             student.setAdress(adress);
-            em.persist(student);
+
+            em.remove(oldAdress);
+
             return Optional.ofNullable(adress);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
             log.error("Eine Exception wurde geworfen \n" + e.toString());

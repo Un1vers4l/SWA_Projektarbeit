@@ -104,7 +104,7 @@ public class ModulRepository implements ModulService{
         }
 
         for(Student student : modul.getStudenten()){
-            student.removeFromModule(modul);
+            student.removeModule(modul);
         }
 
         em.remove(modul);

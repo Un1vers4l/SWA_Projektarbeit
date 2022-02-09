@@ -43,11 +43,11 @@ VALUES (12, 'Eisenbahnstrasse', 'Osnabrueck', 49074, 1),
     (17, 'Suesterstrasse', 'Osnabrueck', 49074, 3),
     (18, 'Sanstrasse', 'Osnabrueck', 49080, 4);
 
-INSERT INTO students(adress_id, email, name, matNr, userId) 
-VALUES (1, 'daisy.jones@hs-osnabrueck.de', 'Daisy Jones', 1000, 4),
-    (2, 'nina.chuba@hs-osnabrueck.de', 'Nina Chuba', 1001, 5),
-    (3, 'beth.harmon@hs-osnabrueck.de', 'Beth Harmon', 1002, 6),
-    (4, 'test.name@hs-osnabrueck.de', 'Test Name', 1003, 7);
+INSERT INTO students(adress_id, email, vorname, nachname, matNr, userId) 
+VALUES (1, 'daisy.jones@hs-osnabrueck.de', 'Daisy', 'Jones', 1000, 4),
+    (2, 'nina.chuba@hs-osnabrueck.de', 'Nina', 'Chuba', 1001, 5),
+    (3, 'beth.harmon@hs-osnabrueck.de', 'Beth', 'Harmon', 1002, 6),
+    (4, 'test.name@hs-osnabrueck.de', 'Test', 'Name', 1003, 7);
 
 INSERT INTO Module(name, modulID, isProject, description) 
 VALUES ('Software Architektur - Konzepte und Anwendungen', 1, true, 'Die Software-Architektur legt die wesentlichen Softwarebausteine (Komponenten) zur Strukturierung eines
@@ -92,5 +92,8 @@ VALUES (1000, 1),
     (1001,4),
     (1001,5),
     (1001,2);
+
+INSERT INTO Question (questionId, topic, text, studentName, owner_matNr, modul_modulID)
+VALUES (0, 'Frage zum Projekt', 'Hallo ich wollte mal fragen wie, das mit dem Projekt Anmeldung aus sieht?', 'Daisy Jones', 1000, 2);
 
 

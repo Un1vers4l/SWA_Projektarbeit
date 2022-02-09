@@ -34,9 +34,12 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
+import de.hsos.swa.studiom.shared.dto.StatusDto;
+import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -54,11 +57,16 @@ public class StudentRessource {
     @Inject
     StudentService service;
 
-    @PUT
+    @POST
     @Operation(summary = "Create a new student", description = "Create a new student with their name")
-    public Response createStudent(String name) {
-        log.info("PUT " + uriInfo.getPath());
-        Optional<Student> opt = service.createStudent(name);
+    public Response createStudent(newStudentDTO newStudent) {
+        log.info("POST " + uriInfo.getPath());
+        Optional<Student> opt = Optional.ofNullable(null);
+        try {
+            opt = service.createStudent(newStudent.getVorname(), newStudent.getNachname());
+        } catch (CanNotGeneratUserExeption e) {
+            return Response.ok(new StatusDto(e)).build();
+        }
         if (opt.isPresent()) {
             return Response.ok(opt.get()).build();
         }
@@ -82,7 +90,7 @@ public class StudentRessource {
     }
 
     @DELETE
-    @POST
+    @PUT
     public Response notImplemented() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
     }

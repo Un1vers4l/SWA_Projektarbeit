@@ -64,11 +64,12 @@ public class Question {
     public Question() {
     }
 
-    public Question(String topic, String text, Modul modul, String studentName) {
+    public Question(String topic, String text, Modul modul, String studentName, Student owner) {
         this.topic = topic;
         this.text = text;
         this.modul = modul;
         this.studentName = studentName;
+        this.owner = owner;
     }
 
 
@@ -112,13 +113,20 @@ public class Question {
         this.studentName = studentName;
     }
 
-
     public Set<Answer> getAnswers() {
         return this.answers;
     }
 
     public void setAnswers(Set<Answer> answers) {
         this.answers = answers;
+    }
+
+    public Student getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(Student owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -143,9 +151,6 @@ public class Question {
             " questionId='" + getquestionId() + "'" +
             ", topic='" + getTopic() + "'" +
             ", text='" + getText() + "'" +
-            ", module='" + getModul() + "'" +
-            ", owner='" + getStudentName() + "'" +
-            ", answers='" + getAnswers() + "'" +
             "}";
     }
 

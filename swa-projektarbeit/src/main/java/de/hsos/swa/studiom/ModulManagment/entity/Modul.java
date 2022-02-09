@@ -45,9 +45,6 @@ public class Modul {
     private String description;
 
     @Column(nullable = false)
-    private String studentName;
-
-    @Column(nullable = false)
     private Boolean isProject;
 
     @ManyToMany(mappedBy = "modules", fetch = FetchType.LAZY)
@@ -155,9 +152,6 @@ public class Modul {
                 ", name='" + getName() + "'" +
                 ", description='" + getDescription() + "'" +
                 ", isProject='" + isIsProject() + "'" +
-                ", studenten='" + getStudenten() + "'" +
-                ", projects='" + getProjects() + "'" +
-                ", questions='" + getQuestions() + "'" +
                 "}";
     }
 
@@ -170,5 +164,9 @@ public class Modul {
 
     public int studentenAnzahl() {
         return this.studenten.size();
+    }
+
+    public boolean removeMember(Student student){
+        return this.studenten.remove(student);
     }
 }

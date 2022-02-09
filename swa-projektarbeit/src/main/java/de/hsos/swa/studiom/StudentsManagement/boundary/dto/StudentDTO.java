@@ -103,7 +103,7 @@ public class StudentDTO {
                 groups.add(MockGroupDTO.Converter.toDTO(group));
             }
 
-            return new StudentDTO(student.getMatNr(), student.getName(), student.getEmail(), modules,
+            return new StudentDTO(student.getMatNr(), student.getFullName(), student.getEmail(), modules,
                     groups, AdressDTO.Converter.toDto(student.getAdress()));
         }
     }

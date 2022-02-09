@@ -52,10 +52,11 @@ public class QuestionRepository implements QuestionService {
     @Override
     public Question createdQuestion(int matNr, int modulId, String topic, String text) throws EntityNotFoundException {
         if(topic == null || text == null) throw new IllegalArgumentException();
+
         Student student = this.studentService.getStudent(matNr).get();
         Modul modul = this.modulService.getModulWithExeption(modulId);
 
-        Question question = new Question(topic, text, modul, student.getName());
+        Question question = new Question(topic, text, modul, student.getFullName(), student);
         em.persist(question);
         return question;
     }

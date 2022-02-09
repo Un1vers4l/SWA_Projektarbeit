@@ -8,8 +8,10 @@
 
 package de.hsos.swa.studiom.StudentsManagement.gateway;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -22,9 +24,16 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.logging.Logger;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
+import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
+import de.hsos.swa.studiom.UserManagement.entity.User;
+import de.hsos.swa.studiom.shared.algorithm.username.SimpleUsernameAlgo;
+import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @RequestScoped
@@ -43,9 +52,11 @@ public class StudentRepository implements StudentService {
     UserService userService;
 
     @Override
-    public Optional<Student> createStudent(String name) {
+    public Optional<Student> createStudent(String voranme, String nachname) throws CanNotGeneratUserExeption {
         try {
-            Student student = new Student(name);
+            Student student = new Student(voranme, nachname);
+            User user = userService.createUserStudent(new SimpleUsernameAlgo(voranme, nachname), "123");
+            student.setUser(user);
             em.persist(student);
             return Optional.ofNullable(student);
         } catch (EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
@@ -61,7 +72,8 @@ public class StudentRepository implements StudentService {
             if (student == null) {
                 return Optional.ofNullable(null);
             }
-            student.setName(newStudent.getName());
+            student.setVorname(newStudent.getVorname());
+            student.setNachname(newStudent.getNachname());
             student.setEmail(newStudent.getEmail());
             em.persist(student);
             return Optional.ofNullable(student);
@@ -78,6 +90,21 @@ public class StudentRepository implements StudentService {
             if (student == null) {
                 return false;
             }
+            for(Group group: student.getGroups()){
+                group.removeMember(student);
+            } 
+            for(Modul modul: student.getModules()){
+                modul.removeMember(student);
+            } 
+
+            for(Group group: student.getMyGroups()){
+                for(Student member: group.getStudents()){
+                    member.removeGroup(group);
+                }
+            }
+
+            for(Question question: student.getMyQuestion()) question.setOwner(null);
+
             em.remove(student);
             return true;
         } catch (TransactionRequiredException | IllegalArgumentException e) {
