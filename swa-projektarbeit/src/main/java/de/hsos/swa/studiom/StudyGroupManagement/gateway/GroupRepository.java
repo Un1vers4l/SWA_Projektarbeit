@@ -110,7 +110,7 @@ public class GroupRepository implements GroupService {
             for (Student student : group.getMember()) {
                 student.removeGroup(group);
             }
-            //group.setOwner(null);
+            // group.setOwner(null);
             em.remove(group);
             return true;
         } catch (IllegalArgumentException | EntityExistsException | TransactionRequiredException e) {
@@ -221,6 +221,11 @@ public class GroupRepository implements GroupService {
             log.error("Eine Exception wurde geworfen \n" + e.toString());
             return Optional.ofNullable(null);
         }
+    }
+
+    public Optional<List<Group>> getGroupByModule(int moduleId) {
+        return Optional.ofNullable(em.createQuery("SELECT g FROM Group g WHERE g.modul.id= :moduleId", Group.class)
+                .setParameter("moduleId", moduleId).getResultList());
     }
 
 }

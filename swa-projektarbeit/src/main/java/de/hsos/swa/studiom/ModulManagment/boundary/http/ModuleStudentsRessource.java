@@ -1,10 +1,3 @@
-/**
- * @author Joana Wegener
- * @email joana.wegener@hs-osnabrueck.de
- * @create date 2022-02-07 13:55:39
- * @modify date 2022-02-07 13:55:39
- * @desc [description]
- */
 package de.hsos.swa.studiom.ModulManagment.boundary.http;
 
 import java.util.Optional;
@@ -25,27 +18,37 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.Response.Status;
+
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
+import de.hsos.swa.studiom.ModulManagment.boundary.http.dto.HTTPModulDTO;
 import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
 import de.hsos.swa.studiom.ModulManagment.control.ModulService;
 import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
+import de.hsos.swa.studiom.ModulManagment.entity.Answer;
+import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.HTTPStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import io.quarkus.qute.Template;
+import io.quarkus.qute.TemplateExtension.TemplateAttribute;
 
 @Transactional
 @RequestScoped
-@Path("modules")
 @Produces(MediaType.TEXT_HTML)
 @Consumes(MediaType.TEXT_HTML)
 @RolesAllowed("STUDENT")
-public class ModulesRessource {
+@Path("modules/{moduleId}/students")
+public class ModuleStudentsRessource {
 
     @Inject
-    Template modulesForum;
+    Template modulesStudents;
 
     @Inject
     ModulService moduleService;
@@ -63,8 +66,8 @@ public class ModulesRessource {
     JsonWebToken jwt;
 
     @GET
-    public Response getModules() {
-        String error = "error";
+    public Response getModuleStudents(@PathParam("moduleId") int moduleId,
+            @DefaultValue("error") @QueryParam("error") String error) {
         HTTPStudentDTO student;
         try {
             student = getHttpStudentDTO();
@@ -72,11 +75,20 @@ public class ModulesRessource {
             student = null;
             error = e.getMessage();
         }
+        HTTPModulDTO moduleDetail = getHttpModulDTO(moduleId);
         return Response
-                .ok(modulesForum.data("student", student).data("moduleDetail", null).data("inModule", true)
-                        .data("error", error)
+                .ok(modulesStudents.data("student", student).data("moduleDetail", moduleDetail).data("groups", null)
+                        .data("error", error).data("inModule", true)
                         .render())
                 .build();
+    }
+
+    private int getMatNr() {
+        Object claim = jwt.getClaim("matNr");
+        if (claim == null) {
+            return 0;
+        }
+        return Integer.valueOf(claim.toString());
     }
 
     private HTTPStudentDTO getHttpStudentDTO() throws EntityNotFoundException {
@@ -89,6 +101,14 @@ public class ModulesRessource {
         opt = studService.getStudent(matNr);
         if (opt.isPresent()) {
             return HTTPStudentDTO.Converter.toHTTPStudentDTO(opt.get());
+        }
+        return null;
+    }
+
+    private HTTPModulDTO getHttpModulDTO(int moduleId) {
+        Optional<Modul> optModule = moduleService.getModul(moduleId);
+        if (optModule.isPresent()) {
+            return HTTPModulDTO.Converter.toDto(optModule.get());
         }
         return null;
     }

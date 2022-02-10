@@ -1,0 +1,172 @@
+<!--
+@author Joana Wegener
+@email joana.wegener@hs-osnabrueck.de
+@create date 2022-02-09 19:28:17
+@modify date 2022-02-10 22:09:58
+@desc [description]
+-->
+<!DOCTYPE html>
+<html lang="en">
+<!-- Navbar Snippet von:  https://bbbootstrap.com/snippets/bootstrap-5-sidebar-menu-toggle-button-34132202#-->
+<!-- Searchbox von:  https://bootstrapious.com/p/bootstrap-search-bar-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="/bootstrapTheme/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrapTheme/custom.css">
+    <link rel="stylesheet" href="/bootstrapTheme/module_custom.css">
+
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/javaScript.js"></script>
+    <script type="text/javascript" src="/moduleJS.js"></script>
+
+    <title>Modules</title>
+
+</head>
+
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle">
+            <i class='nav_icon material-icons md-48' id="header-toggle"> menu</i>
+        </div>
+    </header>
+    <div class="l-navbar navbar navbar-dark bg-dark " id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="/index" class="nav_logo ">
+                    <i class='nav_logo-icon material-icons'> home</i>
+                    <span class="nav_logo-name">StudyOM</span>
+                </a>
+                <div class="nav_list">
+                    <a href="/student/me/modules" class="nav_link ">
+                        <i class='nav_icon material-icons '> account_circle</i>
+                        <span class="nav_name">Profile</span>
+                    </a>
+                    <a href="/modules" class="nav_link active">
+                        <i class='nav_icon material-icons '> school</i>
+                        <span class="nav_name">Modules</span>
+                    </a>
+                    <a href="/groups" class="nav_link ">
+                        <i class='nav_icon material-icons'> groups</i>
+                        <span class="nav_name">Group</span>
+                    </a>
+                </div>
+            </div>
+            <a class="nav_link" href="#">
+                <i onclick="logout()" class='nav_icon material-icons md-36 md-light'>logout</i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </nav>
+    </div>
+    <!--Container Main start-->
+    <div class="height-100 bg-light">
+        <div class="row">
+            <div class="col-3 px-5 py-5" style="height: fit-content">
+                <div class="card shadow-sm">
+                    <div class="card-title">
+                        <h2 class="text-center pt-2">Module</h2>
+                    </div>
+                    <div class="card-body px-2 py-2">
+                        <form>
+                            <div class="search rounded rounded-pill shadow-sm mb-4 ">
+                                <div class="input-group">
+                                    <input type="search" placeholder="Module ID" id="search"
+                                        aria-describedby="button-addon1" class="form-control border-0 search">
+                                    <div class="input-group-append">
+                                        <button id="button-addon1" onclick="searchModule()" type="button"
+                                            class="btn btn-link text-primary">
+                                            <i class="fa fa-search material-icons">search</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <h5 class="text-left py-1"><b>Your Modules</b></h5>
+                        <div class="list-group">
+                            {#for module in student.modules}
+                            <div class="shadow-sm ">
+                                <a href="/modules/{module.id}/info" class="list-group-item list-group-item-action">
+                                    {module.name}</a>
+                            </div>
+                            {/for}
+                        </div>
+                    </div>
+                    {#if error != "error"}
+                    <div class="border pt-2 rounded">
+                        <b class="text-primary px-1 py-1">{error}</b>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+            {#if moduleDetail != null && inModule == true}
+            <div class="col-8 pt-5 ">
+                <div class="card shadow-sm ">
+                    <div class="card-header ">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <div class="row">
+                                <div class="col-2">
+                                    <li class="nav-item">
+                                        <a class="nav-link link-dark "
+                                            href="/modules/{moduleDetail.modulID}/info">Info</a>
+                                    </li>
+                                </div>
+                                <div class="col-2">
+                                    <li class="nav-item">
+                                        <a class="nav-link link-dark "
+                                            href="/modules/{moduleDetail.modulID}/forum">Forum</a>
+                                    </li>
+                                </div>
+                                <div class="col-2">
+                                    <li class="nav-item">
+                                        <a class="nav-link link-dark"
+                                            href="/modules/{moduleDetail.modulID}/students">Students</a>
+                                    </li>
+                                </div>
+                                <div class="col-2">
+                                    <li class="nav-item">
+                                        <a class="nav-link link-dark active" href="#">Groups</a>
+                                    </li>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            {#for group in groups}
+                            <div class="accordion accordion-flush ">
+                                <div class=" text-left">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed rounded border " type="button"
+                                            aria-expanded="false">
+                                            <b> <a href="/groups/{group.id}" class="link-dark">{group.name}</a></b>
+                                        </button>
+                                    </h2>
+                                </div>
+                            </div>
+                            {/for}
+                        </div>
+                    </div>
+                </div>
+                {#if inModule == false }
+                <div class="col-1 pt-5 ">
+                    <form method="Post" action="/modules/{moduleDetail.id}/join">
+                        <button type="submit" class=" btn btn-light-outline">
+                            <i class="material-icons md-48 ">add_circle_outline</i>
+                        </button>
+                    </form>
+                </div>
+                {/if}
+                {/if}
+            </div>
+        </div>
+        <!--Container Main end-->
+</body>
+
+</html>

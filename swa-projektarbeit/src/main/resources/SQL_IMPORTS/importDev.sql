@@ -91,16 +91,16 @@ VALUES (1000, 1),
     (1002, 2),
     (1001, 3), 
     (1001,4),
-    (1001,5),
-    (1001,2);
+    (1001,5);
 
 INSERT INTO Question (questionId, topic, text, studentName, owner_matNr, modul_modulID, hasSolution)
-VALUES (0, 'Frage zum Projekt', 'Hallo ich wollte mal fragen wie, das mit dem Projekt Anmeldung aus sieht?', 'Daisy Jones', 1000, 2, true),
-    (1, 'Test Topic' , 'Hier steht die Frage', 'Nina Chuba', 1001, 2, false);
-
+VALUES (0, 'Vorlesung online?', 'Weiß jemand, ob die Vorlesung am Freitag online ist?', 'Daisy Jones', 1000, 5, true),
+    (1, 'Test Topic' , 'Hier steht die Frage', 'Nina Chuba', 1001, 1, false),
+    (2, 'Frage zum Projekt', 'Wann müssen wir das Projekt abgeben?', 'Daisy Jones', 1000, 1, true),
+    (3, 'Hibernate SQL Queries' , 'Hi Leute, weiß jemand, wie man die SQL Queries von Hibernate in der Console anzeigt?', 'Nina Chuba', 1001, 1, true);
 INSERT INTO Answer (answerID, question_modul_modulID, question_questionId, owner_matNr, isSolution, studentName, text)
-VALUES (0, 2, 0, 1002, true,'Beth Harmon', 'Hier steht die Atwort 42!!!'),
-    (1, 2, 0, 1000, false,'Daisy Jones', 'Nein 41'),
-    (0, 2, 1, 1002, false,'Beth Harmon', 'Ich weiß die antwort nicht :)');
+VALUES (0, 5, 0, 1002, true,'Beth Harmon', 'ja, die VL ist online:)'),
+    (1, 1, 3, 1001, false,'Daisy Jones', 'Füg das einfach in deine application.properties ein: %dev.quarkus.hibernate-orm.log.sql=false'),
+    (2, 1, 3, 1002, true,'Beth Harmon', 'Das ist nicht richtig, du musst das hier einfügen: %dev.quarkus.hibernate-orm.log.sql=true');
 
 

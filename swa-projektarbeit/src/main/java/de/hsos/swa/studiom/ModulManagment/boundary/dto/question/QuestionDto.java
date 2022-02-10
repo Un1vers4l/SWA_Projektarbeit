@@ -14,7 +14,7 @@ import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
 
 public class QuestionDto {
-    
+
     private int questionId;
 
     private String topic;
@@ -23,6 +23,8 @@ public class QuestionDto {
 
     private String studentName;
 
+    private int studentMatNr;
+
     private boolean hasSolution;
 
     private List<AnswerDto> answers;
@@ -30,9 +32,8 @@ public class QuestionDto {
     public QuestionDto() {
     }
 
-
-
-    public QuestionDto(int questionId, String topic, String text, String studentName, boolean hasSolution, List<AnswerDto> answers) {
+    public QuestionDto(int questionId, String topic, String text, String studentName, boolean hasSolution,
+            List<AnswerDto> answers) {
         this.questionId = questionId;
         this.topic = topic;
         this.text = text;
@@ -40,7 +41,18 @@ public class QuestionDto {
         this.hasSolution = hasSolution;
         this.answers = answers;
     }
-    
+
+    public QuestionDto(int questionId, String topic, String text, String studentName, int studentMatNr,
+            boolean hasSolution, List<AnswerDto> answers) {
+        this.questionId = questionId;
+        this.topic = topic;
+        this.text = text;
+        this.studentName = studentName;
+        this.studentMatNr = studentMatNr;
+        this.hasSolution = hasSolution;
+        this.answers = answers;
+    }
+
     public int getQuestionId() {
         return this.questionId;
     }
@@ -93,9 +105,17 @@ public class QuestionDto {
         this.answers = answers;
     }
 
+    public int getStudentMatNr() {
+        return studentMatNr;
+    }
+
+    public void setStudentMatNr(int studentMatNr) {
+        this.studentMatNr = studentMatNr;
+    }
+
     public static class Converter {
 
-        public static QuestionDto SimpleDto(Question question){
+        public static QuestionDto SimpleDto(Question question) {
             QuestionDto uDto = new QuestionDto();
             uDto.setQuestionId(question.getquestionId());
             uDto.setStudentName(question.getStudentName());
@@ -103,13 +123,28 @@ public class QuestionDto {
             uDto.setHasSolution(question.getHasSolution());
             return uDto;
         }
-        public static QuestionDto QuestionToDto(Question question){
+
+        public static QuestionDto QuestionToDto(Question question) {
             QuestionDto uDto = new QuestionDto();
             uDto.setQuestionId(question.getquestionId());
             uDto.setStudentName(question.getStudentName());
             uDto.setTopic(question.getTopic());
             uDto.setText(question.getText());
-            uDto.setAnswers(question.getAnswers().stream().map(AnswerDto.Converter::SimpleDto).collect(Collectors.toList()));
+            uDto.setHasSolution(question.getHasSolution());
+            uDto.setAnswers(
+                    question.getAnswers().stream().map(AnswerDto.Converter::SimpleDto).collect(Collectors.toList()));
+            return uDto;
+        }
+
+        public static QuestionDto QuestionToDtoAnswers(Question question) {
+            QuestionDto uDto = new QuestionDto();
+            uDto.setQuestionId(question.getquestionId());
+            uDto.setStudentName(question.getStudentName());
+            uDto.setTopic(question.getTopic());
+            uDto.setText(question.getText());
+            uDto.setHasSolution(question.getHasSolution());
+            uDto.setAnswers(
+                    question.getAnswers().stream().map(AnswerDto.Converter::AnswerToDto).collect(Collectors.toList()));
             return uDto;
         }
     }
