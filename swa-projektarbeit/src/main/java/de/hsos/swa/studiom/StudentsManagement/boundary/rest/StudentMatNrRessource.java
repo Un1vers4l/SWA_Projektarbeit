@@ -30,8 +30,8 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
@@ -59,7 +59,7 @@ public class StudentMatNrRessource {
             log.info("GET " + uriInfo.getPath());
             Optional<Student> opt = service.getStudent(matNr);
             if (opt.isPresent()) {
-                return Response.ok(StudentDTO.Converter.toStudentDTO(opt.get())).build();
+                return Response.ok(StudentDTO.Converter.toSimpleStudentDTO(opt.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException e) {
@@ -75,7 +75,7 @@ public class StudentMatNrRessource {
             log.info("PUT " + uriInfo.getPath());
             Optional<Student> opt = service.changeStudent(matNr, newStudentDTO.Converter.toStudent(newStudent));
             if (opt.isPresent()) {
-                return Response.ok(StudentDTO.Converter.toStudentDTO(opt.get())).build();
+                return Response.ok(StudentDTO.Converter.toSimpleStudentDTO(opt.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException e) {

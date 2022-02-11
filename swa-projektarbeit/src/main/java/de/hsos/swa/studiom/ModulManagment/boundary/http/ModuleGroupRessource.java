@@ -35,8 +35,8 @@ import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
 import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.HTTPGroup;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.HTTPStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.HTTPGroupDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
@@ -88,7 +88,7 @@ public class ModuleGroupRessource {
         HTTPModulDTO moduleDetail = getHttpModulDTO(moduleId);
         Optional<List<Group>> groupByModule = groupService.getGroupByModule(moduleId);
         if (groupByModule.isPresent()) {
-            List<HTTPGroup> groups = groupByModule.get().stream().map(HTTPGroup.Converter::toDTO)
+            List<HTTPGroupDTO> groups = groupByModule.get().stream().map(HTTPGroupDTO.Converter::toDTO)
                     .collect(Collectors.toList());
             return Response
                     .ok(modulesGroups.data("student", student).data("moduleDetail", moduleDetail)

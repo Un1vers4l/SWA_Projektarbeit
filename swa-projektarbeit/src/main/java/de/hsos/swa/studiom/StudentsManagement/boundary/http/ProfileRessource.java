@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.HTTPStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;

@@ -1,4 +1,4 @@
-package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
+package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
 
 /**
 * @author Joana Wegener
@@ -12,6 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Adresse.AdressDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.HTTPGroupDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Module.ModuleDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
@@ -20,14 +23,14 @@ public class HTTPStudentDTO {
     public int matNr;
     public String name;
     public String email;
-    public Set<HTTPModule> modules = null;
-    public Set<HTTPGroup> groups = null;
+    public Set<ModuleDTO> modules = null;
+    public Set<HTTPGroupDTO> groups = null;
     public AdressDTO adress;
 
     public HTTPStudentDTO() {
     }
 
-    public HTTPStudentDTO(int matNr, String name, String email, Set<HTTPModule> modules, Set<HTTPGroup> groups,
+    public HTTPStudentDTO(int matNr, String name, String email, Set<ModuleDTO> modules, Set<HTTPGroupDTO> groups,
             AdressDTO adress) {
         this.matNr = matNr;
         this.name = name;
@@ -39,15 +42,15 @@ public class HTTPStudentDTO {
 
     public static class Converter {
         public static HTTPStudentDTO toHTTPStudentDTO(Student student) {
-            Set<HTTPModule> modules = new HashSet<>();
-            Set<HTTPGroup> groups = new HashSet<>();
+            Set<ModuleDTO> modules = new HashSet<>();
+            Set<HTTPGroupDTO> groups = new HashSet<>();
 
             for (Modul module : student.getModules()) {
-                modules.add(HTTPModule.Converter.toDTO(module));
+                modules.add(ModuleDTO.Converter.toHTTPDTO(module));
             }
 
             for (Group group : student.getGroups()) {
-                groups.add(HTTPGroup.Converter.toDTO(group));
+                groups.add(HTTPGroupDTO.Converter.toDTO(group));
             }
 
             return new HTTPStudentDTO(student.getMatNr(), student.getFullName(), student.getEmail(), modules,

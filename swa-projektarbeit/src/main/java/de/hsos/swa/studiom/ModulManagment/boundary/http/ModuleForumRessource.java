@@ -32,7 +32,7 @@ import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
 import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.HTTPStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;

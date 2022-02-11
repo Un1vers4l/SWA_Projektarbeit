@@ -32,8 +32,8 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.StudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.newStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.dto.StatusDto;
@@ -80,7 +80,7 @@ public class StudentRessource {
             List<Student> students = opt.get();
             List<StudentDTO> studentsDTO = new ArrayList<>();
             for (Student student : students) {
-                studentsDTO.add(StudentDTO.Converter.toStudentDTO(student));
+                studentsDTO.add(StudentDTO.Converter.toSimpleStudentDTO(student));
             }
             return Response.ok(studentsDTO).build();
         }

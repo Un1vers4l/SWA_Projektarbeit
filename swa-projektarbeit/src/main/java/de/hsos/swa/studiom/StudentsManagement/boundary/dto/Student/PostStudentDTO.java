@@ -1,4 +1,4 @@
-package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
+package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
 
 public class PostStudentDTO {
     private String vorname;

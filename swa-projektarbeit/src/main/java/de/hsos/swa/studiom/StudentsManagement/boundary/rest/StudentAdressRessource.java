@@ -32,7 +32,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.AdressDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Adresse.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 import de.hsos.swa.studiom.StudentsManagement.gateway.AdressRepository;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;

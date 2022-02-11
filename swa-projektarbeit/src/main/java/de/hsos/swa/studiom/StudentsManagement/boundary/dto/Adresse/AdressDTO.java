@@ -6,7 +6,7 @@
  * @desc [description]
  */
 
-package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
+package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Adresse;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Adress;
 

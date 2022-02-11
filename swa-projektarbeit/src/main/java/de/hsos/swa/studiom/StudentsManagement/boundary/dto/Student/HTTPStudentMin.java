@@ -5,7 +5,7 @@
  * @modify date 2022-02-05 20:12:53
  * @desc [description]
  */
-package de.hsos.swa.studiom.StudentsManagement.boundary.dto;
+package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
