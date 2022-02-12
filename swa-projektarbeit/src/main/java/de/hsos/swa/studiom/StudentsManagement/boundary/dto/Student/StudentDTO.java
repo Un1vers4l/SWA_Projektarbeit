@@ -1,8 +1,8 @@
 /**
- * @author Joana Wegener
+ * @author Joana Wegener (855518)
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 19:20:03
- * @modify date 2022-01-22 19:20:03
+ * @modify date 2022-02-12 10:39:02
  * @desc [description]
  */
 package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
@@ -10,10 +10,12 @@ package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Adresse.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.GroupDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Module.ModuleDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Question.QuestionDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
@@ -95,10 +97,18 @@ public class StudentDTO {
                 modules.add(ModuleDTO.Converter.toSimpleDTO(module));
             }
             for (Group group : student.getGroups()) {
-                groups.add(GroupDTO.Converter.toDTO(group));
+                groups.add(GroupDTO.Converter.toSimpleGroupDTO(group));
             }
             return new StudentDTO(student.getMatNr(), student.getFullName(), student.getEmail(), modules,
                     groups, AdressDTO.Converter.toDto(student.getAdress()));
+        }
+
+        public static StudentDTO toMinimalStudentDTO(Student student) {
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.setMatNr(student.getMatNr());
+            studentDTO.setEmail(student.getEmail());
+            studentDTO.setName(student.getFullName());
+            return studentDTO;
         }
     }
 }

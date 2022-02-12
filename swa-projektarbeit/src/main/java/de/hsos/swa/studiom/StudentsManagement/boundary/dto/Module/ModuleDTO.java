@@ -18,9 +18,10 @@ public class ModuleDTO {
     public int id;
     public String description;
     public boolean isProject;
-    public Set<newStudentDTO> students = new HashSet<>();
+    public Set<newStudentDTO> students;
 
     public ModuleDTO(String name, int id, String description, boolean isProject) {
+        students = new HashSet<>();
         this.name = name;
         this.id = id;
         this.description = description;
@@ -32,20 +33,20 @@ public class ModuleDTO {
 
     public static class Converter {
         public static ModuleDTO toHTTPDTO(Modul module) {
-            ModuleDTO httpModule = new ModuleDTO(module.getName(), module.getModulID(), module.getDescription(),
+            ModuleDTO mDTO = new ModuleDTO(module.getName(), module.getModulID(), module.getDescription(),
                     module.getIsProject());
             for (Student stud : module.getStudenten()) {
-                httpModule.students.add(newStudentDTO.Converter.toDTO(stud));
+                mDTO.students.add(newStudentDTO.Converter.toDTO(stud));
             }
-            return httpModule;
+            return mDTO;
         }
 
         public static ModuleDTO toSimpleDTO(Modul module) {
-            ModuleDTO httpModule = new ModuleDTO();
-            httpModule.id = module.getModulID();
-            httpModule.name = module.getName();
-            return httpModule;
+            ModuleDTO mDTO = new ModuleDTO();
+            mDTO.id = module.getModulID();
+            mDTO.name = module.getName();
+            mDTO.isProject = module.isProject();
+            return mDTO;
         }
-
     }
 }

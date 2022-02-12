@@ -1,5 +1,5 @@
 /**
- * @author Joana Wegener
+ * @author Joana Wegener (855518)
  * @email joana.wegener@hs-osnabrueck.de
  * @create date 2022-01-22 14:13:20
  * @modify date 2022-02-02 08:36:30
@@ -40,20 +40,17 @@ public class StudentRepository implements StudentService {
 
     Logger log = Logger.getLogger(StudentRepository.class);
 
-    @Context
-    UriInfo uriInfo;
+    @Inject
+    UserService userService;
 
     @Inject
     EntityManager em;
 
-    @Inject
-    UserService userService;
-
     @Override
-    public Optional<Student> createStudent(String voranme, String nachname) throws CanNotGeneratUserExeption {
+    public Optional<Student> createStudent(String vorname, String nachname) throws CanNotGeneratUserExeption {
         try {
-            Student student = new Student(voranme, nachname);
-            User user = userService.createUserStudent(new SimpleUsernameAlgo(voranme, nachname), "123");
+            Student student = new Student(vorname, nachname);
+            User user = userService.createUserStudent(new SimpleUsernameAlgo(vorname, nachname), "123");
             student.setUser(user);
             em.persist(student);
             return Optional.ofNullable(student);

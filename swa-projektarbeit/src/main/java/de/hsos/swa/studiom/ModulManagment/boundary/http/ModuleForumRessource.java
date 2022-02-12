@@ -154,7 +154,6 @@ public class ModuleForumRessource {
         } catch (EntityNotFoundException e) {
             error = "Question could not be deleted!";
         }
-
         return Response
                 .seeOther(UriBuilder.fromPath("/modules/" + moduleId + "/forum").queryParam("error", error).build())
                 .build();

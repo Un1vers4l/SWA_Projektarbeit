@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.HTTPGroupDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.GroupDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentMin;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
@@ -102,7 +102,7 @@ public class GroupsRessource {
                             .data("error", "group not found").render())
                     .build();
         }
-        HTTPGroupDTO groupDTO = HTTPGroupDTO.Converter.toDTO(group);
+        GroupDTO groupDTO = GroupDTO.Converter.toHttpGroupDTO(group);
         boolean inGroup = false;
         for (HTTPStudentMin member : groupDTO.member) {
             if (member.matNr == matNr) {

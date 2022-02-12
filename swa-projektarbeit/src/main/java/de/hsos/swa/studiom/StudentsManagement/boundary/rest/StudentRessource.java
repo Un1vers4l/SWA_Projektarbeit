@@ -80,7 +80,7 @@ public class StudentRessource {
             List<Student> students = opt.get();
             List<StudentDTO> studentsDTO = new ArrayList<>();
             for (Student student : students) {
-                studentsDTO.add(StudentDTO.Converter.toSimpleStudentDTO(student));
+                studentsDTO.add(StudentDTO.Converter.toMinimalStudentDTO(student));
             }
             return Response.ok(studentsDTO).build();
         }
