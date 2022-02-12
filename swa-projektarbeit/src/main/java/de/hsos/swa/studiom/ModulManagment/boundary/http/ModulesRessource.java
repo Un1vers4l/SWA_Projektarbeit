@@ -15,10 +15,14 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
@@ -67,7 +71,7 @@ public class ModulesRessource {
             error = e.getMessage();
         }
         return Response
-                .ok(modulesForum.data("student", student).data("moduleDetail", null).data("inModule", true)
+                .ok(modulesForum.data("student", student).data("moduleDetail", null).data("inModule", false)
                         .data("error", error)
                         .render())
                 .build();
@@ -86,4 +90,20 @@ public class ModulesRessource {
         }
         return null;
     }
+
+    @POST
+    @Path("/{moduleId}/join")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response joinModule(@PathParam("moduleId") int moduleId) {
+        int matNr = Integer.valueOf(jwt.getClaim("matNr").toString());
+        String error = "error";
+        try {
+            moduleService.addStudentFromModule(moduleId, matNr);
+        } catch (EntityNotFoundException e) {
+            error = e.getMessage();
+        }
+        return Response.seeOther(UriBuilder.fromPath("/modules/" + moduleId + "/info").queryParam("error", error).build())
+                .build();
+    }
+
 }

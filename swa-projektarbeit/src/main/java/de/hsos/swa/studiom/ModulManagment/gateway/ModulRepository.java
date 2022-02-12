@@ -26,7 +26,7 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @RequestScoped
 @Transactional
-public class ModulRepository implements ModulService{
+public class ModulRepository implements ModulService {
 
     @Inject
     StudentService studentService;
@@ -35,50 +35,52 @@ public class ModulRepository implements ModulService{
     EntityManager em;
 
     Logger log = Logger.getLogger(ModulRepository.class);
-    
-    /** 
+
+    /**
      * @param modulId
      * @return Optional<Modul>
      */
     @Override
-    public Optional<Modul> getModul(int modulId){
+    public Optional<Modul> getModul(int modulId) {
         return Optional.ofNullable(em.find(Modul.class, modulId));
     }
-    
-    /** 
+
+    /**
      * @return List<Modul>
      */
     @Override
-    public List<Modul> getAllModul(){
+    public List<Modul> getAllModul() {
         TypedQuery<Modul> query = em.createNamedQuery("Modul.findAll", Modul.class);
         return query.getResultList();
     }
-    
-    /** 
+
+    /**
      * @param name
      * @param description
      * @param isProject
      * @return Modul
      */
     @Override
-    public Modul createdModule(String name, String description, boolean isProject){
-        if(name == null || description == null) throw new IllegalArgumentException();
+    public Modul createdModule(String name, String description, boolean isProject) {
+        if (name == null || description == null)
+            throw new IllegalArgumentException();
         Modul modul = new Modul(name, description, isProject);
-        
+
         em.persist(modul);
-        log.info("Modul(Modul: "+ modul.getModulID() + ") wurde erzeugt");
+        log.info("Modul(Modul: " + modul.getModulID() + ") wurde erzeugt");
         return modul;
     }
-    
-    /** 
+
+    /**
      * @param modulId
      * @param changes
      * @return Modul
      * @throws EntityNotFoundException
      */
     @Override
-    public Modul changeModule(int modulId, Modul changes) throws EntityNotFoundException{
-        if(changes == null) throw new IllegalArgumentException();
+    public Modul changeModule(int modulId, Modul changes) throws EntityNotFoundException {
+        if (changes == null)
+            throw new IllegalArgumentException();
 
         Modul modul = this.getModulWithExeption(modulId);
 
@@ -87,55 +89,56 @@ public class ModulRepository implements ModulService{
         return modul;
     }
 
-    
-    /** 
+    /**
      * @param modulId
-     * @return boolean gibt false zurueck falls es kein Modul mit der ID gibt 
+     * @return boolean gibt false zurueck falls es kein Modul mit der ID gibt
      */
     @Override
-    public boolean deleteModule(int modulId){
+    public boolean deleteModule(int modulId) {
         Optional<Modul> modulOpt = this.getModul(modulId);
-        if (!modulOpt.isPresent()) return false;
+        if (!modulOpt.isPresent())
+            return false;
         Modul modul = modulOpt.get();
 
-        for(Group projekt : modul.getProjects()){
-            for (Student student: projekt.getStudents()){
+        for (Group projekt : modul.getProjects()) {
+            for (Student student : projekt.getStudents()) {
                 student.removeGroup(projekt);
             }
         }
 
-        for(Student student : modul.getStudenten()){
+        for (Student student : modul.getStudenten()) {
             student.removeModule(modul);
         }
 
         em.remove(modul);
 
         log.info("Remove Modul: " + modulId);
-        log.debug("Remove("+ modul.toString() +')');
+        log.debug("Remove(" + modul.toString() + ')');
         return true;
     }
-    
-    /** 
+
+    /**
      * @param modulId
      * @param matNr
      * @return boolean
      * @throws EntityNotFoundException
      */
     @Override
-    public boolean addStudentFromModule(int modulId, int matNr) throws EntityNotFoundException{
+    public boolean addStudentFromModule(int modulId, int matNr) throws EntityNotFoundException {
         Optional<Student> student = studentService.getStudent(matNr);
 
         Modul modul = this.getModulWithExeption(modulId);
         boolean success = student.get().addModule(modul);
-        //ist doof aber damit es nicht persitiert wird
-        if(!success) return success;
+        // ist doof aber damit es nicht persitiert wird
+        if (!success)
+            return success;
 
         em.persist(student.get());
-        log.info("Student("+ matNr +") wurde zum Modul("+ modulId + ") hinzugefuegt");
+        log.info("Student(" + matNr + ") wurde zum Modul(" + modulId + ") hinzugefuegt");
         return success;
     }
-    
-    /** 
+
+    /**
      * @param modulId
      * @param matNr
      * @return boolean
@@ -148,25 +151,42 @@ public class ModulRepository implements ModulService{
         Modul modul = this.getModulWithExeption(modulId);
 
         boolean success = student.get().removeModule(modul);
-        if(!success) return success;
+        if (!success)
+            return success;
 
         em.persist(student.get());
-        log.info("Student("+ matNr +") wurde aus dem Modul("+ modulId + ") entfernt");
+        log.info("Student(" + matNr + ") wurde aus dem Modul(" + modulId + ") entfernt");
         return success;
     }
-    
-    /** 
+
+    /**
      * @param modulId
      * @return Modul
      * @throws EntityNotFoundException
      */
     @Override
-    public Modul getModulWithExeption(int modulId) throws EntityNotFoundException{
+    public Modul getModulWithExeption(int modulId) throws EntityNotFoundException {
         Optional<Modul> modul = this.getModul(modulId);
-        if(!modul.isPresent()){
-            log.warn("Modul mit der ID "+ modulId + "konnte nicht gefunden");
+        if (!modul.isPresent()) {
+            log.warn("Modul mit der ID " + modulId + "konnte nicht gefunden");
             throw new EntityNotFoundException(Modul.class, modulId);
         }
         return modul.get();
+    }
+
+    @Override
+    public boolean isInModule(int matNr, int modulId) {
+        Optional<Modul> modul = getModul(modulId);
+        if (modul.isPresent()) {
+            for (Student student : modul.get().getStudenten()) {
+                if (student.getMatNr() == matNr) {
+                    System.out.println("isInModule true");
+                    return true;
+                }
+            }
+        }
+        
+        System.out.println("isInModule false");
+        return false;   
     }
 }

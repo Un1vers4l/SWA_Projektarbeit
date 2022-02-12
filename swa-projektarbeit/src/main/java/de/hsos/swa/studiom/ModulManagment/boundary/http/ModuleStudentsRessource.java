@@ -59,8 +59,11 @@ public class ModuleStudentsRessource {
     public Response getModuleStudents(@PathParam("moduleId") int moduleId,
             @DefaultValue("error") @QueryParam("error") String error) {
         StudentDTO student;
+        boolean inModule = false;
         try {
-            student = getHttpStudentDTO();
+            int matNr = Integer.valueOf(jwt.getClaim("matNr").toString());
+            student = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+            inModule = moduleService.isInModule(matNr, moduleId);
         } catch (EntityNotFoundException e) {
             student = null;
             error = e.getMessage();
@@ -68,23 +71,9 @@ public class ModuleStudentsRessource {
         ModulDto moduleDetail = getHttpModulDTO(moduleId);
         return Response
                 .ok(modulesStudents.data("student", student).data("moduleDetail", moduleDetail).data("groups", null)
-                        .data("error", error).data("inModule", true)
+                        .data("error", error).data("inModule", inModule)
                         .render())
                 .build();
-    }
-
-    private StudentDTO getHttpStudentDTO() throws EntityNotFoundException {
-        Object claim = jwt.getClaim("matNr");
-        if (claim == null) {
-            return null;
-        }
-        int matNr = Integer.valueOf(claim.toString());
-        Optional<Student> opt;
-        opt = studService.getStudent(matNr);
-        if (opt.isPresent()) {
-            return StudentDTO.Converter.toHTTPStudentDTO(opt.get());
-        }
-        return null;
     }
 
     private ModulDto getHttpModulDTO(int moduleId) {

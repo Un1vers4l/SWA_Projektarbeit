@@ -2,7 +2,7 @@
 @author Joana Wegener
 @email joana.wegener@hs-osnabrueck.de
 @create date 2022-02-09 19:28:17
-@modify date 2022-02-12 18:18:56
+@modify date 2022-02-12 21:13:09
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -104,12 +104,8 @@
                     <b class="text-primary px-1 py-1">{error}</b>
                 </div>
                 {/if}
-
-
             </div>
-
-
-            {#if moduleDetail != null && inModule == true}
+            {#if moduleDetail != null}
             <div class="col-8 pt-5 ">
                 <div class="card shadow-sm ">
                     <div class="card-header ">
@@ -117,8 +113,7 @@
                             <div class="row">
                                 <div class="col-2">
                                     <li class="nav-item">
-                                        <a class="nav-link link-dark "
-                                            href="/modules/{moduleDetail.id}/info">Info</a>
+                                        <a class="nav-link link-dark " href="/modules/{moduleDetail.id}/info">Info</a>
                                     </li>
                                 </div>
                                 <div class="col-2">
@@ -141,8 +136,10 @@
                             </div>
                         </ul>
                     </div>
+
                     <div class="card-body">
                         <div class="card-text">
+
                             {#for question in moduleDetail.questions}
                             <div class="accordion accordion-flush " id="accordionFlushExample">
                                 <div class="accordion-item text-left">
@@ -158,7 +155,7 @@
                                             </div>
                                             <div class="col-1">
                                                 <form method="post"
-                                                    action="/modules/{moduleDetail.id}/deleteQuestion">
+                                                    action="/modules/{moduleDetail.id}/forum/deleteQuestion">
                                                     <input type="hidden" value="{question.questionId}"
                                                         name="questionId">
                                                     <button type="sumit" class="material-icons md-18">delete</button>
@@ -177,7 +174,7 @@
                                             </div>
                                             <div class="col-1">
                                                 <form method="post"
-                                                    action="/modules/{moduleDetail.id}/deleteQuestion">
+                                                    action="/modules/{moduleDetail.id}/forum/deleteQuestion">
                                                     <input type="hidden" value="{question.questionId}"
                                                         name="questionId">
                                                     <button type="sumit" class="material-icons md-18">delete</button>
@@ -210,12 +207,11 @@
                                                 <h4>
                                                     <a class="material-icons text-success">add_box</a>New Answer
                                                 </h4>
-                                                <form method="post" action="/modules/{moduleDetail.id}/addAnswer"
+                                                <form method="post" action="/modules/{moduleDetail.id}/forum/addAnswer"
                                                     class="px-3 py-3 border">
                                                     <div class="form-group">
                                                         <label for="question">Answer</label>
-                                                        <input type="hidden" value="{moduleDetail.id}"
-                                                            name=moduleId>
+                                                        <input type="hidden" value="{moduleDetail.id}" name=moduleId>
                                                         <input type="hidden" value="{question.questionId}"
                                                             name=questionId>
                                                         <textarea name="answer" class="form-control" id="question"
@@ -242,7 +238,7 @@
                         <h4>
                             <a class="material-icons">add_box</a>New Question
                         </h4>
-                        <form method="post" action="/modules/{moduleDetail.id}/question" class="px-3 py-3 border">
+                        <form method="post" action="/modules/{moduleDetail.id}/forum/question" class="px-3 py-3 border">
                             <div class="form-group">
                                 <label for="topic">Topic</label>
                                 <input type="text" name="topic" class="form-control" id="topic"
@@ -261,17 +257,9 @@
                             </div>
                         </form>
                     </div>
+                    {/if}
+
                 </div>
-                {#if inModule == false }
-                <div class="col-1 pt-5 ">
-                    <form method="Post" action="/modules/{moduleDetail.id}/join">
-                        <button type="submit" class=" btn btn-light-outline">
-                            <i class="material-icons md-48 ">add_circle_outline</i>
-                        </button>
-                    </form>
-                </div>
-                {/if}
-                {/if}
             </div>
         </div>
 

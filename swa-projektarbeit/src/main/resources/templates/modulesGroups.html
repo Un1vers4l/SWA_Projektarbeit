@@ -2,7 +2,7 @@
 @author Joana Wegener
 @email joana.wegener@hs-osnabrueck.de
 @create date 2022-02-09 19:28:17
-@modify date 2022-02-12 18:19:57
+@modify date 2022-02-12 20:55:20
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -105,7 +105,7 @@
                     {/if}
                 </div>
             </div>
-            {#if moduleDetail != null && inModule == true}
+
             <div class="col-8 pt-5 ">
                 <div class="card shadow-sm ">
                     <div class="card-header ">
@@ -113,14 +113,12 @@
                             <div class="row">
                                 <div class="col-2">
                                     <li class="nav-item">
-                                        <a class="nav-link link-dark "
-                                            href="/modules/{moduleDetail.id}/info">Info</a>
+                                        <a class="nav-link link-dark " href="/modules/{moduleDetail.id}/info">Info</a>
                                     </li>
                                 </div>
                                 <div class="col-2">
                                     <li class="nav-item">
-                                        <a class="nav-link link-dark "
-                                            href="/modules/{moduleDetail.id}/forum">Forum</a>
+                                        <a class="nav-link link-dark " href="/modules/{moduleDetail.id}/forum">Forum</a>
                                     </li>
                                 </div>
                                 <div class="col-2">
@@ -138,6 +136,7 @@
                         </ul>
                     </div>
                     <div class="card-body">
+                        {#if moduleDetail != null && inModule == true}
                         <div class="card-text">
                             {#for group in groups}
                             <div class="accordion accordion-flush ">
@@ -151,6 +150,33 @@
                                 </div>
                             </div>
                             {/for}
+                            <div class="py-3 border">
+                                <h4 class="px-3">New Group</h4>
+                                <form class="px-3 " action="/modules/{moduleDetail.id}/groups/newGroup" method="POST">
+                                    <div class="form-check">
+                                        <input class="form-check-input" onclick="group() " type="radio" name="groupType"
+                                            value="STUDYGROUP" checked>
+                                        <label class="form-check-label" for="exampleRadios1">
+                                            StudyGroup
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" onclick="project()" type="radio"
+                                            name="groupType" value="PROJECT">
+                                        <label class="form-check-label" for="exampleRadios2">
+                                            Project
+                                        </label>
+                                    </div>
+                                    <input type="text" name="groupName" placeholder="groupname" id="groupName">
+                                    <input type="number" name="maxMember" id="maxMember" placeholder="maxMember">
+                                    <div class="row">
+                                        <div class="col-10"></div>
+                                        <div class="col-2">
+                                            <button type="submit">Send</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

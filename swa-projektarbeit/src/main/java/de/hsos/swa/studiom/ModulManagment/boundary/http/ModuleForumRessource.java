@@ -1,3 +1,10 @@
+/**
+ * @author Joana Wegener (855518)
+ * @email joana.wegener@hs-osnabrueck.de
+ * @create date 2022-02-12 18:44:47
+ * @modify date 2022-02-12 18:44:47
+ * @desc [description]
+ */
 package de.hsos.swa.studiom.ModulManagment.boundary.http;
 
 import java.util.Optional;
@@ -21,16 +28,12 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
-import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
 import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
 import de.hsos.swa.studiom.ModulManagment.control.ModulService;
 import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
-import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
-import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 import io.quarkus.qute.Template;
 
@@ -66,37 +69,24 @@ public class ModuleForumRessource {
     public Response getDetailForum(@PathParam("moduleId") int moduleId,
             @DefaultValue("error") @QueryParam("error") String error) {
         StudentDTO student;
+        boolean inModule = false;
         try {
-            student = getHttpStudentDTO();
+            int matNr = Integer.valueOf(jwt.getClaim("matNr").toString());
+            inModule = moduleService.isInModule(matNr, moduleId);
+            student = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
         } catch (EntityNotFoundException e) {
             student = null;
             error = e.getMessage();
         }
-        ModulDto moduleDetail = getHttpModulDTO(moduleId);
+        ModulDto moduleDetail = ModulDto.Converter.toDetailHTTPModule(moduleService.getModul(moduleId).get());
+
         return Response
-                .ok(modulesForum.data("student", student).data("moduleDetail", moduleDetail).data("inModule", true)
+                .ok(modulesForum.data("student", student).data("moduleDetail", moduleDetail).data("inModule", inModule)
                         .data("error", error)
                         .render())
                 .build();
     }
 
-    @GET
-    @Path("/students")
-    public Response getDetailModuleStudents(@PathParam("moduleId") int moduleId,
-            @DefaultValue("error") @QueryParam("error") String error) {
-        StudentDTO student;
-        try {
-            student = getHttpStudentDTO();
-        } catch (EntityNotFoundException e) {
-            student = null;
-            error = e.getMessage();
-        }
-        ModulDto moduleDetail = getHttpModulDTO(moduleId);
-        return Response
-                .ok(modulesForum.data("student", student).data("moduleDetail", moduleDetail).data("inModule", true)
-                        .render())
-                .build();
-    }
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -105,7 +95,8 @@ public class ModuleForumRessource {
             @FormParam("answer") String answer) {
         String error = "error";
         try {
-            answerService.createdAnswer(getMatNr(), moduleId, questionId, answer);
+            answerService.createdAnswer(Integer.valueOf(jwt.getClaim("matNr").toString()), moduleId, questionId,
+                    answer);
         } catch (EntityNotFoundException e) {
             error = e.getMessage();
         }
@@ -121,7 +112,7 @@ public class ModuleForumRessource {
             @FormParam("question") String question) {
         String error = "error";
         try {
-            questService.createdQuestion(getMatNr(), moduleId, topic, question);
+            questService.createdQuestion(Integer.valueOf(jwt.getClaim("matNr").toString()), moduleId, topic, question);
         } catch (EntityNotFoundException e) {
             error = e.getMessage();
         }
@@ -136,13 +127,14 @@ public class ModuleForumRessource {
     public Response deleteQuestion(@PathParam("moduleId") int moduleId, @FormParam("questionId") int questionId) {
         String error = "error";
         try {
-            if (questService.isQuestionOwner(getMatNr(), moduleId, questionId) == true) {
+            if (questService.isQuestionOwner(Integer.valueOf(jwt.getClaim("matNr").toString()), moduleId,
+                    questionId) == true) {
                 if (questService.deleteQuestion(questionId, moduleId) == false) {
                     error = "Question could not be deleted!";
                 }
+            } else {
+                error = "You are not the Owner of the Question";
             }
-            error = "You are not the Owner of the Question";
-
         } catch (EntityNotFoundException e) {
             error = "Question could not be deleted!";
         }
@@ -150,35 +142,4 @@ public class ModuleForumRessource {
                 .seeOther(UriBuilder.fromPath("/modules/" + moduleId + "/forum").queryParam("error", error).build())
                 .build();
     }
-
-    private ModulDto getHttpModulDTO(int moduleId) {
-        Optional<Modul> optModule = moduleService.getModul(moduleId);
-        if (optModule.isPresent()) {
-            return ModulDto.Converter.toDetailHTTPModule(optModule.get());
-        }
-        return null;
-    }
-
-    private int getMatNr() {
-        Object claim = jwt.getClaim("matNr");
-        if (claim == null) {
-            return 0;
-        }
-        return Integer.valueOf(claim.toString());
-    }
-
-    private StudentDTO getHttpStudentDTO() throws EntityNotFoundException {
-        Object claim = jwt.getClaim("matNr");
-        if (claim == null) {
-            return null;
-        }
-        int matNr = Integer.valueOf(claim.toString());
-        Optional<Student> opt;
-        opt = studService.getStudent(matNr);
-        if (opt.isPresent()) {
-            return StudentDTO.Converter.toHTTPStudentDTO(opt.get());
-        }
-        return null;
-    }
-
 }
