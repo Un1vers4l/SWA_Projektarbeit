@@ -7,7 +7,6 @@
  */
 package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Project;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
