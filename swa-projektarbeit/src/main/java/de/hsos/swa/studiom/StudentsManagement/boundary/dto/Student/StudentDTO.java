@@ -8,7 +8,6 @@
 package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;

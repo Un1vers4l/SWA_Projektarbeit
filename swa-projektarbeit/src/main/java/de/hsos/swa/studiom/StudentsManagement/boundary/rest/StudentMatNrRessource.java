@@ -32,7 +32,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.PutStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
