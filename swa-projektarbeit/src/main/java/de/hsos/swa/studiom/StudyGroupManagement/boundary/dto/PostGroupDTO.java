@@ -11,16 +11,16 @@ import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
-public class NewGroupDTO {
+public class PostGroupDTO {
     public int ownerMatNr;
     public String name;
     public int maxMember;
     public int moduleId;
 
-    public NewGroupDTO() {
+    public PostGroupDTO() {
     }
 
-    public NewGroupDTO(int matNr, String name, int maxMember, int moduleId) {
+    public PostGroupDTO(int matNr, String name, int maxMember, int moduleId) {
         this.ownerMatNr = matNr;
         this.name = name;
         this.maxMember = maxMember;
@@ -28,12 +28,12 @@ public class NewGroupDTO {
     }
 
     public static class Converter {
-        public static NewGroupDTO toDTO(Group group) {
-            return new NewGroupDTO(group.getOwner().getMatNr(), group.getName(), group.getMaxMembers(),
+        public static PostGroupDTO toDTO(Group group) {
+            return new PostGroupDTO(group.getOwner().getMatNr(), group.getName(), group.getMaxMembers(),
                     group.getModul().getModulID());
         }
 
-        public static Group toGroup(NewGroupDTO gDTO, Student owner, Modul module) {
+        public static Group toGroup(PostGroupDTO gDTO, Student owner, Modul module) {
             return new Group(owner, module, gDTO.name, gDTO.maxMember);
         }
     }

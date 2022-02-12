@@ -91,7 +91,7 @@ public class ProjectIdRessource {
             log.info("GET " + uriInfo.getPath());
             Optional<Group> project = service.getProject(projectId);
             if (project.isPresent()) {
-                return Response.ok(GroupDTO.Converter.toDTO(project.get())).build();
+                return Response.ok(GroupDTO.Converter.toSimpleGroupDTO(project.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException e) {
@@ -112,7 +112,7 @@ public class ProjectIdRessource {
         try {
             Optional<Group> group = service.addStudent(matNr, projectId);
             if (group.isPresent()) {
-                return Response.ok(GroupDTO.Converter.toDTO(group.get())).build();
+                return Response.ok(GroupDTO.Converter.toSimpleGroupDTO(group.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException | JoinGroupException e) {

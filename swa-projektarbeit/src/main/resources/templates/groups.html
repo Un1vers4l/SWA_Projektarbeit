@@ -102,10 +102,10 @@
                     <a href="/modules/{groupDetail.module.id}">{groupDetail.module.name}</a>
                     <br>
                     <b>Owner:</b>
-                    <a href=" /student/modules/{groupDetail.owner.matNr}">{groupDetail.owner.name}
+                    <a href="/student/modules/{groupDetail.owner.matNr}">{groupDetail.owner.name}
                         ({groupDetail.owner.matNr})</a> <br>
                     <b>Members:</b>
-                    <a>{groupDetail.member.size}/{groupDetail.maxMembers}</a>
+                    <a>{groupDetail.member.size}/{groupDetail.maxMember}</a>
                     <br>
                     {#for student in groupDetail.member}
                     <div style="text-indent:20px">

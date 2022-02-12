@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Adresse.AdressDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.GroupDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
 public class HTTPStudentDTO {
@@ -49,7 +49,7 @@ public class HTTPStudentDTO {
             Set<GroupDTO> groups = new HashSet<>();
 
             for (Group group : student.getGroups()) {
-                groups.add(GroupDTO.Converter.toHttpGroupDTO(group));
+                groups.add(GroupDTO.Converter.toHTTPGroupDTO(group));
             }
 
             return new HTTPStudentDTO(student.getMatNr(), student.getFullName(), student.getEmail(), modules,

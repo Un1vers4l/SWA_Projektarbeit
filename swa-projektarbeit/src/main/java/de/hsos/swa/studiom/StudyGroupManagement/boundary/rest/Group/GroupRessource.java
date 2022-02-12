@@ -11,6 +11,7 @@ package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Group;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -32,7 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
-import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
+import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.PostGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.gateway.GroupRepository;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
@@ -55,7 +56,7 @@ public class GroupRessource {
     @POST
     @RolesAllowed("STUDENT")
     @Operation(summary = "Create a new Group")
-    public Response createGroup(NewGroupDTO gDTO) {
+    public Response createGroup(PostGroupDTO gDTO) {
         log.info("POST " + uriInfo.getPath());
         if (gDTO.maxMember <= 0) {
             return Response.status(Status.BAD_REQUEST).build();
@@ -63,7 +64,7 @@ public class GroupRessource {
         try {
             Optional<Group> created = service.createGroup(gDTO.ownerMatNr, gDTO.name, gDTO.maxMember, gDTO.moduleId);
             if (created.isPresent()) {
-                GroupDTO group = GroupDTO.Converter.toDTO(created.get());
+                GroupDTO group = GroupDTO.Converter.toSimpleGroupDTO(created.get());
                 return Response.ok(group).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
@@ -79,11 +80,9 @@ public class GroupRessource {
         log.info("GET " + uriInfo.getPath());
         Optional<List<Group>> allGroups = service.getAllGroup();
         if (allGroups.isPresent()) {
-            List<GroupDTO> gDTOs = new ArrayList<>();
-            for (Group group : allGroups.get()) {
-                gDTOs.add(GroupDTO.Converter.toDTO(group));
-            }
-            return Response.ok(gDTOs).build();
+            List<GroupDTO> gDtos = allGroups.get().stream().map(GroupDTO.Converter::toMinimalGroupDTO)
+                    .collect(Collectors.toList());
+            return Response.ok(gDtos).build();
         }
         return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }

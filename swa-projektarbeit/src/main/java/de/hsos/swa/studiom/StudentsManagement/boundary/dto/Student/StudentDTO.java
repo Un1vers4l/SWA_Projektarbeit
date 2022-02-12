@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Adresse.AdressDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.GroupDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Question.QuestionDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 
 public class StudentDTO {
     public int matNr;
@@ -26,7 +26,7 @@ public class StudentDTO {
     public List<GroupDTO> groups = null;
     public AdressDTO adress;
     private Set<GroupDTO> myGroups;
-    private Set<QuestionDTO> myQuestion;
+    private Set<QuestionDto> myQuestion;
     private Set<AnswerDto> myAnswer;
 
     public StudentDTO() {
@@ -98,11 +98,11 @@ public class StudentDTO {
         this.myGroups = myGroups;
     }
 
-    public Set<QuestionDTO> getMyQuestion() {
+    public Set<QuestionDto> getMyQuestion() {
         return myQuestion;
     }
 
-    public void setMyQuestion(Set<QuestionDTO> myQuestion) {
+    public void setMyQuestion(Set<QuestionDto> myQuestion) {
         this.myQuestion = myQuestion;
     }
 
@@ -124,7 +124,7 @@ public class StudentDTO {
         public static StudentDTO toSimpleStudentDTO(Student student) {
             List<ModulDto> modules = student.getModules().stream().map(ModulDto.Converter::toMinimalModuleDTO)
                     .collect(Collectors.toList());
-            List<GroupDTO> groups = student.getGroups().stream().map(GroupDTO.Converter::toSimpleGroupDTO)
+            List<GroupDTO> groups = student.getGroups().stream().map(GroupDTO.Converter::toMinimalGroupDTO)
                     .collect(Collectors.toList());
 
             return new StudentDTO(student.getMatNr(), student.getFullName(), student.getEmail(), modules,

@@ -10,6 +10,7 @@ package de.hsos.swa.studiom.StudyGroupManagement.boundary.rest.Project;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -60,11 +61,9 @@ public class ProjectRessource {
         log.info("GET " + uriInfo.getPath());
         Optional<List<Group>> allProjects = service.getAllProjects();
         if (allProjects.isPresent()) {
-            List<GroupDTO> gDTOs = new ArrayList<>();
-            for (Group group : allProjects.get()) {
-                gDTOs.add(GroupDTO.Converter.toDTO(group));
-            }
-            return Response.ok(gDTOs).build();
+            List<GroupDTO> gDtos = allProjects.get().stream().map(GroupDTO.Converter::toMinimalGroupDTO)
+                    .collect(Collectors.toList());
+            return Response.ok(gDtos).build();
         }
         return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
@@ -83,7 +82,7 @@ public class ProjectRessource {
         try {
             Optional<Group> createProject = service.createProject(matNr, moduleId);
             if (createProject.isPresent()) {
-                return Response.ok(GroupDTO.Converter.toDTO(createProject.get())).build();
+                return Response.ok(GroupDTO.Converter.toSimpleGroupDTO(createProject.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException | JoinGroupException e) {

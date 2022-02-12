@@ -9,16 +9,16 @@ package de.hsos.swa.studiom.StudyGroupManagement.boundary.dto;
 
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
-public class StudentDTO {
+public class StudentTempDTO {
     public String name;
     public int matNr;
 
-    public StudentDTO() {
+    public StudentTempDTO() {
     }
 
     public static class Converter{
-        public static StudentDTO toDTO(Student student){
-            StudentDTO studentDTO  = new StudentDTO();
+        public static StudentTempDTO toDTO(Student student){
+            StudentTempDTO studentDTO  = new StudentTempDTO();
             studentDTO.name = student.getFullName();
             studentDTO.matNr = student.getMatNr();
             return studentDTO;

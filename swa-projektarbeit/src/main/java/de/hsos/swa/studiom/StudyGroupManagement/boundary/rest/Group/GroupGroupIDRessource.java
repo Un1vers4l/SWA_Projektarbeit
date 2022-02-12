@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
-import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.NewGroupDTO;
+import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.PostGroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
@@ -79,7 +79,7 @@ public class GroupGroupIDRessource {
             Optional<Group> opt = service.getGroup(groupId);
             if (opt.isPresent()) {
                 Group group = opt.get();
-                return Response.ok(GroupDTO.Converter.toDTO(group)).build();
+                return Response.ok(GroupDTO.Converter.toSimpleGroupDTO(group)).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException e) {
@@ -90,15 +90,15 @@ public class GroupGroupIDRessource {
     @POST
     @RolesAllowed("STUDENT")
     @Operation(summary = "Change a group", description = "Change the name, maxMembers or module of a group")
-    public Response changeGroup(@PathParam("groupId") int groupId, NewGroupDTO newGroup) {
+    public Response changeGroup(@PathParam("groupId") int groupId, PostGroupDTO newGroup) {
         try {
             log.info("POST " + uriInfo.getPath());
             Optional<Student> ownerOpt = studService.getStudent(newGroup.ownerMatNr);
             if (ownerOpt.isPresent()) {
                 Optional<Group> changeGroupOpt = service.changeGroup(newGroup.ownerMatNr, groupId,
-                        NewGroupDTO.Converter.toGroup(newGroup, ownerOpt.get(), null));
+                        PostGroupDTO.Converter.toGroup(newGroup, ownerOpt.get(), null));
                 if (changeGroupOpt.isPresent()) {
-                    return Response.ok(GroupDTO.Converter.toDTO(changeGroupOpt.get())).build();
+                    return Response.ok(GroupDTO.Converter.toSimpleGroupDTO(changeGroupOpt.get())).build();
                 }
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
@@ -121,7 +121,7 @@ public class GroupGroupIDRessource {
         try {
             Optional<Group> addStudent = service.addStudent(groupId, matNr);
             if (addStudent.isPresent()) {
-                return Response.ok(GroupDTO.Converter.toDTO(addStudent.get())).build();
+                return Response.ok(GroupDTO.Converter.toSimpleGroupDTO(addStudent.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (JoinGroupException | EntityNotFoundException e) {
@@ -166,7 +166,7 @@ public class GroupGroupIDRessource {
         try {
             Optional<Group> removeStudent = service.removeStudent(groupId, matNr);
             if (removeStudent.isPresent()) {
-                return Response.ok(GroupDTO.Converter.toDTO(removeStudent.get())).build();
+                return Response.ok(GroupDTO.Converter.toSimpleGroupDTO(removeStudent.get())).build();
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         } catch (EntityNotFoundException | OwnerException e) {
