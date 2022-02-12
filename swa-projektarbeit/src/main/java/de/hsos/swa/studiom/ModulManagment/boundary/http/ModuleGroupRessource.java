@@ -21,7 +21,7 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.ModulManagment.boundary.http.dto.HTTPModulDTO;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
 import de.hsos.swa.studiom.ModulManagment.control.ModulService;
 import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
@@ -76,7 +76,7 @@ public class ModuleGroupRessource {
             student = null;
             error = e.getMessage();
         }
-        HTTPModulDTO moduleDetail = getHttpModulDTO(moduleId);
+        ModulDto moduleDetail = getHttpModulDTO(moduleId);
         Optional<List<Group>> groupByModule = groupService.getGroupByModule(moduleId);
         if (groupByModule.isPresent()) {
             List<GroupDTO> groups = groupByModule.get().stream().map(GroupDTO.Converter::toHTTPGroupDTO)
@@ -96,10 +96,10 @@ public class ModuleGroupRessource {
                 .build();
     }
 
-    private HTTPModulDTO getHttpModulDTO(int moduleId) {
+    private ModulDto getHttpModulDTO(int moduleId) {
         Optional<Modul> optModule = moduleService.getModul(moduleId);
         if (optModule.isPresent()) {
-            return HTTPModulDTO.Converter.toDto(optModule.get());
+            return ModulDto.Converter.toDetailHTTPModule(optModule.get());
         }
         return null;
     }

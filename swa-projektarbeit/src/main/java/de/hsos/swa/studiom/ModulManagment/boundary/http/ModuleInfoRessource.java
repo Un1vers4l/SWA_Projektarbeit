@@ -5,33 +5,22 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.print.attribute.standard.Media;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
-import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
-import de.hsos.swa.studiom.ModulManagment.boundary.http.dto.HTTPModulDTO;
-import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.ModulManagment.control.ModulService;
-import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
-import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
-import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
@@ -69,7 +58,7 @@ public class ModuleInfoRessource {
             student = null;
             error = e.getMessage();
         }
-        HTTPModulDTO moduleDetail = getHttpModulDTO(moduleId);
+        ModulDto moduleDetail = getHttpModulDTO(moduleId);
         return Response
                 .ok(modulesInfo.data("student", student).data("moduleDetail", moduleDetail).data("inModule", true)
                         .data("error", error)
@@ -77,10 +66,10 @@ public class ModuleInfoRessource {
                 .build();
     }
 
-    private HTTPModulDTO getHttpModulDTO(int moduleId) {
+    private ModulDto getHttpModulDTO(int moduleId) {
         Optional<Modul> optModule = moduleService.getModul(moduleId);
         if (optModule.isPresent()) {
-            return HTTPModulDTO.Converter.toDto(optModule.get());
+            return ModulDto.Converter.toDetailHTTPModule(optModule.get());
         }
         return null;
     }

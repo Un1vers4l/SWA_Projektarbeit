@@ -2,7 +2,7 @@
 @author Joana Wegener
 @email joana.wegener@hs-osnabrueck.de
 @create date 2022-02-09 19:28:17
-@modify date 2022-02-10 21:14:51
+@modify date 2022-02-12 18:19:38
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -120,19 +120,19 @@
                                 <div class="col-2">
                                     <li class="nav-item">
                                         <a class="nav-link link-dark "
-                                            href="/modules/{moduleDetail.modulID}/forum">Forum</a>
+                                            href="/modules/{moduleDetail.id}/forum">Forum</a>
                                     </li>
                                 </div>
                                 <div class="col-2">
                                     <li class="nav-item">
                                         <a class="nav-link link-dark"
-                                            href="/modules/{moduleDetail.modulID}/students">Students</a>
+                                            href="/modules/{moduleDetail.id}/students">Students</a>
                                     </li>
                                 </div>
                                 <div class="col-2">
                                     <li class="nav-item">
                                         <a class="nav-link link-dark"
-                                            href="/modules/{moduleDetail.modulID}/groups">Groups</a>
+                                            href="/modules/{moduleDetail.id}/groups">Groups</a>
                                     </li>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="card-body">
                         <b>Module ID:</b>
-                        <a>{moduleDetail.modulID}</a>
+                        <a>{moduleDetail.id}</a>
                         <br>
                         <b>Number of Students:</b>
                         <a>{moduleDetail.students.size}</a>

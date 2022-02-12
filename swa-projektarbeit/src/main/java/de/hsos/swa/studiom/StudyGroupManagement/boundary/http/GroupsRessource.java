@@ -30,7 +30,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
-import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.StudentTempDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
@@ -104,7 +103,7 @@ public class GroupsRessource {
         }
         GroupDTO groupDTO = GroupDTO.Converter.toHTTPGroupDTO(group);
         boolean inGroup = false;
-        for (StudentTempDTO member : groupDTO.member) {
+        for (StudentDTO member : groupDTO.member) {
             if (member.matNr == matNr) {
                 inGroup = true;
             }

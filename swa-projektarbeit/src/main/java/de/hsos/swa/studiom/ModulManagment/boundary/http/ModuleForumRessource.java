@@ -24,8 +24,8 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.answer.AnswerDto;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
-import de.hsos.swa.studiom.ModulManagment.boundary.http.dto.HTTPModulDTO;
 import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
 import de.hsos.swa.studiom.ModulManagment.control.ModulService;
 import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
@@ -66,8 +66,6 @@ public class ModuleForumRessource {
     @Inject
     JsonWebToken jwt;
 
-    
-
     @GET
     public Response getDetailForum(@PathParam("moduleId") int moduleId,
             @DefaultValue("error") @QueryParam("error") String error) {
@@ -78,7 +76,7 @@ public class ModuleForumRessource {
             student = null;
             error = e.getMessage();
         }
-        HTTPModulDTO moduleDetail = getHttpModulDTO(moduleId);
+        ModulDto moduleDetail = getHttpModulDTO(moduleId);
         return Response
                 .ok(modulesForum.data("student", student).data("moduleDetail", moduleDetail).data("inModule", true)
                         .data("error", error)
@@ -97,14 +95,12 @@ public class ModuleForumRessource {
             student = null;
             error = e.getMessage();
         }
-        HTTPModulDTO moduleDetail = getHttpModulDTO(moduleId);
+        ModulDto moduleDetail = getHttpModulDTO(moduleId);
         return Response
                 .ok(modulesForum.data("student", student).data("moduleDetail", moduleDetail).data("inModule", true)
                         .render())
                 .build();
     }
-
-    
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -159,10 +155,10 @@ public class ModuleForumRessource {
                 .build();
     }
 
-    private HTTPModulDTO getHttpModulDTO(int moduleId) {
+    private ModulDto getHttpModulDTO(int moduleId) {
         Optional<Modul> optModule = moduleService.getModul(moduleId);
         if (optModule.isPresent()) {
-            return HTTPModulDTO.Converter.toDto(optModule.get());
+            return ModulDto.Converter.toDetailHTTPModule(optModule.get());
         }
         return null;
     }
