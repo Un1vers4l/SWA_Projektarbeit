@@ -66,7 +66,7 @@ public class ModulRest {
         log.info("GET " +  uriInfo.getPath());
         List<ModulDto> list = moduleService.getAllModul()
         .stream()
-        .map(ModulDto.Converter::SimpleDto)
+        .map(ModulDto.Converter::toSimpleModuleDTO)
         .collect(Collectors.toList());
   
         return Response.ok(new DataDto<ModulDto>(list)).build();
@@ -82,7 +82,7 @@ public class ModulRest {
         }
 
         Modul module = this.moduleService.createdModule(newModul.getName(), newModul.getDescription(), newModul.getIsProject());
-        return Response.ok(ModulDto.Converter.ModuleToDto(module)).build();
+        return Response.ok(ModulDto.Converter.toModuleDTO(module)).build();
     }
     
 }

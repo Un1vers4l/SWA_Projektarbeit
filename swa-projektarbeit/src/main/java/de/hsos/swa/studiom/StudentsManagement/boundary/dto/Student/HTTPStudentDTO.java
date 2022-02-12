@@ -9,12 +9,14 @@ package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
 */
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Adresse.AdressDTO;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Group.GroupDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Module.ModuleDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
@@ -23,14 +25,14 @@ public class HTTPStudentDTO {
     public int matNr;
     public String name;
     public String email;
-    public Set<ModuleDTO> modules = null;
+    public List<ModulDto> modules = null;
     public Set<GroupDTO> groups = null;
     public AdressDTO adress;
 
     public HTTPStudentDTO() {
     }
 
-    public HTTPStudentDTO(int matNr, String name, String email, Set<ModuleDTO> modules, Set<GroupDTO> groups,
+    public HTTPStudentDTO(int matNr, String name, String email, List<ModulDto> modules, Set<GroupDTO> groups,
             AdressDTO adress) {
         this.matNr = matNr;
         this.name = name;
@@ -42,12 +44,9 @@ public class HTTPStudentDTO {
 
     public static class Converter {
         public static HTTPStudentDTO toHTTPStudentDTO(Student student) {
-            Set<ModuleDTO> modules = new HashSet<>();
+            List<ModulDto> modules = student.getModules().stream().map(ModulDto.Converter::toMinimalHTTPModuleDTO)
+                    .collect(Collectors.toList());
             Set<GroupDTO> groups = new HashSet<>();
-
-            for (Modul module : student.getModules()) {
-                modules.add(ModuleDTO.Converter.toHTTPDTO(module));
-            }
 
             for (Group group : student.getGroups()) {
                 groups.add(GroupDTO.Converter.toHttpGroupDTO(group));

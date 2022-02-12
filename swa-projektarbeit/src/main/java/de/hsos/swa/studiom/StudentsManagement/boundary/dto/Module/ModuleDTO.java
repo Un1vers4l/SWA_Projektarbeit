@@ -9,6 +9,10 @@ package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Module;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.newStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
@@ -17,6 +21,7 @@ public class ModuleDTO {
     public String name;
     public int id;
     public String description;
+    @JsonInclude(Include.NON_DEFAULT)
     public boolean isProject;
     public Set<newStudentDTO> students;
 
@@ -27,6 +32,7 @@ public class ModuleDTO {
         this.description = description;
         this.isProject = isProject;
     }
+    
 
     public ModuleDTO() {
     }
@@ -38,14 +44,6 @@ public class ModuleDTO {
             for (Student stud : module.getStudenten()) {
                 mDTO.students.add(newStudentDTO.Converter.toDTO(stud));
             }
-            return mDTO;
-        }
-
-        public static ModuleDTO toSimpleDTO(Modul module) {
-            ModuleDTO mDTO = new ModuleDTO();
-            mDTO.id = module.getModulID();
-            mDTO.name = module.getName();
-            mDTO.isProject = module.isProject();
             return mDTO;
         }
     }

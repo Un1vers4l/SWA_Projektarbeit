@@ -14,7 +14,7 @@ import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 
 public class GroupDTO {
-    public int groupId;
+    public int id;
     public StudentDTO owner;
     public String name;
     public int maxMember;
@@ -27,7 +27,7 @@ public class GroupDTO {
     public static class Converter {
         public static GroupDTO toDTO(Group group) {
             GroupDTO gDTO = new GroupDTO();
-            gDTO.groupId = group.getGroupId();
+            gDTO.id = group.getGroupId();
             gDTO.owner = StudentDTO.Converter.toDTO(group.getOwner());
             gDTO.name = group.getName();
             gDTO.maxMember = group.getMaxMembers();
@@ -37,6 +37,8 @@ public class GroupDTO {
             }
             return gDTO;
         }
+
+        
     }
 
 }

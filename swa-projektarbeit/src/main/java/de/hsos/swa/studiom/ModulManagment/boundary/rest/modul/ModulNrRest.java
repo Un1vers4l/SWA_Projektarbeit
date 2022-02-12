@@ -65,7 +65,7 @@ public class ModulNrRest {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.ok(ModulDto.Converter.ModuleToDto(module.get())).build();
+        return Response.ok(ModulDto.Converter.toModuleDTO(module.get())).build();
     }
 
     @Operation(summary = "Verändert ein Modul Rechte: {SEKT}")
