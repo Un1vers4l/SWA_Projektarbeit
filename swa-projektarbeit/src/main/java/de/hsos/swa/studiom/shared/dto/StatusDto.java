@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;;
+
+
 public class StatusDto {
     private boolean success;
     private String message;
@@ -34,11 +37,12 @@ public class StatusDto {
         this.message = e.getMessage();
         this.success = false;
     }
+
     public StatusDto(Set<? extends ConstraintViolation<?>> violations) {
         this.success = false;
         this.message = violations.stream()
-             .map(cv -> cv.getMessage())
-             .collect(Collectors.joining('\n' + " "));
+                .map(cv -> cv.getMessage())
+                .collect(Collectors.joining('\n' + " "));
     }
 
     public String getmessage() {
@@ -57,7 +61,4 @@ public class StatusDto {
         this.success = success;
     }
 
-    
-
-    
 }

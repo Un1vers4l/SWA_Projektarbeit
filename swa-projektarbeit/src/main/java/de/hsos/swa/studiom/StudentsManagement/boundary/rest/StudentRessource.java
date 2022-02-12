@@ -33,11 +33,13 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.newStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.PostStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.PutStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.dto.StatusDto;
 import de.hsos.swa.studiom.shared.exceptions.CanNotGeneratUserExeption;
+import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -57,16 +59,16 @@ public class StudentRessource {
 
     @POST
     @Operation(summary = "Create a new student", description = "Create a new student with their name")
-    public Response createStudent(newStudentDTO newStudent) {
+    public Response createStudent(PostStudentDTO newStudent) {
         log.info("POST " + uriInfo.getPath());
         Optional<Student> opt = Optional.ofNullable(null);
         try {
-            opt = service.createStudent(newStudent.getVorname(), newStudent.getNachname());
+            opt = service.createStudent(newStudent.vorname, newStudent.nachname, newStudent.password);
         } catch (CanNotGeneratUserExeption e) {
             return Response.ok(new StatusDto(e)).build();
         }
         if (opt.isPresent()) {
-            return Response.ok(opt.get()).build();
+            return Response.ok(StudentDTO.Converter.toUserSimpleStudentDTO(opt.get())).build();
         }
         return Response.status(Status.BAD_REQUEST).build();
     }
@@ -87,8 +89,24 @@ public class StudentRessource {
         return Response.status(Status.BAD_REQUEST).build();
     }
 
-    @DELETE
     @PUT
+    @RolesAllowed("SEKT")
+    @Operation(summary = "Change a student", description = "Change the E-Mail and name of a student")
+    public Response changeStudent(PutStudentDTO newStudent) {
+        try {
+            log.info("PUT " + uriInfo.getPath());
+            Optional<Student> opt = service.changeStudent(newStudent.matNr,
+                    PutStudentDTO.Converter.toStudent(newStudent));
+            if (opt.isPresent()) {
+                return Response.ok(StudentDTO.Converter.toSimpleStudentDTO(opt.get())).build();
+            }
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+    @DELETE
     public Response notImplemented() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
     }

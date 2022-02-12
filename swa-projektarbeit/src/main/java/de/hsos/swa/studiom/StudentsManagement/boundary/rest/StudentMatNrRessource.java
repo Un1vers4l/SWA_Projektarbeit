@@ -32,7 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.newStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.PutStudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudentsManagement.gateway.StudentRepository;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
@@ -68,22 +68,6 @@ public class StudentMatNrRessource {
         }
     }
 
-    @PUT
-    @RolesAllowed("SEKT")
-    @Operation(summary = "Change a student", description = "Change the E-Mail and name of a student")
-    public Response changeStudent(@PathParam("matNr") int matNr, newStudentDTO newStudent) {
-        try {
-            log.info("PUT " + uriInfo.getPath());
-            Optional<Student> opt = service.changeStudent(matNr, newStudentDTO.Converter.toStudent(newStudent));
-            if (opt.isPresent()) {
-                return Response.ok(StudentDTO.Converter.toSimpleStudentDTO(opt.get())).build();
-            }
-            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-        } catch (EntityNotFoundException e) {
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-    }
-
     @POST
     public Response notImplementedResponse() {
         return Response.status(Status.NOT_IMPLEMENTED).build();
@@ -103,5 +87,10 @@ public class StudentMatNrRessource {
         } catch (EntityNotFoundException e) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
+    }
+
+    @PUT
+    public Response notImplemented() {
+        return Response.status(Status.NOT_IMPLEMENTED).build();
     }
 }

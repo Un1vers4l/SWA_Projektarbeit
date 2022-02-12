@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
@@ -56,7 +56,7 @@ public class ProfileRessource {
             return Response.status(Status.UNAUTHORIZED).build();
         }
         int matNr = Integer.valueOf(claim.toString());
-        HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+        StudentDTO stud = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
         return Response.ok(studentModules.data("student", stud).render()).build();
     }
 
@@ -68,7 +68,7 @@ public class ProfileRessource {
             return Response.status(Status.UNAUTHORIZED).build();
         }
         int matNr = Integer.valueOf(claim.toString());
-        HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+        StudentDTO stud = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
         return Response.ok(studentGroups.data("student", stud).render()).build();
     }
 
@@ -78,7 +78,7 @@ public class ProfileRessource {
         if (matNr == 0) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
-        HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+        StudentDTO stud = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
         return Response.ok(studentModules.data("student", stud).render()).build();
     }
 
@@ -88,7 +88,7 @@ public class ProfileRessource {
         if (matNr == 0) {
             return Response.status(Status.UNAUTHORIZED).build();
         }
-        HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+        StudentDTO stud = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
         return Response.ok(studentGroups.data("student", stud).render()).build();
     }
 }

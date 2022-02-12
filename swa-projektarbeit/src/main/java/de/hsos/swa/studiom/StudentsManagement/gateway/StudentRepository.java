@@ -17,8 +17,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 
 import org.jboss.logging.Logger;
 
@@ -47,10 +45,11 @@ public class StudentRepository implements StudentService {
     EntityManager em;
 
     @Override
-    public Optional<Student> createStudent(String vorname, String nachname) throws CanNotGeneratUserExeption {
+    public Optional<Student> createStudent(String vorname, String nachname, String password)
+            throws CanNotGeneratUserExeption {
         try {
             Student student = new Student(vorname, nachname);
-            User user = userService.createUserStudent(new SimpleUsernameAlgo(vorname, nachname), "123");
+            User user = userService.createUserStudent(new SimpleUsernameAlgo(vorname, nachname), password);
             student.setUser(user);
             em.persist(student);
             return Optional.ofNullable(student);
@@ -85,21 +84,23 @@ public class StudentRepository implements StudentService {
             if (student == null) {
                 return false;
             }
-            for(Group group: student.getGroups()){
+            for (Group group : student.getGroups()) {
                 group.removeMember(student);
-            } 
-            for(Modul modul: student.getModules()){
+            }
+            for (Modul modul : student.getModules()) {
                 modul.removeMember(student);
-            } 
+            }
 
-            for(Group group: student.getMyGroups()){
-                for(Student member: group.getStudents()){
+            for (Group group : student.getMyGroups()) {
+                for (Student member : group.getStudents()) {
                     member.removeGroup(group);
                 }
             }
 
-            for(Question question: student.getMyQuestion()) question.setOwner(null);
-            for(Answer answer: student.getMyAnswer()) answer.setOwner(null);
+            for (Question question : student.getMyQuestion())
+                question.setOwner(null);
+            for (Answer answer : student.getMyAnswer())
+                answer.setOwner(null);
 
             em.remove(student);
             return true;

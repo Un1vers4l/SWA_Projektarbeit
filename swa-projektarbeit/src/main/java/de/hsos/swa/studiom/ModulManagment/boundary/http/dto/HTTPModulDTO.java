@@ -6,7 +6,7 @@ import java.util.List;
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
 public class HTTPModulDTO {
@@ -20,12 +20,12 @@ public class HTTPModulDTO {
 
     public Integer studentenAnzahl;
 
-    public List<HTTPStudentDTO> students;
+    public List<StudentDTO> students;
 
     public List<QuestionDto> questions;
 
     public HTTPModulDTO(int modulID, String name, String description, boolean isProject, Integer studentenAnzahl,
-            List<HTTPStudentDTO> students, List<QuestionDto> questions) {
+            List<StudentDTO> students, List<QuestionDto> questions) {
         this.modulID = modulID;
         this.name = name;
         this.description = description;
@@ -41,9 +41,9 @@ public class HTTPModulDTO {
     public static class Converter {
 
         public static HTTPModulDTO toDto(Modul modul) {
-            List<HTTPStudentDTO> studentDTOs = new ArrayList<>();
+            List<StudentDTO> studentDTOs = new ArrayList<>();
             for (Student stud : modul.getStudenten()) {
-                studentDTOs.add(HTTPStudentDTO.Converter.toHTTPStudentDTO(stud));
+                studentDTOs.add(StudentDTO.Converter.toHTTPStudentDTO(stud));
             }
             List<QuestionDto> questionDtos = new ArrayList<>();
             for (Question question : modul.getQuestions()) {

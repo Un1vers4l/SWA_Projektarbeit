@@ -1,32 +1,26 @@
 package de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student;
 
+import de.hsos.swa.studiom.StudentsManagement.entity.Student;
+
 public class PostStudentDTO {
-    private String vorname;
-    private String nachname;
+    public String vorname;
+    public String nachname;
+    public String password;
 
     public PostStudentDTO(String vorname, String nachname) {
         this.vorname = vorname;
         this.nachname = nachname;
     }
+    
 
     public PostStudentDTO() {
     }
 
-    public String getVorname() {
-        return this.vorname;
+
+    public static class Converter {
+
+        public static PostStudentDTO toPutStudentDTO(Student student) {
+            return new PostStudentDTO(student.getVorname(), student.getNachname());
+        }
     }
-
-    public void setVorname(String vorname) {
-        this.vorname = vorname;
-    }
-
-    public String getNachname() {
-        return this.nachname;
-    }
-
-    public void setNachname(String nachname) {
-        this.nachname = nachname;
-    }
-
-
 }

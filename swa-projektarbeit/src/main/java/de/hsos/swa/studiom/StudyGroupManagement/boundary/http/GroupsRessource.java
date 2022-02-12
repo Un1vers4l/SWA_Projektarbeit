@@ -27,9 +27,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentMin;
-
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.StudentTempDTO;
@@ -70,7 +68,7 @@ public class GroupsRessource {
         }
         try {
             int matNr = Integer.valueOf(claim.toString());
-            HTTPStudentDTO stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+            StudentDTO stud = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
             return Response
                     .ok(groups.data("student", stud).data("groupDetail", null).data("inGroup", false)
                             .data("error", "error")
@@ -91,9 +89,9 @@ public class GroupsRessource {
             return Response.status(Status.UNAUTHORIZED).build();
         }
         int matNr = Integer.valueOf(claim.toString());
-        HTTPStudentDTO stud;
+        StudentDTO stud;
         try {
-            stud = HTTPStudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+            stud = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
         } catch (EntityNotFoundException e) {
             return Response.status(Status.BAD_REQUEST).build();
         }

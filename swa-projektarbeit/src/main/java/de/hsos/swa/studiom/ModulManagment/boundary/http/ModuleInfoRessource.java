@@ -32,7 +32,7 @@ import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
 import de.hsos.swa.studiom.ModulManagment.entity.Answer;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.ModulManagment.entity.Question;
-import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.HTTPStudentDTO;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
@@ -62,7 +62,7 @@ public class ModuleInfoRessource {
     public Response getDetailModuleInfo(@PathParam("moduleId") int moduleId,
             @DefaultValue("error") @QueryParam("error") String error) {
 
-        HTTPStudentDTO student;
+        StudentDTO student;
         try {
             student = getHttpStudentDTO();
         } catch (EntityNotFoundException e) {
@@ -83,9 +83,9 @@ public class ModuleInfoRessource {
             return HTTPModulDTO.Converter.toDto(optModule.get());
         }
         return null;
-    }       
+    }
 
-    private HTTPStudentDTO getHttpStudentDTO() throws EntityNotFoundException {
+    private StudentDTO getHttpStudentDTO() throws EntityNotFoundException {
         Object claim = jwt.getClaim("matNr");
         if (claim == null) {
             return null;
@@ -94,7 +94,7 @@ public class ModuleInfoRessource {
         Optional<Student> opt;
         opt = studService.getStudent(matNr);
         if (opt.isPresent()) {
-            return HTTPStudentDTO.Converter.toHTTPStudentDTO(opt.get());
+            return StudentDTO.Converter.toHTTPStudentDTO(opt.get());
         }
         return null;
     }
