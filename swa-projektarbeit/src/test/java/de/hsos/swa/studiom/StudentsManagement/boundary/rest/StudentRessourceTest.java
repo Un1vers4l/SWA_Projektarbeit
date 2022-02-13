@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 
 @QuarkusTest
 public class StudentRessourceTest {
-    @Test
+    /*@Test
     void testCreateStudent() {
         given().contentType(MediaType.APPLICATION_JSON).body("Student2")
                 .when().put("/api/v1/student")
@@ -23,5 +23,5 @@ public class StudentRessourceTest {
                 .when().get()
                 .then()
                 .statusCode(200);
-    }
+    }*/
 }
