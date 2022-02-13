@@ -7,8 +7,6 @@
  */
 package de.hsos.swa.studiom.ModulManagment.boundary.http;
 
-import java.util.Optional;
-
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
-import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 

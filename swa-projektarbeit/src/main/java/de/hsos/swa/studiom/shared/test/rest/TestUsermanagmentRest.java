@@ -72,9 +72,9 @@ public class TestUsermanagmentRest {
     public Response creatUser(){
         User user = null;
         Set<Role> role = new HashSet<>();
-        role.add(Role.USER);
+        role.add(Role.USER); 
         try {
-            user = userService.createUserGenertor(new SimpleUsernameAlgo("Marc", "Kla"), "123", role);
+            user = userService.createUserGenertor(new SimpleUsernameAlgo("Marc", "Sauer"), "123", role);
         } catch (CanNotGeneratUserExeption e) {
             return Response.ok(new StatusDto(e)).build();
         }

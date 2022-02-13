@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -23,7 +22,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.jboss.resteasy.annotations.Form;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.ModulManagment.control.AnswerService;
@@ -32,7 +30,6 @@ import de.hsos.swa.studiom.ModulManagment.control.QuestionService;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.control.StudentService;
-import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 import de.hsos.swa.studiom.StudyGroupManagement.boundary.dto.GroupDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.control.GroupService;
 import de.hsos.swa.studiom.StudyGroupManagement.control.ProjectService;

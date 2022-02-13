@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
+import de.hsos.swa.studiom.UserManagement.boundary.dto.PostUserDto;
 import de.hsos.swa.studiom.UserManagement.boundary.dto.UserDto;
 import de.hsos.swa.studiom.UserManagement.control.UserService;
 import de.hsos.swa.studiom.UserManagement.entity.Role;
@@ -68,9 +69,9 @@ public class UserRest {
     @RolesAllowed("ADMIN")
     @POST
     @Operation(summary = "Erzeugt einen User Rechte {ADMIN}", description = "Einen Studenten kann man hier nicht erzeugen")
-    public Response creatUser(UserDto userDto){
+    public Response creatUser(PostUserDto userDto){
         log.info("POST " +  uriInfo.getPath());
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
+        Set<ConstraintViolation<PostUserDto>> violations = validator.validate(userDto);
         if(!violations.isEmpty()){
             return Response.ok(new StatusDto(violations)).build();
         }
