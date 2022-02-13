@@ -8,7 +8,7 @@
 
 /* Testen der authentifizierung*/
 INSERT INTO Account (userId, username, password)
-VALUES (1,'studentTest','264c8c381bf16c982a4e59b0dd4c6f7808c51a05f64c35db42cc78a2a72875bb'),
+VALUES (1,'studentTest','264c8c381bf16c982a4e59b0dd4c6f7808c51a05f64c35db42cc78a2a72875bb'), /*Password: "student"*/
     (2,'admin','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'),/*Password: "admin"*/
     (3,'sekt','63870b1f068e4a136ad446e762d45f752de8ff74524bf7e458b495598f01c414');/*Password: "sekt"*/
 
@@ -98,6 +98,7 @@ VALUES (0, 'Vorlesung online?', 'Weiß jemand, ob die Vorlesung am Freitag onlin
     (1, 'Test Topic' , 'Hier steht die Frage', 'Nina Chuba', 1001, 1, false),
     (2, 'Frage zum Projekt', 'Wann müssen wir das Projekt abgeben?', 'Daisy Jones', 1000, 1, true),
     (3, 'Hibernate SQL Queries' , 'Hi Leute, weiß jemand, wie man die SQL Queries von Hibernate in der Console anzeigt?', 'Nina Chuba', 1001, 1, true);
+
 INSERT INTO Answer (answerID, question_modul_modulID, question_questionId, owner_matNr, isSolution, studentName, text)
 VALUES (0, 5, 0, 1002, true,'Beth Harmon', 'ja, die VL ist online:)'),
     (1, 1, 3, 1001, false,'Daisy Jones', 'Füg das einfach in deine application.properties ein: %dev.quarkus.hibernate-orm.log.sql=false'),
