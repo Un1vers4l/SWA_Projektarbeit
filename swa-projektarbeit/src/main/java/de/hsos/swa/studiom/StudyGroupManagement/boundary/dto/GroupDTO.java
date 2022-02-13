@@ -14,17 +14,18 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
+import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.Group;
 import de.hsos.swa.studiom.StudyGroupManagement.entity.GroupType;
 
 public class GroupDTO {
     public int id;
-    public StudentTempDTO owner;
+    public StudentDTO owner;
     public String name;
     @JsonInclude(Include.NON_NULL)
     public Integer maxMember;
     public ModulDto module;
-    public List<StudentTempDTO> member;
+    public List<StudentDTO> member;
     public GroupType type;
 
     public GroupDTO() {
@@ -35,8 +36,8 @@ public class GroupDTO {
         this.name = name;
     }
 
-    public GroupDTO(int id, StudentTempDTO owner, String name, Integer maxMember, ModulDto module,
-            List<StudentTempDTO> members) {
+    public GroupDTO(int id, StudentDTO owner, String name, Integer maxMember, ModulDto module,
+            List<StudentDTO> members) {
         this.id = id;
         this.owner = owner;
         this.name = name;
@@ -45,7 +46,7 @@ public class GroupDTO {
         this.member = members;
     }
 
-    public GroupDTO(int id, StudentTempDTO owner, String name, Integer maxMember, ModulDto module, List<StudentTempDTO> members,
+    public GroupDTO(int id, StudentDTO owner, String name, Integer maxMember, ModulDto module, List<StudentDTO> members,
             GroupType type) {
         this.id = id;
         this.owner = owner;
@@ -58,9 +59,10 @@ public class GroupDTO {
 
     public static class Converter {
         public static GroupDTO toSimpleGroupDTO(Group group) {
-            List<StudentTempDTO> member = group.getMember().stream().map(StudentTempDTO.Converter::toDTO)
+            List<StudentDTO> member = group.getMember().stream().map(StudentDTO.Converter::toMinimalStudentDTO)
                     .collect(Collectors.toList());
-            return new GroupDTO(group.getGroupId(), StudentTempDTO.Converter.toDTO(group.getOwner()), group.getName(),
+            return new GroupDTO(group.getGroupId(), StudentDTO.Converter.toMinimalStudentDTO(group.getOwner()),
+                    group.getName(),
                     group.getMaxMembers(), ModulDto.Converter.toMinimalModuleDTO(group.getModul()), member);
         }
 
@@ -69,12 +71,11 @@ public class GroupDTO {
         }
 
         public static GroupDTO toHTTPGroupDTO(Group group) {
-            List<StudentTempDTO> member = group.getMember().stream().map(StudentTempDTO.Converter::toDTO)
+            List<StudentDTO> member = group.getMember().stream().map(StudentDTO.Converter::toMinimalStudentDTO)
                     .collect(Collectors.toList());
-            return new GroupDTO(group.getGroupId(), StudentTempDTO.Converter.toDTO(group.getOwner()), group.getName(),
-                    group.getMaxMembers(),
-                    ModulDto.Converter.toMinimalHTTPModuleDTO(group.getModul()), member,
-                    group.getType());
+            return new GroupDTO(group.getGroupId(), StudentDTO.Converter.toMinimalStudentDTO(group.getOwner()),
+                    group.getName(), group.getMaxMembers(), ModulDto.Converter.toMinimalHTTPModuleDTO(group.getModul()),
+                    member, group.getType());
         }
     }
 

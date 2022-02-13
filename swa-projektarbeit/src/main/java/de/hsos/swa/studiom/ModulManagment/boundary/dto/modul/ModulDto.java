@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import de.hsos.swa.studiom.ModulManagment.boundary.dto.question.QuestionDto;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
+import de.hsos.swa.studiom.ModulManagment.entity.Question;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
 import de.hsos.swa.studiom.StudentsManagement.entity.Student;
 
@@ -101,6 +102,15 @@ public class ModulDto {
             return uDto;
         }
 
+        public static ModulDto toDetailHTTPModule(Modul module) {
+            List<StudentDTO> students = module.getStudenten().stream().map(StudentDTO.Converter::toHTTPStudentDTO)
+                    .collect(Collectors.toList());
+            List<QuestionDto> questions = module.getQuestions().stream()
+                    .map(QuestionDto.Converter::QuestionToDtoAnswers).collect(Collectors.toList());
+
+            return new ModulDto(module.getModulID(), module.getName(), module.getDescription(),
+                    module.isProject(), module.studentenAnzahl(), students, questions);
+        }
     }
 
 }

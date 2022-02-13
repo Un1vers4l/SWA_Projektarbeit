@@ -15,11 +15,20 @@ import de.hsos.swa.studiom.shared.exceptions.EntityNotFoundException;
 
 public interface ModulService {
     public Optional<Modul> getModul(int modulId);
+
     public List<Modul> getAllModul();
+
     public Modul createdModule(String name, String description, boolean isProject);
+
     public Modul changeModule(int modulId, Modul modul) throws EntityNotFoundException;
+
     public boolean deleteModule(int modulId);
+
     public boolean addStudentFromModule(int modulId, int matNr) throws EntityNotFoundException;
+
     public boolean removeStudentFromModule(int modulId, int matNr) throws EntityNotFoundException;
+
     public Modul getModulWithExeption(int modulId) throws EntityNotFoundException;
+
+    public boolean isInModule(int matNr, int modulId);
 }

@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import de.hsos.swa.studiom.ModulManagment.boundary.http.dto.HTTPModulDTO;
+import de.hsos.swa.studiom.ModulManagment.boundary.dto.modul.ModulDto;
 import de.hsos.swa.studiom.ModulManagment.control.ModulService;
 import de.hsos.swa.studiom.ModulManagment.entity.Modul;
 import de.hsos.swa.studiom.StudentsManagement.boundary.dto.Student.StudentDTO;
@@ -50,40 +50,28 @@ public class ModuleInfoRessource {
     @GET
     public Response getDetailModuleInfo(@PathParam("moduleId") int moduleId,
             @DefaultValue("error") @QueryParam("error") String error) {
-
         StudentDTO student;
+        boolean inModule = false;
         try {
-            student = getHttpStudentDTO();
+            int matNr = Integer.valueOf(jwt.getClaim("matNr").toString());
+            student = StudentDTO.Converter.toHTTPStudentDTO(studService.getStudent(matNr).get());
+            inModule = moduleService.isInModule(matNr, moduleId);
         } catch (EntityNotFoundException e) {
             student = null;
             error = e.getMessage();
         }
-        HTTPModulDTO moduleDetail = getHttpModulDTO(moduleId);
+        ModulDto moduleDetail = getHttpModulDTO(moduleId);
         return Response
-                .ok(modulesInfo.data("student", student).data("moduleDetail", moduleDetail).data("inModule", true)
+                .ok(modulesInfo.data("student", student).data("moduleDetail", moduleDetail).data("inModule", inModule)
                         .data("error", error)
                         .render())
                 .build();
     }
 
-    private HTTPModulDTO getHttpModulDTO(int moduleId) {
+    private ModulDto getHttpModulDTO(int moduleId) {
         Optional<Modul> optModule = moduleService.getModul(moduleId);
         if (optModule.isPresent()) {
-            return HTTPModulDTO.Converter.toDto(optModule.get());
-        }
-        return null;
-    }
-
-    private StudentDTO getHttpStudentDTO() throws EntityNotFoundException {
-        Object claim = jwt.getClaim("matNr");
-        if (claim == null) {
-            return null;
-        }
-        int matNr = Integer.valueOf(claim.toString());
-        Optional<Student> opt;
-        opt = studService.getStudent(matNr);
-        if (opt.isPresent()) {
-            return StudentDTO.Converter.toHTTPStudentDTO(opt.get());
+            return ModulDto.Converter.toDetailHTTPModule(optModule.get());
         }
         return null;
     }
