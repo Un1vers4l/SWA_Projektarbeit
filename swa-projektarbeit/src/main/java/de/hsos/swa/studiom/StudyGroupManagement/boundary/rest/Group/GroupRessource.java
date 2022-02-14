@@ -20,6 +20,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -86,7 +87,7 @@ public class GroupRessource {
         return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
 
-    @POST
+    @PUT
     @DELETE
     public Response notImplemented() {
         return Response.status(Status.NOT_IMPLEMENTED).build();

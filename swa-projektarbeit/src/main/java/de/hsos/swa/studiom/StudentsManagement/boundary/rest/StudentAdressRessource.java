@@ -74,7 +74,7 @@ public class StudentAdressRessource {
         }
     }
 
-    @PUT
+    @POST
     @Operation(summary = "Create a new adress", description = "Create a new adress for a student")
     public Response createAdress(@PathParam("matNr") int matNr, AdressDTO adress) {
         log.info("PUT " + uriInfo.getPath());
@@ -89,7 +89,7 @@ public class StudentAdressRessource {
         }
     }
 
-    @POST
+    @PUT
     @Operation(summary = "Change an adress", description = "Change the adress of a student")
     public Response changeAdress(@PathParam("matNr") int matNr, AdressDTO adress) {
         try {

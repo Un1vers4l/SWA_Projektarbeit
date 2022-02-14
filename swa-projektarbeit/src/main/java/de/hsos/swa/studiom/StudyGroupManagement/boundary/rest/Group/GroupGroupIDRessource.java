@@ -87,7 +87,7 @@ public class GroupGroupIDRessource {
         }
     }
 
-    @POST
+    @PUT
     @RolesAllowed("STUDENT")
     @Operation(summary = "Change a group", description = "Change the name, maxMembers or module of a group")
     public Response changeGroup(@PathParam("groupId") int groupId, PostGroupDTO newGroup) {
@@ -107,7 +107,7 @@ public class GroupGroupIDRessource {
         }
     }
 
-    @PUT
+    @POST
     @RolesAllowed("STUDENT")
     @Path("/student")
     @Operation(summary = "Join a Group", description = "Adds a Student to a group if group is not full yet")
